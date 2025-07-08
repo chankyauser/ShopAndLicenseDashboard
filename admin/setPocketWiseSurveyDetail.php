@@ -1,0 +1,39 @@
+<?php
+    session_start();
+include '../api/includes/DbOperation.php'; 
+
+if( $_SERVER['REQUEST_METHOD'] === "POST" ) {
+  
+  if(isset($_GET['pocketCd']) && !empty($_GET['pocketCd']) ){
+
+    try  
+        {  
+            $pocketCd = $_GET['pocketCd'];
+            $executiveCd = $_GET['executiveCd'];
+            $electionName = $_GET['electionName'];
+            $nodeCd = $_GET['nodeCd'];
+            $node_Name = $_GET['node_Name'];
+            $fromDate = $_GET['fromDate'];
+            $toDate = $_GET['toDate'];
+            $_SESSION['SAL_Pocket_Cd'] = $pocketCd;
+            $_SESSION['SAL_Executive_Cd'] = $executiveCd;
+            $_SESSION['SAL_ElectionName'] = $electionName;
+            $_SESSION['SAL_Node_Cd'] = $nodeCd;
+            $_SESSION['SAL_Node_Name'] = $node_Name;
+            $_SESSION['SAL_FromDate'] = $fromDate;
+            $_SESSION['SAL_ToDate'] = $toDate;
+           
+        } 
+        catch(Exception $e)  
+        {  
+            echo("Error!");  
+        }
+                                                          
+
+  }else{
+    //echo "ddd";
+  }
+
+}
+?>
+

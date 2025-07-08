@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="112.47" height="112.47" viewBox="0 0 112.47 112.47">
+  <g id="ShopList" transform="translate(-695 -583)">
+    <rect id="Rectangle_21" data-name="Rectangle 21" width="112.47" height="112.47" transform="translate(695 583)" fill="#fff"/>
+    <g id="Group_2" data-name="Group 2" transform="translate(-3.04 -3.366)">
+      <g id="Path_160" data-name="Path 160" transform="translate(717.04 590.366)" fill="#fff">
+        <path d="M 70 103.5 L 5 103.5 C 3.070100069046021 103.5 1.5 101.9299011230469 1.5 100 L 1.5 5 C 1.5 3.070100069046021 3.070100069046021 1.5 5 1.5 L 70 1.5 C 71.92990112304688 1.5 73.5 3.070100069046021 73.5 5 L 73.5 100 C 73.5 101.9299011230469 71.92990112304688 103.5 70 103.5 Z" stroke="none"/>
+        <path d="M 5 3 C 3.897201538085938 3 3 3.897201538085938 3 5 L 3 100 C 3 101.1027984619141 3.897201538085938 102 5 102 L 70 102 C 71.10279846191406 102 72 101.1027984619141 72 100 L 72 5 C 72 3.897201538085938 71.10279846191406 3 70 3 L 5 3 M 5 0 L 70 0 C 72.76141357421875 0 75 2.23858642578125 75 5 L 75 100 C 75 102.7614135742188 72.76141357421875 105 70 105 L 5 105 C 2.23858642578125 105 0 102.7614135742188 0 100 L 0 5 C 0 2.23858642578125 2.23858642578125 0 5 0 Z" stroke="none" fill="#c90d41"/>
+      </g>
+      <path id="Icon_material-playlist-add-check" data-name="Icon material-playlist-add-check" d="M22.6,15.262H3v1.943H22.6ZM22.6,9H3v2.047H22.6ZM3,22.382H16.069v-2H3Zm31.857-5.554,1.425,1.447L26.123,27.157,19.759,21.6l1.211-1.219,4.917,4.27Z" transform="translate(736.774 593.216)" fill="#c90d41"/>
+      <path id="Icon_material-playlist-add-check-2" data-name="Icon material-playlist-add-check" d="M22.6,15.262H3v1.943H22.6ZM22.6,9H3v2.047H22.6ZM3,22.382H16.069v-2H3Zm31.857-5.554,1.425,1.447L26.123,27.157,19.759,21.6l1.211-1.219,4.917,4.27Z" transform="translate(736.774 623.216)" fill="#c90d41"/>
+      <path id="Icon_material-playlist-add-check-3" data-name="Icon material-playlist-add-check" d="M22.6,15.262H3v1.943H22.6ZM22.6,9H3v2.047H22.6ZM3,22.382H16.069v-2H3Zm31.857-5.554,1.425,1.447L26.123,27.157,19.759,21.6l1.211-1.219,4.917,4.27Z" transform="translate(736.774 653.216)" fill="#c90d41"/>
+    </g>
+  </g>
+</svg>
