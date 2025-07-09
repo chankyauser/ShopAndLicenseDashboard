@@ -84,18 +84,18 @@ $ipdat = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" .
 </style>
  
         <div class="page-content pt-50 pb-50 loginBg">
-            <div class="container-fluid ">
+            <div class="container-fluid h-100">
                 <div class="container h-100">
                     <div class="row h-100">
                         <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
                             <div class="row d-flex align-items-center justify-content-end">
                                 <div class="col-lg-6 col-md-8">
-                                    <div class="card p-5" style="background: #ffffff3d; border-radius: 50px; box-shadow: 0px 0px 12px 4px #00000085; backdrop-filter: blur(10px);">
+                                    <div class="card p-4" style="background: #ffffff3d; border-radius: 50px; box-shadow: 0px 0px 12px 4px #00000085; backdrop-filter: blur(10px);">
                                         <div class="card-body">
                                             <div class="login_wrap widget-taber-content">
                                                 <div class="padding_eight_all">
-                                                    <div class="heading_s1" style="margin-bottom: 20px;">
-                                                        <h4 class="mb-5" style="color: #fff; font-size: 45px; text-align: center;">Login</h4>
+                                                    <div class="heading_s1" style="margin-bottom: 5px;">
+                                                        <h4 class="mb-5" style="color: #fff; font-size: 32px; text-align: center;">Login</h4>
                                                     </div>
                                                         <div class="form-group">
                                                             <label for="" class="text-white">Mobile <span class="text-danger">*</span></label>
@@ -125,8 +125,8 @@ $ipdat = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" .
                                                                 <div id="submitmsg" style="display: none;">
                                                                     <img height="50" width="50" src="assets/imgs/loader/loading.gif"/>
                                                                 </div>
-                                                                <div id="submitmsgsuccess" class="controls alert alert-success" role="alert" style="display: none;"></div>
-                                                                <div id="submitmsgfailed"  class="controls alert alert-danger" role="alert" style="display: none;"></div>
+                                                                <div id="submitmsgsuccess" class="controls alert alert-success" role="alert" style="display: none; padding: 4px 10px;">adfa</div>
+                                                                <div id="submitmsgfailed"  class="controls alert alert-danger" role="alert" style="display: none;  padding: 4px 10px;">sdrf</div>
                                                         </div>
                                                 </div>
                                             </div>

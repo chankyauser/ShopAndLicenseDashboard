@@ -202,11 +202,10 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                     echo $_SESSION['SAL_FullName'] . " !";
                                 } ?>
                             </h6>
-                            <!-- <span> Shop Billing Summary </span> -->
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
+                            <div class="row row-cols-2 row-cols-lg-5 g-2">
+                                <div class="col">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
@@ -270,8 +269,8 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a>
+                                <div class="col">
+                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Document-Pending.png" alt="" /> -->
@@ -370,9 +369,9 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                     </a>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row row-cols-2 row-cols-lg-5 g-2">
                                 
-                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
+                                <div class="col">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
@@ -406,7 +405,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                 </div>
 
                                 <?php if($shopBillingCountData["LicenseRenewedShops"] != 0) { ?>
-                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
+                                <div class="col">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
@@ -438,7 +437,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
+                                <div class="col">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
@@ -470,7 +469,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
+                                <div class="col">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
@@ -503,7 +502,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                     </a>
                                 </div>
                                 <?php } ?>
-                                <div class="col-lg-3 col-md-2 col-sm-6 col-12">
+                                <div class="col">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">

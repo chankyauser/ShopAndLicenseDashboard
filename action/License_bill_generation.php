@@ -99,7 +99,8 @@ if(isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
                 $Billing_Cd = $MaxBillingCd + 1;
 
                 $BillNo = $Code.'-'.$FinYear.'/'.$shopCd.'-'.$Billing_Cd;
-                $InsertQuery = "INSERT INTO ShopBilling (Shop_Cd, IsLicenseRenewal, BillingDate, BillNo, FinYear, LicenseFees, ExpiryDate, BillAmount, IsActive,  AddedDate, LicenseStartDate, LicenseEndDate) VALUES($shopCd, $RenewalFlag, '$BillingDate', '$BillNo', '$FinYear','$CatAmount', '$LicenseEndDate', '$Amount', 1, GETDATE(), '$LicenseStartDate', '$LicenseEndDate')";
+                $LicenseNumber = $Code.'-'.$FinYear.'/'.$shopCd;
+                $InsertQuery = "INSERT INTO ShopBilling (Shop_Cd, IsLicenseRenewal, BillingDate, BillNo, FinYear, LicenseFees, ExpiryDate, BillAmount, IsActive,  AddedDate, LicenseStartDate, LicenseEndDate, LicenseNumber) VALUES($shopCd, $RenewalFlag, '$BillingDate', '$BillNo', '$FinYear','$CatAmount', '$LicenseEndDate', '$Amount', 1, GETDATE(), '$LicenseStartDate', '$LicenseEndDate', '$LicenseNumber')";
                 // echo $InsertQuery;exit;
                 $InsertDB = new DBOperation();
                 $result = $InsertDB->RunQuerySALData($InsertQuery, $electionName, $developmentMode);
@@ -111,7 +112,7 @@ if(isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
 
                     if(!empty($ParwanaDetailResult)){
                         $ParwanaDetCd = $ParwanaDetailResult['ParwanaDetCd'];
-                        $UpdateRenewalFlagQuery = "UPDATE ShopMaster SET ParwanaDetCd = $ParwanaDetCd, RenewalDate = '$LicenseRenewalDate' WHERE Shop_Cd = $shopCd AND IsActive = 1";
+                        $UpdateRenewalFlagQuery = "UPDATE ShopMaster SET ParwanaDetCd = $ParwanaDetCd, RenewalDate = '$LicenseRenewalDate', LicenseNumber = '$LicenseNumber' WHERE Shop_Cd = $shopCd AND IsActive = 1";
                         $UpdateRenewalDB = new DBOperation();
                         $UpdateRenewalDB->RunQuerySALData($UpdateRenewalFlagQuery, $electionName, $developmentMode);
                     }
