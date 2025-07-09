@@ -6,16 +6,23 @@
                 $_SESSION['SAL_ElectionName']='CSMC';
                 $_SESSION['SAL_DevelopmentMode']='Live';
         }
+        
         $electionName = $_SESSION['SAL_ElectionName'];
         $developmentMode = $_SESSION['SAL_DevelopmentMode'];
 
-	$key = base64_decode('JoYPd+qso9s7T+Ebj8pi4Wl8i+AHLv+5UNJxA3JkDgY=');
-        $iv = base64_decode('hlnuyA9b4YxDq6oJSZFl8g');
+        // UAT --------------
+	// $key = base64_decode('JoYPd+qso9s7T+Ebj8pi4Wl8i+AHLv+5UNJxA3JkDgY=');
+        // $iv = base64_decode('hlnuyA9b4YxDq6oJSZFl8g');
+
+        // LIVE --------------
+	$key = base64_decode('tPjvm0W0iIO4lpX/Ry9VQcGGcx0gAB1D1salkTrtpP4=');
+        $iv = base64_decode('FRaquqRsN0nrEStG0ukNOA==');
 
 	$result = $_POST['response'];
         $ciphertext_raw = hex2bin($result);
         $original_plaintext = openssl_decrypt($ciphertext_raw,  "AES-256-CBC", $key, $options=OPENSSL_RAW_DATA, $iv);
         $original_plaintext = trim($original_plaintext);
         $json = json_decode($original_plaintext, true);
+
         include('../../action/saveTransaction.php');
 ?>

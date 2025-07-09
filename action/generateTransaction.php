@@ -38,9 +38,9 @@ isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
         $TransStatus = $IsExist['TransStatus'];
         if(strtolower($TransStatus) == "success"){
             echo json_encode([
-                        'statusCode' => 204,
-                        'status' => 'exists',
-                        'message' => 'Transaction has been done against this bill',
+                'statusCode' => 204,
+                'status' => 'exists',
+                'message' => 'Transaction has been done against this bill',
             ]);
         }else{
            include('../PHP-GetEPay/PG/GetePayInvoicePg.php');
