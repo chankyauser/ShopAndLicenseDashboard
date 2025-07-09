@@ -44,14 +44,15 @@
             COALESCE(bm.BusinessCatName, '') AS BusinessCatName, 
             COALESCE(td.TransNumber, '') AS TransNumber, 
             COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar,
-            COALESCE(sb.LicenseNumber, '') AS LicenseNumber
+            COALESCE(sb.LicenseNumber, '') AS LicenseNumber,
+			COALESCE(sm.Ward_No,0) AS Ward_No,
+			CONCAT(COALESCE(sm.ShopAddress_1,''),' ',COALESCE(sm.ShopAddress_2,'')) AS ShopAddress,
+			COALESCE(nm.NodeName,'') AS ZoneName
         FROM ShopBilling sb 
-        LEFT JOIN 
-            ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
-        LEFT JOIN 
-            BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
-        LEFT JOIN 
-            TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
+        LEFT JOIN ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
+        LEFT JOIN BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
+        LEFT JOIN TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
+		LEFT JOIN NodeMaster nm ON (sm.Ward_No = nm.Ward_No)
         WHERE sb.Billing_Cd = $billing_Id AND sb.IsActive = 1";
 
     $BillingData = $db->ExecutveQuerySingleRowSALData($BillingQuery, $electionName, $developmentMode);
@@ -192,12 +193,12 @@
                                                 <div style="width:20%">
                                                     <div class="logo d-none d-flex" style="position: absolute; top: 0px; left: 0px; display: flex">
                                                             <!-- <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
-                                                            <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px; border-radius: 50px;"/>
+                                                            <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px;"/>
                                                     </div>
                                                 </div>
                                                 <div style="width: 100%;text-align: center;">
                                                     <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
-                                                        <b style="margin-top:15px;">छत्रपती संभाजीनगर महानगरपालिका <br>Chhtrapati Sambhajinagar Municipal Corporation</b>
+                                                        <b style="margin-top:15px;">छत्रपती संभाजीनगर महानगरपालिका <br>Chhatrapati Sambhajinagar Municipal Corporation</b>
                                                     </h2>
                                                 </div>
     
@@ -226,11 +227,18 @@
                                                         <p style="font-size: 14px;"> 
                                                             <!-- छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span>< ?= $Shop_Cd ?></span>) यावर देय्य असलेली सन < ?= $FinYear ?> या आर्थिक वर्षात पुढील प्रमाणे कराची रक्कम अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे. -->
                                                             
-                                                            छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. <b><span><?= $Shop_Cd ?></span></b> साठी <b><?= $LicenseStartDate ?></b></b> ते <b><?= $LicenseEndDate ?></b> या कालावधीत देय असलेली कराची रक्कम पुढील प्रमाणे अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे.
+                                                            महाराष्ट्र महानगरपालिका अधिनियम 1949 चे कलम 376, 383, 386 अन्वये छत्रपती संभाजीनगर महानगरपालिका कार्यक्षेत्रातील दुकाने, कारखाने  इ. व्यापारी आस्थापनांनी आपले व्यवसाय करणेकारीता महानगरपालिकेचा परवाना दुकान क्र. <b><span><?= $Shop_Cd ?></span></b> साठी <b><?= $LicenseStartDate ?></b></b> ते <b><?= $LicenseEndDate ?></b> या कालावधी करिता अदा करण्यात येत आहे.
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="margin-bottom: 50px;">
+                                                    <div style="width:50%">
+
+                                                    </div>
+                                                    <div style="width:50%">
+
+                                                    </div>
+                                                    
                                                     <table class="table table-responsive-sm" border="1"
                                                         style="border-collapse: collapse;width:100%; font-family: serif;">
                                                         <thead>
@@ -239,7 +247,7 @@
                                                                 <th style="font-size: 13px;"> दुकानाचे नाव  </th>
                                                                 <th style="font-size: 13px;"> दुकानदाराचे नाव  </th>
                                                                 <th style="font-size: 13px;"> रक्कम </th>
-                                                                <th style="font-size: 13px;"> रक्कम  अक्षरी  </th>
+                                                                <th style="font-size: 13px;"> रक्कम अक्षरी  </th>
                                                             </tr>
                                                             <tr>
                                                                 <th style="font-size: 13px;">1</th>
@@ -252,12 +260,12 @@
                                                     </table>
                                                 </div>
                                                 <div class="row">
-                                                    <p style="font-size: 14px;">उपरोक्त व्यावसायिक अस्थापना परवाना फी आकारणी केली असून पुढील एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना नुतानिकरण करणे अपेक्षित आहे. </p>
+                                                    <p style="font-size: 14px;">उपरोक्त व्यावसायिक अस्थापना परवाना पुढील एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना नुतनिकरण करणे अपेक्षित आहे. </p>
                                                 </div>
                                                 <div class="row" style="display: flex ; justify-content: flex-end; margin-bottom: 50px;">
                                                     <div style="display: flex ; flex-direction: column; align-content: center; align-items: center;">
                                                         <p style="font-size: 14px;">उपायुक्त </p>
-                                                        <p style="font-size: 14px;">छ. संभाजीनगर महानगरपलिका </p>
+                                                        <p style="font-size: 14px;">छत्रपती संभाजीनगर महानगरपलिका</p>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="display: flex; gap: 10px;">
