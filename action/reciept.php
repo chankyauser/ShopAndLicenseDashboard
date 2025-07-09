@@ -35,14 +35,15 @@ $PaymentQuery = "SELECT
             COALESCE(sm.ShopCategory, '') AS ShopCategory,
             COALESCE(sb.PastDues, '') AS PastDues,
             COALESCE(bm.BusinessCatName, '') AS BusinessCatName, 
-            COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar
+            COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar,
+			COALESCE(sm.Ward_No,0) AS Ward_No,
+			CONCAT(COALESCE(sm.ShopAddress_1,''),' ',COALESCE(sm.ShopAddress_2,'')) AS ShopAddress,
+			COALESCE(nm.NodeName,'') AS ZoneName
         FROM TransactionDetails td
-        LEFT JOIN 
-            ShopBilling sb ON td.Billing_Cd = sb.Billing_Cd
-        LEFT JOIN 
-            ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
-        LEFT JOIN 
-            BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
+        LEFT JOIN ShopBilling sb ON td.Billing_Cd = sb.Billing_Cd
+        LEFT JOIN ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
+        LEFT JOIN BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
+		LEFT JOIN NodeMaster nm ON (sm.Ward_No = nm.Ward_No)
         WHERE td.Transaction_Cd = $Transaction_Cd ";
 
 $BillingData = $db->ExecutveQuerySingleRowSALData($PaymentQuery, $electionName, $developmentMode);
@@ -190,11 +191,11 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                 <thead>
                                                     <tr>
                                                         <td colspan="12">
-                                                            <center style="position: relative; font-family: serif;">
+                                                            <center style="position: relative; font-family: serif;padding: 13px;">
                                                                 <div class="logo d-flex align-items-center"
                                                                     style="position: absolute; top: 20px; left: 12px; display: flex; align-items: center;">
 
-                                                                        <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px; border-radius: 50px;margin-top: -15px;"/>
+                                                                        <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px;margin-top: -15px;"/>
 
                                                                     <!-- <div
                                                                         style="display: flex; flex-direction: column; justify-content: center; text-align: left; color: #C90D41; font-size: 16px; font-weight: 700; line-height: 1.2;">
@@ -215,12 +216,11 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                 </h2>
 
 
-                                                                <h2
+                                                                <!-- <h2
                                                                     style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 14px;">
-                                                                    <!-- <b>छत्रपती संभाजी नगर - 431001</b> -->
                                                                     <b> पोस्ट बॉक्स क्रमांक - 125, टाऊन हॉल, छ.
                                                                         संभाजीनगर - 431009 </b>
-                                                                </h2>
+                                                                </h2> -->
                                                             </center>
                                                         </td>
                                                     </tr>
@@ -302,45 +302,39 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                     </div>
                                                                 </td>
                                                             </tr>
-                                                        </tbody>
-                                                    </table>
-
-
-                                                    <table class="table table-responsive-sm"
-                                                        style="border-collapse: collapse;width:100%; margin-top: 10px; font-family: serif; "
-                                                        border="1">
-                                                        <thead>
-                                                            <th colspan="12">
-                                                                <!-- <div class="sub-heading">Payments Details ( देयक तपशील )</div> -->
-                                                                <div class="sub-heading" style="font-size: 16px">
-                                                                    PAYMENTS
-                                                                    DETAILS</div>
-                                                            </th>
-                                                        </thead>
-                                                        <tbody>
-
-                                                            <!-- <tr>
-                                                                <td>
-                                                                    <div class="info" style="font-size: 14px"> बिल
-                                                                        क्रमांक :</div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="info info-data" style="font-size: 14px">
-                                                                        <?= $BillNo ?>
-                                                                    </div>
-                                                                </td>
-                                                            </tr> -->
-
                                                             <tr>
                                                                 <td>
-                                                                    <!-- <div class="info"> Payer Name :</div> -->
-                                                                    <div class="info" style="font-size: 14px"> देयकाराचे
-                                                                        नाव :
-                                                                    </div>
+                                                                    <!-- <div class="info"> Mobile No. : </div> -->
+                                                                    <div class="info" style="font-size: 14px"> मोबाईल
+                                                                        क्रमांक : </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
-                                                                        <?= $ShopOwnerName ?>
+                                                                        <?= $ShopOwnerMobile ?>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <!-- <div class="info"> Mobile No. : </div> -->
+                                                                    <div class="info" style="font-size: 14px"> मोबाईल
+                                                                        क्रमांक : </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        <?= $ShopOwnerMobile ?>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <!-- <div class="info"> Mobile No. : </div> -->
+                                                                    <div class="info" style="font-size: 14px"> मोबाईल
+                                                                        क्रमांक : </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        <?= $ShopOwnerMobile ?>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -399,7 +393,6 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                     </div>
                                                                 </td>
                                                             </tr>
-
                                                         </tbody>
                                                     </table>
                                                 </tbody>
