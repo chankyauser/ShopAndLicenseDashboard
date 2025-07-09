@@ -405,9 +405,11 @@ function getBillDetails() {
                     let tableHtml = `<table class="table table-bordered">
                                 <thead style="background-color:#FFEBEB;text-align:center">
                                     <tr>
-                                        <th> Sr. No. </th> 
-                                        <th> Download </th>
-                                        <th> Bill Number </th>
+                                        <th> Sr. No. </th>`; 
+                     if (hasSuccessPayment) {                    
+                            tableHtml += ` <th> Download </th> `;
+                    } 
+                         tableHtml += `  <th> Bill Number </th>
                                         <th> License Period </th>
                                         <th> Amount </th>
                                         <th> Status </th>`;
@@ -445,15 +447,17 @@ function getBillDetails() {
                             actionBtn =
                                 `<button class="btn btn-sm btn-success" onclick="paymentGateway(${item.Billing_Cd}, ${item.BillAmount}, ${shopCd})">Pay Now</button>`;
                         }
+                        
 
                         tableHtml += `<tr class="bill-row text-center" data-index="${index}">
-                                                    <td> ${index + 1} </td>
-                                                    <td> 
+                                                    <td> ${index + 1} </td>`;
+                        if (item.PaymentStatus.toLowerCase() === "success") {
+                                tableHtml += `      <td> 
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="./action/licence_generate.php?billing_id=${item.Billing_Cd}"   data-tooltip="Download the License Invoice" style="margin-right: 12px;" target="_blank">
                                                                <span class ="badge bg-warning" style="font-size: 14px;"> License </span>
                                                             </a>`;
-                        if (item.PaymentStatus.toLowerCase() === "success") {
+                       
                             tableHtml += ` <a href="./action/reciept.php?Transaction_Cd=${item.Transaction_Cd}" data-bs-toggle="tooltip" data-tooltip="Download the Payment Receipt" style="margin-right: 12px;" target="_blank">
                                                                 <span class ="badge bg-info" style="font-size: 14px;"> Receipt </span>
                                                             </a>`;
