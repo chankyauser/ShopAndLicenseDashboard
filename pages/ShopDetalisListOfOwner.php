@@ -661,6 +661,14 @@ function paymentGateway(Billing_id, Amount, shopCd) {
                     confirmButtonText: 'OK',
                     confirmButtonColor: '#d33'
                 });
+            } else if (data.statusCode === 500) {
+                Swal.fire({
+                    title: 'Opps, Something went wrong!',
+                    text: `${data.message}`,
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#d33'
+                });
             }
         },
         error: function() {
