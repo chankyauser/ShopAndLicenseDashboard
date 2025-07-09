@@ -37,7 +37,7 @@ $_SESSION['SAL_View_Type'] = 'ListView';
     background-position: bottom;
 }
 
-#addnewButton:hover{
+#addnewButton:hover {
     background-color: #fff !important;
     color: #C90D41 !important;
 }
@@ -111,8 +111,9 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                                                 OTP</button>
                                         </div>
                                         <div class="form-group d-flex justify-content-center">
-                                            <button id="addnewButton" type="button" class="btn btn-brand btn-block hover-up mb-2" 
-                                                name="newlogin" style="border: 1px solid #fff;border-radius: 13px; width: 100%; background-color: #fff; color: #C90D41;">
+                                            <button id="addnewButton" type="button"
+                                                class="btn btn-brand btn-block hover-up mb-2" name="newlogin"
+                                                style="border: 1px solid #fff;border-radius: 13px; width: 100%; background-color: #fff; color: #C90D41;">
                                                 New Shop
                                             </button>
                                         </div>
@@ -208,17 +209,32 @@ $(document).ready(function() {
     $('#otpField').hide();
 
     $('#submitLoginBtnId').on('click', function() {
-        $('#submitLoginBtnId').text('Login');
-        if ($('#otpField').is(':visible')) {
-            var mobileNumber = $('#mobile').val();
-            var otp = $('#otp').val();
-            if (otp == '') {
-                $('#otperror').text("Please Enter OTP").show();
+        var mobileNumber = $('#mobile').val().trim();
+        var mobileRegex = /^[6-9]\d{9}$/;
+
+        if (mobileNumber !== '') {
+            if (!mobileRegex.test(mobileNumber)) {
+                $('#mobileerror').text('Please enter a valid 10-digit mobile number.').show();
+                return;
             } else {
-                validateOtp(mobileNumber, otp);
+                $('#mobileerror').text('').hide();
+            }
+
+            $('#submitLoginBtnId').text('Login');
+
+            if ($('#otpField').is(':visible')) {
+                var otp = $('#otp').val().trim();
+                if (otp === '') {
+                    $('#otperror').text("Please enter OTP").show();
+                } else {
+                    $('#otperror').text('').hide();
+                    validateOtp(mobileNumber, otp);
+                }
+            } else {
+                shopLogin();
             }
         } else {
-            shopLogin();
+            $('#mobileerror').text('Please enter a mobile number.').show();
         }
     });
 

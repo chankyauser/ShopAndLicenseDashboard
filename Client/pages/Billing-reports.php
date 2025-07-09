@@ -237,8 +237,9 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col">
-                                   <a>
+
+                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permission-Denied.png" alt="" /> -->
@@ -300,7 +301,9 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col">
+
+
+                                <div class="col-lg-2 col-md-2 col-sm-6 col-12">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
@@ -332,7 +335,8 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col">
+
+                                <div class="col-lg-3 col-md-2 col-sm-6 col-12">
                                     <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
@@ -364,7 +368,6 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                         </div>
                                     </a>
                                 </div>
-                                
                             </div>
                             <div class="row row-cols-2 row-cols-lg-5 g-2">
                                 
