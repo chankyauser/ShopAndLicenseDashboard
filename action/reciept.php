@@ -110,6 +110,56 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
     .amt-words {
         text-transform: capitalize;
     }
+    
+.watermarked-container {
+  position: relative;
+}
+
+.watermarked-container::before {
+  content: "";
+  background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 300px 300px; /* adjust size as needed */
+  opacity: 0.05;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#PrintApplicationTableID {
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ Ensure watermark shows when printing */
+@media print {
+  .watermarked-container::before {
+    content: "";
+    background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 300px 300px;
+    opacity: 0.05;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  body, html {
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important; /* Chrome/Safari */
+    print-color-adjust: exact !important;
+  }
+}
     </style>
 
     <title> Bazaar Trace | <?= trim($_SESSION['SAL_ElectionName'])?> </title>
@@ -129,7 +179,7 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                 <section id="basic-datatable">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card">
+                            <div class="card watermarked-container">
                                 <div class="card-content">
                                     <div class="card-body card-dashboard">
                                         <div class="table-responsive">
@@ -398,6 +448,67 @@ function acknowledgementPrinting() {
         '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
     );
     a.document.write('<style>');
+    a.document.write(`
+        body {
+            font-family: "Laila", serif !important;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .watermarked-container {
+            position: relative;
+        }
+
+        .watermarked-container::before {
+            content: "";
+            background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg'); /* Adjust path if needed */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 300px 300px;
+            opacity: 0.05;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #PrintApplicationTableID {
+            position: relative;
+            z-index: 1;
+        }
+
+        @page {
+            margin: 10mm;
+        }
+
+        @media print {
+            header { display: none; }
+            .logo { margin-left: 10px !important; }
+
+            .watermarked-container::before {
+                content: "";
+                background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 300px 300px;
+                opacity: 0.05;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    `);
     a.document.write('@media print {');
     a.document.write('  header { display: none; }');
     a.document.write(
