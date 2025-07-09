@@ -3,7 +3,6 @@
     include '../api/includes/DbOperation.php';
   
     $qcTypeArray = array(array('QC_Title' => 'Shop Listing', 'QC_Type' =>'ShopList', 'QC_Flag' =>1), array('QC_Title' => 'Shop Survey', 'QC_Type' =>'ShopSurvey', 'QC_Flag' =>2), array('QC_Title' => 'Shop Board', 'QC_Type' =>'ShopBoard', 'QC_Flag' =>5), array('QC_Title' => 'Shop Document', 'QC_Type' =>'ShopDocument', 'QC_Flag' =>3), array('QC_Title' => 'Shop Calling', 'QC_Type' =>'ShopCalling', 'QC_Flag' =>4));
-        
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">

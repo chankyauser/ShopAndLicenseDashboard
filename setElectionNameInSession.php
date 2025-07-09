@@ -10,7 +10,7 @@ if( $_SERVER['REQUEST_METHOD'] === "POST" ) {
         {  
             
             $_SESSION['SAL_ElectionName'] = $_GET['electionName'];
-
+            unset($_SESSION['SAL_Corporation_Name']);
             unset($_SESSION['SAL_Node_Cd']);
             unset($_SESSION['SAL_Ward_No']);
             unset($_SESSION['SAL_Node_Name']);

@@ -62,6 +62,11 @@
         $businessCatCd = $_SESSION['SAL_BusinessCat_Cd'];
     }
 
+    $db=new DbOperation();
+    $getCorporationNameQuery = "SELECT ISNULL(Description, '') as Description FROM Survey_Entry_Data..SALCorporationMaster WHERE ElectionName = '$electionName'";
+    $CorporationName = $db->ExecutveQuerySingleRowSALData($getCorporationNameQuery, $electionName, $developmentMode);
+    $_SESSION['SAL_Corporation_Name'] = $CorporationName['Description'];
+
 ?>
 <!-- <style>
 .nav-tabs {
