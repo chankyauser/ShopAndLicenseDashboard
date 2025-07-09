@@ -75,7 +75,7 @@ $ipdat = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" .
         <style>
 
     .loginBg{
-        background: url(Client/assets/imgs/logo/bg.jpeg);
+        background: url('<?php echo 'Client/assets/imgs/logo/' . trim($_SESSION["SAL_ElectionName"]) . '_bg.jpeg'; ?>');
         height: 70vh;
         background-size: cover;
         background-repeat: no-repeat;

@@ -30,13 +30,13 @@ $_SESSION['SAL_View_Type'] = 'ListView';
 ?>
 
 <style>
-    .loginBg {
-        background: url(Client/assets/imgs/logo/bg.jpeg);
-        height: 70vh;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: bottom;
-    }
+.loginBg {
+    background: url('<?php echo 'Client/assets/imgs/logo/' . trim($_SESSION["SAL_ElectionName"]) . '_bg.jpeg'; ?>');
+    height: 70vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+}
 </style>
 
 
@@ -53,17 +53,21 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                         <div class="card p-5"
                             style="background: #ffffff3d; border-radius: 50px; box-shadow: 0px 0px 12px 4px #00000085; backdrop-filter: blur(10px);">
                             <div class="card-body">
+
                                 <div class="login_wrap widget-taber-content background-white">
+                                    <div class="form-group mb-0" style="text-align: right;">
+                                        <button id="addnewButton" type="button" class="btn btn-brand hover-up mb-5"
+                                            name="newlogin">
+                                            New Shop
+                                        </button>
+                                    </div>
                                     <div class="padding_eight_all">
                                         <div class="heading_s6 d-flex justify-content-center mb-5 align-items-left">
                                             <h6 class="mb-5" style="color: #fff; font-size: 40px; text-align: left;">
                                                 Shop Owner Login</h6>
-                                            <div class="form-group mb-0">
-                                                <!-- <button id="addnewButton" type="button"
-                                                        class="btn btn-brand btn-block hover-up mb-5" name="newlogin"
-                                                        id="newlogin">New Shop</button> -->
-                                            </div>
+
                                         </div>
+
                                         <div class="form-group">
                                             <label for="" class="text-white">Mobile <span
                                                     class="text-danger">*</span></label>
@@ -135,268 +139,268 @@ $_SESSION['SAL_View_Type'] = 'ListView';
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    $(document).ready(function () {
+$(document).ready(function() {
 
-        $('#mobile,#otp_id_4').on('keypress', function (e) {
-            if (e.which === 13) { // 13 is the Enter key
-                $('#submitLoginBtnId').click(); // Trigger button click
-            }
-        });
-
-
-        $('.otp-input').on('input', function () {
-            const $input = $(this);
-            const value = $input.val().replace(/[^0-9]/g, '');
-
-            $input.val(value);
-
-            if (value && $input.next('.otp-input').length) {
-                $input.next('.otp-input').focus();
-            }
-
-            updateOTP();
-        });
-
-        $('.otp-input').on('keydown', function (e) {
-            const $input = $(this);
-
-            // Handle backspace
-            if (e.key === 'Backspace' && !$input.val() && $input.prev('.otp-input').length) {
-                $input.prev('.otp-input').focus();
-            }
-        });
-
-        function updateOTP() {
-            let otp = '';
-            $('.otp-input').each(function () {
-                otp += $(this).val();
-            });
-            $('#otp').val(otp); // Set hidden field
+    $('#mobile,#otp_id_4').on('keypress', function(e) {
+        if (e.which === 13) { // 13 is the Enter key
+            $('#submitLoginBtnId').click(); // Trigger button click
         }
-
-        $('#resend-otp').on('click', function () {
-            var mobileNumber = $('#mobile').val();
-            if (mobileNumber.length === 10) {
-                var otp = generateOtp();
-                // alert(otp)
-                sendOTPToMobile(mobileNumber, otp);
-                $('#otp').val('');
-                $('#otpField').show();
-                $('#resend-otp').hide();
-            } else {
-                $('#mobileerror').text('Please enter a valid mobile number.');
-            }
-        });
-        $('#resend-otp').hide();
-
-        $('#mobile').on('input', function () {
-            $('#mobileerror').hide();
-        });
-        $('#otp').on('input', function () {
-            $('#otperror').hide();
-        });
-        $('#otpField').hide();
-
-        $('#submitLoginBtnId').on('click', function () {
-            $('#submitLoginBtnId').text('Login');
-            if ($('#otpField').is(':visible')) {
-                var mobileNumber = $('#mobile').val();
-                var otp = $('#otp').val();
-                if (otp == '') {
-                    $('#otperror').text("Please Enter OTP").show();
-                } else {
-                    validateOtp(mobileNumber, otp);
-                }
-            } else {
-                shopLogin();
-            }
-        });
-
-        $('#addnewButton').on('click', function () {
-            // alert('hello');
-            $('#ShopModal').find('form').each(function () {
-                this.reset();
-            });
-
-            $('#ShopModal').find('select').each(function () {
-                $(this).val(null).trigger('change');
-            });
-            $('#shopkeeper_mobile').prop('readonly', false);
-            $('#verifyOtpBtn').hide();
-            $('#ShopModal').modal('show');
-
-            setTimeout(function () {
-                if ($('.nav-item').has('active')) {
-                    $('.nav-item').removeClass('active');
-                }
-                $('#application-details-tab').addClass('active');
-                $('#application-details-tab-link').tab('show');
-                updateNavLinks();
-            }, 200);
-        })
     });
 
-    var generatedOtp;
 
-    function shopLogin() {
-        // var fullName = $('#fullName').val();
+    $('.otp-input').on('input', function() {
+        const $input = $(this);
+        const value = $input.val().replace(/[^0-9]/g, '');
+
+        $input.val(value);
+
+        if (value && $input.next('.otp-input').length) {
+            $input.next('.otp-input').focus();
+        }
+
+        updateOTP();
+    });
+
+    $('.otp-input').on('keydown', function(e) {
+        const $input = $(this);
+
+        // Handle backspace
+        if (e.key === 'Backspace' && !$input.val() && $input.prev('.otp-input').length) {
+            $input.prev('.otp-input').focus();
+        }
+    });
+
+    function updateOTP() {
+        let otp = '';
+        $('.otp-input').each(function() {
+            otp += $(this).val();
+        });
+        $('#otp').val(otp); // Set hidden field
+    }
+
+    $('#resend-otp').on('click', function() {
         var mobileNumber = $('#mobile').val();
-        // alert(mobileNumber);
-
         if (mobileNumber.length === 10) {
-            checkMobileExistence(mobileNumber);
+            var otp = generateOtp();
+            // alert(otp)
+            sendOTPToMobile(mobileNumber, otp);
+            $('#otp').val('');
+            $('#otpField').show();
+            $('#resend-otp').hide();
         } else {
-            if (!fullName) {
-                $('#nameerror').text("Enter Full Name").show();
-            } else {
-                $('#nameerror').hide();
-            }
+            $('#mobileerror').text('Please enter a valid mobile number.');
+        }
+    });
+    $('#resend-otp').hide();
 
-            if (mobileNumber.length !== 10) {
-                $('#mobileerror').text("Enter Mobile Number").show();
+    $('#mobile').on('input', function() {
+        $('#mobileerror').hide();
+    });
+    $('#otp').on('input', function() {
+        $('#otperror').hide();
+    });
+    $('#otpField').hide();
+
+    $('#submitLoginBtnId').on('click', function() {
+        $('#submitLoginBtnId').text('Login');
+        if ($('#otpField').is(':visible')) {
+            var mobileNumber = $('#mobile').val();
+            var otp = $('#otp').val();
+            if (otp == '') {
+                $('#otperror').text("Please Enter OTP").show();
             } else {
-                $('#mobileerror').hide();
+                validateOtp(mobileNumber, otp);
             }
+        } else {
+            shopLogin();
+        }
+    });
+
+    $('#addnewButton').on('click', function() {
+        // alert('hello');
+        $('#ShopModal').find('form').each(function() {
+            this.reset();
+        });
+
+        $('#ShopModal').find('select').each(function() {
+            $(this).val(null).trigger('change');
+        });
+        $('#shopkeeper_mobile').prop('readonly', false);
+        $('#verifyOtpBtn').hide();
+        $('#ShopModal').modal('show');
+
+        setTimeout(function() {
+            if ($('.nav-item').has('active')) {
+                $('.nav-item').removeClass('active');
+            }
+            $('#application-details-tab').addClass('active');
+            $('#application-details-tab-link').tab('show');
+            updateNavLinks();
+        }, 200);
+    })
+});
+
+var generatedOtp;
+
+function shopLogin() {
+    // var fullName = $('#fullName').val();
+    var mobileNumber = $('#mobile').val();
+    // alert(mobileNumber);
+
+    if (mobileNumber.length === 10) {
+        checkMobileExistence(mobileNumber);
+    } else {
+        if (!fullName) {
+            $('#nameerror').text("Enter Full Name").show();
+        } else {
+            $('#nameerror').hide();
+        }
+
+        if (mobileNumber.length !== 10) {
+            $('#mobileerror').text("Enter Mobile Number").show();
+        } else {
+            $('#mobileerror').hide();
         }
     }
+}
 
-    function checkMobileExistence(mobileNumber) {
-        // AJAX request to check if mobile number exists
-        $.ajax({
-            type: "POST",
-            url: 'action/checkMobileExists.php',
-            data: {
-                mobileNumber: mobileNumber,
+function checkMobileExistence(mobileNumber) {
+    // AJAX request to check if mobile number exists
+    $.ajax({
+        type: "POST",
+        url: 'action/checkMobileExists.php',
+        data: {
+            mobileNumber: mobileNumber,
 
-            },
-            beforeSend: function () {
-                $('#submitLoginBtnId').prop("disabled", true);
-                $('#submitmsg').show();
-                $('html').addClass("ajaxLoading");
-            },
-            success: function (dataResult) {
-                dataResult = JSON.parse(dataResult);
-                if (dataResult.exists === 1 && dataResult.message === 'Mobile number exists') {
-                    var otp = generateOtp();
-                    sendOTPToMobile(mobileNumber, otp);
-                    $('#otpField').show();
-                    $('#fullNameField').hide();
-                    $('input[name="mobile"]').show();
-                    $("#submitmsgsuccess").html('OTP sent to your mobile.')
-                        .hide().fadeIn(800, function () {
-                            $("submitmsgsuccess").append("");
+        },
+        beforeSend: function() {
+            $('#submitLoginBtnId').prop("disabled", true);
+            $('#submitmsg').show();
+            $('html').addClass("ajaxLoading");
+        },
+        success: function(dataResult) {
+            dataResult = JSON.parse(dataResult);
+            if (dataResult.exists === 1 && dataResult.message === 'Mobile number exists') {
+                var otp = generateOtp();
+                sendOTPToMobile(mobileNumber, otp);
+                $('#otpField').show();
+                $('#fullNameField').hide();
+                $('input[name="mobile"]').show();
+                $("#submitmsgsuccess").html('OTP sent to your mobile.')
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgsuccess").append("");
 
-                        }).delay(3000).fadeOut("fast");
-                } else {
-                    $("#submitmsgfailed").html('Mobile number does not exist. Please check and try again.')
-                        .hide().fadeIn(800, function () {
-                            $("submitmsgfailed").append("");
+                    }).delay(3000).fadeOut("fast");
+            } else {
+                $("#submitmsgfailed").html('Mobile number does not exist. Please check and try again.')
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgfailed").append("");
 
-                        }).delay(3000).fadeOut("fast");
-                    $('#ShopModal').find('form').each(function () {
-                        this.reset();
-                    });
+                    }).delay(3000).fadeOut("fast");
+                $('#ShopModal').find('form').each(function() {
+                    this.reset();
+                });
 
-                    $('#ShopModal').find('select').each(function () {
-                        $(this).val(null).trigger('change');
-                    });
-                    $('#shopkeeper_mobile').prop('readonly', false);
-                    $('#verifyOtpBtn').hide();
-                    $('#ShopModal').modal('show');
-                    setTimeout(function () {
-                        if ($('.nav-item').has('active')) {
-                            $('.nav-item').removeClass('active');
-                        }
-                        $('#application-details-tab').addClass('active');
-                        $('#application-details-tab-link').tab('show');
-                        updateNavLinks();
-                    }, 200);
-                }
-            },
-            complete: function () {
-                $('#submitLoginBtnId').prop("disabled", false);
-                $('#submitmsg').hide();
-                $('html').removeClass("ajaxLoading");
+                $('#ShopModal').find('select').each(function() {
+                    $(this).val(null).trigger('change');
+                });
+                $('#shopkeeper_mobile').prop('readonly', false);
+                $('#verifyOtpBtn').hide();
+                $('#ShopModal').modal('show');
+                setTimeout(function() {
+                    if ($('.nav-item').has('active')) {
+                        $('.nav-item').removeClass('active');
+                    }
+                    $('#application-details-tab').addClass('active');
+                    $('#application-details-tab-link').tab('show');
+                    updateNavLinks();
+                }, 200);
             }
-        });
-    }
+        },
+        complete: function() {
+            $('#submitLoginBtnId').prop("disabled", false);
+            $('#submitmsg').hide();
+            $('html').removeClass("ajaxLoading");
+        }
+    });
+}
 
-    function sendOTPToMobile(mobileNumber, otp) {
-        $.ajax({
-            type: "POST",
-            url: 'action/sendOTP.php',
-            data: {
-                mobileNumber: mobileNumber,
-                otp: otp
-            },
-            success: function (response) {
-                if (response.success) {
-                    $("#submitmsgsuccess").html('OTP has been sent to your mobile number!')
-                        .hide().fadeIn(800, function () {
-                            $("submitmsgsuccess").append("");
+function sendOTPToMobile(mobileNumber, otp) {
+    $.ajax({
+        type: "POST",
+        url: 'action/sendOTP.php',
+        data: {
+            mobileNumber: mobileNumber,
+            otp: otp
+        },
+        success: function(response) {
+            if (response.success) {
+                $("#submitmsgsuccess").html('OTP has been sent to your mobile number!')
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgsuccess").append("");
 
-                        }).delay(3000).fadeOut("fast");
-                    $('#generatedOtp').val(otp);
-                }
-            },
-            error: function () {
-                alert('Error occurred while sending OTP.');
+                    }).delay(3000).fadeOut("fast");
+                $('#generatedOtp').val(otp);
             }
-        });
-    }
+        },
+        error: function() {
+            alert('Error occurred while sending OTP.');
+        }
+    });
+}
 
-    function generateOtp() {
-        var otp = Math.floor(1000 + Math.random() * 9000);
-        generatedOtp = otp
-        return otp;
-    }
+function generateOtp() {
+    var otp = Math.floor(1000 + Math.random() * 9000);
+    generatedOtp = otp
+    return otp;
+}
 
-    function validateOtp(mobileNumber, otpEntered) {
+function validateOtp(mobileNumber, otpEntered) {
 
-        $.ajax({
-            type: "POST",
-            url: 'action/sendOTP.php',
-            data: {
-                verifyMobileNumber: mobileNumber,
-                verifyOtp: otpEntered
-            },
-            success: function (response) {
-                var responseData = JSON.parse(response);
-                if (responseData.statusCode === 200) {
-                    $("#submitmsgsuccess").html(responseData.msg)
-                        .hide().fadeIn(800, function () {
-                            $("submitmsgsuccess").append("");
+    $.ajax({
+        type: "POST",
+        url: 'action/sendOTP.php',
+        data: {
+            verifyMobileNumber: mobileNumber,
+            verifyOtp: otpEntered
+        },
+        success: function(response) {
+            var responseData = JSON.parse(response);
+            if (responseData.statusCode === 200) {
+                $("#submitmsgsuccess").html(responseData.msg)
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgsuccess").append("");
 
-                        }).delay(3000).fadeOut("fast");
-                    // alert(responseData.msg);
-                    ShopOwnerLogin();
-                } else {
-                    $("#submitmsgfailed").html(responseData.msg || 'OTP verification failed.')
-                        .hide().fadeIn(800, function () {
-                            $("submitmsgfailed").append("");
+                    }).delay(3000).fadeOut("fast");
+                // alert(responseData.msg);
+                ShopOwnerLogin();
+            } else {
+                $("#submitmsgfailed").html(responseData.msg || 'OTP verification failed.')
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgfailed").append("");
 
-                        }).delay(3000).fadeOut("fast");
-                    $('#otp').val('');
-                    $('#resend-otp').show();
-                }
-            },
-            error: function () {
-                alert('Error occurred during OTP verification.');
+                    }).delay(3000).fadeOut("fast");
+                $('#otp').val('');
+                $('#resend-otp').show();
             }
-        });
+        },
+        error: function() {
+            alert('Error occurred during OTP verification.');
+        }
+    });
 
-    }
+}
 
-    function ShopOwnerLogin() {
-        $("#submitmsgsuccess").html('Shop owner logged in successfully.')
-            .hide().fadeIn(800, function () {
-                $("submitmsgsuccess").append("");
+function ShopOwnerLogin() {
+    $("#submitmsgsuccess").html('Shop owner logged in successfully.')
+        .hide().fadeIn(800, function() {
+            $("submitmsgsuccess").append("");
 
-            }).delay(3000).fadeOut("fast");
-        $('#otp').val('');
-        $('#fullName').val('');
-        // $('#application-details-tab-link').tab('show');
-        window.location.href = 'index.php?p=ShopDetalisListOfOwner';
+        }).delay(3000).fadeOut("fast");
+    $('#otp').val('');
+    $('#fullName').val('');
+    // $('#application-details-tab-link').tab('show');
+    window.location.href = 'index.php?p=ShopDetalisListOfOwner';
 
-    }
+}
 </script>

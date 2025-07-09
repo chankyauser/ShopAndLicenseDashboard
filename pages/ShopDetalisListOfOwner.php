@@ -15,8 +15,7 @@ $queryShopOwnerShopList = "SELECT
                                 ISNULL(sm.Shop_Cd , '') AS Shop_Cd,
                                 ISNULL(sm.ShopOwnerAadharNo, '') AS ShopOwnerAadharNo,
                                 ISNULL(sm.ShopOwnerPinCode, '') AS ShopOwnerPinCode,
-                                 ISNULL(bcm.BusinessCatName, '') AS BusinessCatName,
-                                -- ISNULL(NULLIF(ShopKeeperName, ''), ShopOwnerName) AS ShopKeeperName,
+                                ISNULL(bcm.BusinessCatName, '') AS BusinessCatName,
                                 ISNULL(CASE
                                     WHEN sm.ShopKeeperName = '.....' OR NULLIF(sm.ShopKeeperName, '') IS NULL THEN ShopOwnerName
                                     ELSE ShopKeeperName

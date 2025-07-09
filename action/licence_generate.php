@@ -1,8 +1,3 @@
-<head>
-    <title> Shop License </title>
-    <link rel="shortcut icon" href="../assets/imgs/theme/favicon.ico">
-    <link rel="icon" href="../assets/imgs/theme/favicon.ico" type="image/x-icon">
-</head>
 <?php
     session_start();
     include '../api/includes/DbOperation.php';
@@ -49,13 +44,13 @@
             COALESCE(bm.BusinessCatName, '') AS BusinessCatName, 
             COALESCE(td.TransNumber, '') AS TransNumber, 
             COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar
-        FROM Aurangabad_ShopAndLicense..ShopBilling sb 
+        FROM ShopBilling sb 
         LEFT JOIN 
-            Aurangabad_ShopAndLicense..ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
+            ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
         LEFT JOIN 
-            Aurangabad_ShopAndLicense..BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
+            BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
         LEFT JOIN 
-            Aurangabad_ShopAndLicense..TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
+            TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
         WHERE sb.Billing_Cd = $billing_Id AND sb.IsActive = 1";
 
     $BillingData = $db->ExecutveQuerySingleRowSALData($BillingQuery, $electionName, $developmentMode);
@@ -92,6 +87,12 @@
     $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
     
 ?>
+<head>
+    <title> Bazaar Trace | <?= trim($_SESSION['SAL_ElectionName'])?>  </title>
+     <link rel="shortcut icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg">
+    <link rel="icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" type="image/x-icon">
+</head>
+
 
 <button style="float:right;margin-right:20px;margin-top:10px;" onclick="window.open('','_self').close();">Back</button>
 <button style="float:right;margin-right:20px;margin-top:10px;" onclick="acknowledgementPrinting()">Print</button>
@@ -136,81 +137,83 @@
                                         <br>
                                         <br>
                                         <div id="PrintApplicationTableID">
-                                            
                                             <div class="row" style="position: relative; font-family: serif;">
-                                                <div class="logo d-none d-flex" style="position: absolute; top: -7px; left: 2px; display: flex">
-                                                        <!-- <img src="../assets/imgs/theme/logo.png" alt="logo" style="height: 39px;"/> -->
-                                                         <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo"
-                                                                    style="height: 55px;" />
-                                                        <!-- <p style="color: #C90D41; margin-top: 10px; font-size: 10px; font-weight: 700; display: block; line-height: 1;">Bazaar<br>Trace</p> -->
+                                                <div class="logo d-none d-flex" style="position: absolute; top: 0px; left: 0px; display: flex">
+                                                        <!-- <img src="../assets/imgs/theme/logo.png" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
+                                                         <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 50px; border-radius: 50px;"/>
+                                                        <p style="color: #C90D41; margin-top: 10px; font-size: 14px; font-weight: 700; display: block; line-height: 1;"> <?=trim($_SESSION['SAL_ElectionName'])?> <br> Bazaar Trace</p>
                                                 </div>
     
                                                 
                                                 <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
                                                     <b>	छत्रपती संभाजीनगर महानगरपालिका</b>
                                                 </h2>
-                                                <h4 style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 10px;">
+                                                <h4 style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 15px;">
                                                     <b style=""> post box number - 125, Town Hall, Chha. Sambhajinagar – 431009
                                                         <?= $FinYear ?>
                                                     </b>
                                                 </h4>
                                             </div>
                                             <hr>
-                                            <div class="row">
-                                                <div class="col-12" style="display: flex;justify-content: center;">
-                                                    <p style="font-size: 12px;">व्यावसायिक अस्थापना दुकान परवाना </p>
-                                                </div>
-                                                <div class="col-12" style="display: flex; ">
-                                                    <div class="col-6" style="width: 50%">
-                                                        <p style="font-size: 10px;">पावती क्र. <span><?= $TransNumber ?> </span> </p>
+                                            <div class="row" style="padding: 10px 40px; margin-bottom: 40px;">
+                                                <div class="row">
+                                                    <div class="col-12" style="display: flex;justify-content: center;">
+                                                        <p style="font-size: 16px; font-weight: 600;">व्यावसायिक अस्थापना दुकान परवाना </p>
                                                     </div>
-                                                    <div class="col-6"  style="width: 50%">
-                                                        <p style="font-size: 10px;">दिनांक: <span><?= $BillingDate ?> </span> </p>
+                                                    <div class="col-12" style="display: flex; ">
+                                                        <div class="col-6" style="width: 50%">
+                                                            <p style="font-size: 14px;">पावती क्र. <span><?= $TransNumber ?> </span> </p>
+                                                        </div>
+                                                        <div class="col-6"  style="width: 50%">
+                                                            <p style="font-size: 14px;">दिनांक: <span><?= $BillingDate ?> </span> </p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <p style="font-size: 11px;"> 
-                                                        छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span><?= $Shop_Cd ?></span>) यावर देय्य असलेली सन <?= $FinYear ?> या आर्थिक वर्षात पुढील प्रमाणे कराची रक्कम अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे. 
+                                                <div class="row" style="margin-bottom: 50px;">
+                                                    <div class="col-12">
+                                                        <p style="font-size: 14px;"> 
+                                                            छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span><?= $Shop_Cd ?></span>) यावर देय्य असलेली सन <?= $FinYear ?> या आर्थिक वर्षात पुढील प्रमाणे कराची रक्कम अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे. 
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="margin-bottom: 50px;">
+                                                    <table class="table table-responsive-sm" border="1"
+                                                        style="border-collapse: collapse;width:100%; font-family: serif;">
+                                                        <thead>
+                                                           <tr>
+                                                                <th style="width: 11%; font-size: 13px;"> क्र. </th>
+                                                                <th style="font-size: 13px;"> दुकानाचे नाव  </th>
+                                                                <th style="font-size: 13px;"> दुकानदाराचे नाव  </th>
+                                                                <th style="font-size: 13px;"> रक्कम </th>
+                                                                <th style="font-size: 13px;"> रक्कम  अक्षरी  </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="font-size: 13px;">1</th>
+                                                                <th style="font-size: 13px;"><?= $ShopName?></th>
+                                                                <th style="font-size: 13px;"><?= $ShopOwnerName ?></th>
+                                                                <th style="font-size: 13px;"><?= $BillAmount?></th>
+                                                                <th style="font-size: 13px;"><?= convertAmountToWords($BillAmount); ?></th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                                <div class="row">
+                                                    <p style="font-size: 14px;">उपरोक्त व्यावसायिक अस्थापना परवाना फी आकारणी केली असून पुढील एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना नुतानिकरण करणे अपेक्षित आहे. </p>
+                                                </div>
+                                                <div class="row" style="display: flex ; justify-content: flex-end; margin-bottom: 50px;">
+                                                    <div style="display: flex ; flex-direction: column; align-content: center; align-items: center;">
+                                                        <p style="font-size: 14px;">उपायुक्त </p>
+                                                        <p style="font-size: 14px;">छ. संभाजीनगर महानगरपलिका </p>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="display: flex; gap: 10px;">
+                                                    <p style="font-size: 14px;">टीप :- 
+                                                    </p>
+                                                    <p style="font-size: 14px;">
+                                                        १. हा परवाना सिस्टीम जनरेटेड आहे आणि त्यासाठी स्वाक्षरीची <br>
+                                                        २. सदरील परवाना मालमत्ता मालकीचा पुरावा नाही.
                                                     </p>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <table class="table table-responsive-sm" border="1"
-                                                    style="border-collapse: collapse;width:100%; font-family: serif;">
-                                                    <thead>
-                                                       <tr>
-                                                            <th style="width: 11%; font-size: 10px;"> क्र. </th>
-                                                            <th style="font-size: 10px;"> दुकानाचे नाव  </th>
-                                                            <th style="font-size: 10px;"> दुकानदाराचे नाव  </th>
-                                                            <th style="font-size: 10px;"> रक्कम </th>
-                                                            <th style="font-size: 10px;"> रक्कम  अक्षरी  </th>
-                                                        </tr>
-                                                        <tr>
-                                                            <!-- <th style="font-size: 9px;">< ?= $Shop_UID ?></th> -->
-                                                            <th style="font-size: 10px;">1</th>
-                                                            <th style="font-size: 10px;"><?= $ShopName?></th>
-                                                            <th style="font-size: 10px;"><?= $ShopOwnerName ?></th>
-                                                            <th style="font-size: 10px;"><?= $BillAmount?></th>
-                                                            <th style="font-size: 10px;"><?= convertAmountToWords($BillAmount); ?></th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                            <div class="row">
-                                                <p style="font-size: 11px;">उपरोक्त व्यावसायिक अस्थापना परवाना फी आकारणी केली असून पुढील एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना नुतानिकरण करणे अपेक्षित आहे. </p>
-                                            </div>
-                                            <div class="row" style="display: flex ; justify-content: flex-end;">
-                                                <div style="display: flex ; flex-direction: column; align-content: center; align-items: center;">
-                                                    <p style="font-size: 10px;">उपायुक्त </p>
-                                                    <p style="font-size: 10px;">छ. संभाजीनगर महानगरपलिका </p>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <p style="font-size: 10px;">टीप :- १. हे माणप िसटीम जनरेटेड आहे आिण यासाठी वा रीची आवयकता नाही.
-                                                        <br> २. सदरील माणप  मालम9 मालक9 पुरावा नाही.
-                                                </p>
                                             </div>
                                         </div>
                                     </div>
