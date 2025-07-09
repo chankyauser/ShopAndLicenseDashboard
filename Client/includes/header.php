@@ -376,24 +376,24 @@
 
                                   <li>
                                         <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'Billing-reports' || $_GET['p']== 'collection-report' || $_GET['p'] == 'pending-report') ){ ?> class="active" <?php } ?>
-                                        href="index.php?p=Billing-reports"><img src="./assets/imgs/logo/rupee.png" style="width:20px; height:20px; object-fit:contain"> Revenue Dashboard</a>
+                                        href="index.php?p=Billing-reports"><i class="fa-solid fa-indian-rupee-sign"></i> Revenue Dashboard</a>
                                         <ul class="sub-menu">
                                         <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'collection-report') ){ ?> class="active" <?php }  ?> href="index.php?p=collection-report"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Collection Report</a></li>
                                             <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'pending-report') ){ ?> class="active" <?php }  ?> href="index.php?p=pending-report"> <i class="fa-solid fa-filter-circle-dollar"></i> &nbsp; Pending Report</a></li>
                                             
                                         </ul>
                                     </li>
-                                    <li>
-                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-revenue-summary' || $_GET['p']== 'shop-license-defaulters' ) ){ ?> class="active" <?php } ?>
+                                    <!-- <li>
+                                        <a < ?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-revenue-summary' || $_GET['p']== 'shop-license-defaulters' ) ){ ?> class="active" < ?php } ?>
                                         href="#"><i class="fa-solid fa-indian-rupee-sign"></i> Revenue Statistics </a>
                                         <ul class="sub-menu">
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-revenue-summary') ){ ?> class="active" <?php }  ?> href="index.php?p=shop-revenue-summary"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license-defaulters') ){ ?> class="active" <?php }  ?> href="index.php?p=shop-license-defaulters"> <i class="fa-solid fa-filter-circle-dollar"></i> &nbsp; License Defaulters</a></li>
+                                            <li><a < ?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-revenue-summary') ){ ?> class="active" < ?php }  ?> href="index.php?p=shop-revenue-summary"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
+                                            <li><a < ?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license-defaulters') ){ ?> class="active" < ?php }  ?> href="index.php?p=shop-license-defaulters"> <i class="fa-solid fa-filter-circle-dollar"></i> &nbsp; License Defaulters</a></li>
                                             
                                         </ul>
-                                    </li>
+                                    </li> -->
                                     <!-- <li>
-                                        <a <?php if (isset($_GET['p']) && $_GET['p'] == 'all-report') { ?> class="active" <?php } ?>
+                                        <a < ?php if (isset($_GET['p']) && $_GET['p'] == 'all-report') { ?> class="active" < ?php } ?>
                                         href="index.php?p=all-report"><i class="fa-solid fa-file-pdf"></i> Reports  -->
                                         
 
