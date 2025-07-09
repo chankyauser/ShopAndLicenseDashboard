@@ -2,7 +2,7 @@
     ob_start();
     session_start();
 
-    include('checksession.php');
+    // include('checksession.php');
     // require_once 'PHP-Cache/cache.class.php';
     // $cache = new Cache();
     ini_set('max_execution_time', '1000'); // 5 min
@@ -408,10 +408,10 @@
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
                         <a href="index.php">
-                            <div class="logo d-none d-lg-flex">
+                            <div class="logo d-none d-lg-flex" style="width: max-content">
                                 <!-- <img src="assets/imgs/theme/logo.png" height="50" alt="logo" /> -->
                                 <img src="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50" alt="logo" />
-                                <p> <?= trim($_SESSION["SAL_ElectionName"]) ?> Bazaar Trace</p>
+                                <p class ="mt-3"> <?= trim($_SESSION["SAL_ElectionName"]) ?> <br> Bazaar Trace</p>
                             </div>
                         </a>
                     </div>

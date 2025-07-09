@@ -106,7 +106,8 @@
     <meta property="og:type" content="" />
     <meta property="og:url" content="" />
     <meta property="og:image" content="" />
-    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/logo/logo.png" />
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/logo/logo.png" /> -->
+      <link rel="shortcut icon" type="image/x-icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" />
     <link rel="stylesheet" href="assets/css/plugins/animate.min.css" />
 
     <link rel="stylesheet" type="text/css" href="assets/css/select/select2.min.css">
@@ -308,15 +309,14 @@
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1">
                         <a href="index.php">
-                              <div class="logo d-none d-lg-flex">
+                              <div class="logo d-none d-lg-flex" style="width: max-content">
                                     <!-- <img src="assets/imgs/theme/logo.png" height="50" alt="logo" /> -->
-                                     <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50" alt="logo" />
-                                    <p><?= $_SESSION['SAL_ElectionName']; ?><br>Bazaar Trace</p>
+                                    <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50" alt="logo" />
+                                    <p> <?= trim($_SESSION["SAL_ElectionName"]) ?><br> Bazaar Trace</p>
                               </div>
                         </a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
-                        
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                             <nav>
                                 <ul>
@@ -374,11 +374,15 @@
                                         href="index.php?p=shop-tracking"> <i class="fa-solid fa-clock"></i> Shop Tracking </a>
                                     </li>
 
-                                     <li>
-                                        <a <?php if (isset($_GET['p']) && $_GET['p'] == 'Billing-reports') { ?> class="active" <?php } ?>
-                                        href="index.php?p=Billing-reports"> <i class="fa-solid fa-indian-rupee-sign"></i> Revenue </a>
+                                  <li>
+                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'Billing-reports' || $_GET['p']== 'collection-report' || $_GET['p'] == 'pending-report') ){ ?> class="active" <?php } ?>
+                                        href="index.php?p=Billing-reports"><img src="./assets/imgs/logo/rupee.png" style="width:20px; height:20px; object-fit:contain"> Revenue Dashboard</a>
+                                        <ul class="sub-menu">
+                                        <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'collection-report') ){ ?> class="active" <?php }  ?> href="index.php?p=collection-report"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Collection Report</a></li>
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'pending-report') ){ ?> class="active" <?php }  ?> href="index.php?p=pending-report"> <i class="fa-solid fa-filter-circle-dollar"></i> &nbsp; Pending Report</a></li>
+                                            
+                                        </ul>
                                     </li>
-                                    
                                     <li>
                                         <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-revenue-summary' || $_GET['p']== 'shop-license-defaulters' ) ){ ?> class="active" <?php } ?>
                                         href="#"><i class="fa-solid fa-indian-rupee-sign"></i> Revenue Statistics </a>

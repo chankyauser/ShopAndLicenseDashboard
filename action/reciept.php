@@ -1,44 +1,3 @@
-<head>
-
-    <title> Shop License Reciept</title>
-
-    <style>
-    .title {
-        font-weight: bold;
-    }
-
-    th .heading {
-        padding: 10px !important;
-        background: #9e9e9e2b !important;
-        font-size: 23px;
-        text-transform: uppercase;
-        font-weight: bold;
-    }
-
-    td .info {
-        margin: 4px !important;
-    }
-
-    th .sub-heading {
-        padding: 5px !important;
-        background: #9e9e9e2b !important;
-        font-size: 18px;
-    }
-
-    td .info-data {
-        width: 300px;
-    }
-
-    .amt-words {
-        text-transform: capitalize;
-    }
-    </style>
-
-    <link rel="shortcut icon" href="../assets/imgs/theme/favicon.ico">
-    <link rel="icon" href="../assets/imgs/theme/favicon.ico" type="image/x-icon">
-</head>
-
-
 <?php
 
 session_start();
@@ -48,7 +7,6 @@ include 'amount_words.php';
 $db = new DbOperation();
 
 $Transaction_Cd = $_GET['Transaction_Cd'];
-// $type = $_GET['type'];
 
 $appName = $_SESSION['SAL_AppName'];
 $electionName = $_SESSION['SAL_ElectionName'];
@@ -78,18 +36,16 @@ $PaymentQuery = "SELECT
             COALESCE(sb.PastDues, '') AS PastDues,
             COALESCE(bm.BusinessCatName, '') AS BusinessCatName, 
             COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar
-        FROM Aurangabad_ShopAndLicense..TransactionDetails td
+        FROM TransactionDetails td
         LEFT JOIN 
-            Aurangabad_ShopAndLicense..ShopBilling sb ON td.Billing_Cd = sb.Billing_Cd
+            ShopBilling sb ON td.Billing_Cd = sb.Billing_Cd
         LEFT JOIN 
-            Aurangabad_ShopAndLicense..ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
+            ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
         LEFT JOIN 
-            Aurangabad_ShopAndLicense..BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
+            BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
         WHERE td.Transaction_Cd = $Transaction_Cd ";
 
 $BillingData = $db->ExecutveQuerySingleRowSALData($PaymentQuery, $electionName, $developmentMode);
-// print_r($BillingData);
-// exit;
 
 $Transaction_Cd = $BillingData['Transaction_Cd'];
 $txnAmount = $BillingData['txnAmount'];
@@ -122,12 +78,53 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
 
 
 ?>
+
+<head>
+    <style>
+    .title {
+        font-weight: bold;
+    }
+
+    th .heading {
+        padding: 10px !important;
+        background: #9e9e9e2b !important;
+        font-size: 23px;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    td .info {
+        margin: 4px !important;
+    }
+
+    th .sub-heading {
+        padding: 5px !important;
+        background: #9e9e9e2b !important;
+        font-size: 18px;
+    }
+
+    td .info-data {
+        width: 300px;
+    }
+
+    .amt-words {
+        text-transform: capitalize;
+    }
+    </style>
+
+    <title> Bazaar Trace | <?= trim($_SESSION['SAL_ElectionName'])?> </title>
+    <link rel="shortcut icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg">
+    <link rel="icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" type="image/x-icon">
+</head>
+
+
+
 <button style="float:right;margin-right:20px;margin-top:10px;" onclick="window.open('','_self').close();">Back</button>
 <button style="float:right;margin-right:20px;margin-top:10px;" onclick="acknowledgementPrinting()">Print</button>
 
 <center>
     <div class="col-md-12 d-flex justify-content-center" id="RecepitID" style="padding-left:20%; padding-right:20%">
-        <div class="card" style="width:60%;padding-top:12%;padding-left:12%;">
+        <div class="card">
             <div class="content-body">
                 <section id="basic-datatable">
                     <div class="row">
@@ -144,32 +141,39 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                     <tr>
                                                         <td colspan="12">
                                                             <center style="position: relative; font-family: serif;">
-                                                                <div class="logo d-none d-flex"
-                                                                    style="position: absolute; top: 10px; left: 32px; display: flex">
-                                                                    <!-- <img src="../assets/imgs/theme/logo.png" alt="logo"
-                                                                        style="height: 55px;" /> -->
-                                                                        <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo"
-                                                                        style="height: 55px;" />
-                                                                    <!-- <p
-                                                                        style="color: #C90D41; margin-top: 15px; font-size: 16px; font-weight: 700; display: block; line-height: 1;">
-                                                                        Bazaar<br>Trace</p> -->
+                                                                <div class="logo d-flex align-items-center"
+                                                                    style="position: absolute; top: 20px; left: 12px; display: flex; align-items: center;">
+
+                                                                    <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg"
+                                                                        alt="logo"
+                                                                        style="height: 50px; width: 50px; border-radius: 50%; margin-right: 10px;" />
+
+                                                                    <div
+                                                                        style="display: flex; flex-direction: column; justify-content: center; text-align: left; color: #C90D41; font-size: 16px; font-weight: 700; line-height: 1.2;">
+                                                                       <?=trim($_SESSION['SAL_ElectionName'])?> <br>
+                                                                        Bazaar Trace
+                                                                    </div>
                                                                 </div>
 
+
                                                                 <h4
-                                                                    style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 10px;">
-                                                                    <b style=""> दुकान परवाना बिल - दुकान परवाना फी जमा पावती
+                                                                    style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 13px;">
+                                                                    <b style=""> दुकान परवाना बिल - दुकान परवाना फी जमा
+                                                                        पावती
                                                                     </b>
                                                                 </h4>
 
-                                                                <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 13px;">
+                                                                <h2
+                                                                    style="display: flex; justify-content: center; margin: 0; padding-bottom: 4px; font-size: 20px;">
                                                                     <b>छत्रपती संभाजीनगर महानगरपालिका</b>
                                                                 </h2>
-                                                            
+
 
                                                                 <h2
-                                                                    style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 10px;">
+                                                                    style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 14px;">
                                                                     <!-- <b>छत्रपती संभाजी नगर - 431001</b> -->
-                                                                    <b> ( पोस्ट बॉक्स क्रमांक - 125, टाऊन हॉल, छ. संभाजीनगर - 431009 ) </b>
+                                                                    <b> ( पोस्ट बॉक्स क्रमांक - 125, टाऊन हॉल, छ.
+                                                                        संभाजीनगर - 431009 ) </b>
                                                                 </h2>
                                                             </center>
                                                         </td>
@@ -181,20 +185,22 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                         border="1">
                                                         <thead>
                                                             <th colspan="12">
-                                                                <div class="heading" style="font-size: 13px">Receipt</div>
+                                                                <div class="heading" style="font-size: 16px">RECEIPT
+                                                                </div>
                                                             </th>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td colspan="9">
                                                                     <!-- <div class="info"> Bill No. : < ?= $BillNo ?></div> -->
-                                                                    <div class="info" style="font-size: 10px"> बिल क्रमांक :
-                                                                        <?= $BillNo ?>
+                                                                    <div class="info" style="font-size: 12px"> पावती
+                                                                        क्रमांक :
+                                                                        <?= $TransNumber ?>
                                                                     </div>
                                                                 </td>
                                                                 <td colspan="3">
                                                                     <!-- <div class="info"> Payment Date : < ?= $PaymentDate ?> </div>-->
-                                                                    <div class="info" style="font-size: 10px">दिनांक :
+                                                                    <div class="info" style="font-size: 12px">दिनांक :
                                                                         <?= $TranDateTime ?>
                                                                     </div>
                                                                 </td>
@@ -210,29 +216,33 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <th colspan="12">
                                                                 <!-- <div class="sub-heading">Property Details ( मालमत्तेची
                                                                     माहिती )</div> -->
-                                                                <div class="sub-heading" style="font-size: 13px">Property
-                                                                    Details </div>
+                                                                <div class="sub-heading" style="font-size: 16px">
+                                                                    PROPERTY DETAILS
+                                                                </div>
                                                             </th>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td colspan="12">
                                                                     <!-- <div class="info"> Owner Name : < ?= $OwnerName ?></div> -->
-                                                                    <div class="info" style="font-size: 10px"> दुकानदारचे
+                                                                    <div class="info" style="font-size: 14px">
+                                                                        दुकानदारचे
                                                                         नाव : <?= $ShopOwnerName ?></div>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="12">
                                                                     <!-- <div class="info"> Owner Name : < ?= $OwnerName ?></div> -->
-                                                                    <div class="info" style="font-size: 10px"> दुकानाचे नाव
+                                                                    <div class="info" style="font-size: 14px"> दुकानाचे
+                                                                        नाव
                                                                         : <?= $ShopName ?></div>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <?php if (!empty($Shop_UID)) { ?>
                                                                 <td colspan="9">
-                                                                    <div class="info" style="font-size: 10px">दुकान क्रमांक
+                                                                    <div class="info" style="font-size: 14px">दुकान
+                                                                        क्रमांक
                                                                         : <?= $Shop_UID ?>
                                                                     </div>
                                                                 </td>
@@ -241,7 +251,7 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
 
                                                                 <td colspan="3">
                                                                     <!-- <div class="info"> Property Type : < ?= $Property_type ?> -->
-                                                                    <div class="info" style="font-size: 10px">दुकानाचे
+                                                                    <div class="info" style="font-size: 14px">दुकानाचे
                                                                         प्रकार : <?= $ShopCategory ?>
                                                                     </div>
                                                                 </td>
@@ -251,37 +261,40 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
 
 
                                                     <table class="table table-responsive-sm"
-                                                        style="border-collapse: collapse;width:100%; margin-top: 10px; "
+                                                        style="border-collapse: collapse;width:100%; margin-top: 10px; font-family: serif; "
                                                         border="1">
                                                         <thead>
                                                             <th colspan="12">
                                                                 <!-- <div class="sub-heading">Payments Details ( देयक तपशील )</div> -->
-                                                                <div class="sub-heading" style="font-size: 13px">Payments
-                                                                    Details</div>
+                                                                <div class="sub-heading" style="font-size: 16px">
+                                                                    PAYMENTS
+                                                                    DETAILS</div>
                                                             </th>
                                                         </thead>
                                                         <tbody>
-                                                            <?php if ($TransNumber != '') { ?>
+
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Transaction Id :</div> -->
-                                                                    <div class="info" style="font-size: 10px"> पावती क्रमांक :</div>
+                                                                    <div class="info" style="font-size: 14px"> बिल
+                                                                        क्रमांक :</div>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="info info-data" style="font-size: 10px">
-                                                                        <?= $TransNumber ?>
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        <?= $BillNo ?>
                                                                     </div>
                                                                 </td>
                                                             </tr>
-                                                            <?php } ?>
+
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Payer Name :</div> -->
-                                                                    <div class="info" style="font-size: 10px"> देयकाचे नाव :
+                                                                    <div class="info" style="font-size: 14px"> देयकाचे
+                                                                        नाव :
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="info info-data" style="font-size: 10px">
+                                                                    <div class="info info-data" style="font-size: 14px">
                                                                         <?= $ShopOwnerName ?>
                                                                     </div>
                                                                 </td>
@@ -289,24 +302,25 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 10px"> मोबाईल
+                                                                    <div class="info" style="font-size: 14px"> मोबाईल
                                                                         क्रमांक : </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="info info-data" style="font-size: 10px">
+                                                                    <div class="info info-data" style="font-size: 14px">
                                                                         <?= $ShopOwnerMobile ?>
                                                                     </div>
                                                                 </td>
                                                             </tr>
-                                                            
+
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info "> Payment Mode :</div> -->
-                                                                    <div class="info" style="font-size: 10px"> देय प्रकार
+                                                                    <div class="info" style="font-size: 14px"> देय
+                                                                        प्रकार
                                                                         : </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="info info-data" style="font-size: 10px">
+                                                                    <div class="info info-data" style="font-size: 14px">
                                                                         <?= $paymentMode ?>
                                                                     </div>
                                                                 </td>
@@ -315,10 +329,11 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info "> Payment Mode :</div> -->
-                                                                    <div class="info" style="font-size: 10px"> मागील शिल्लक मागणी : </div>
+                                                                    <div class="info" style="font-size: 14px"> मागील
+                                                                        शिल्लक मागणी : </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="info info-data" style="font-size: 10px">
+                                                                    <div class="info info-data" style="font-size: 14px">
                                                                         <?= $PastDues ?>
                                                                     </div>
                                                                 </td>
@@ -326,16 +341,15 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
 
                                                             <tr>
                                                                 <td>
-                                                                    <div class="info amt-words" style="font-size: 10px">
-                                                                    अक्षरी रुपये : <br>
-                                                                        <b><?= convertAmountToWords($txnAmount); ?></b>
+                                                                    <div class="info amt-words" style="font-size: 14px">
+                                                                        रुपये : <br>
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="info info-data" style="font-size: 10px">
-                                                                        Amount : <br> <b> &#8377;
-                                                                            <!-- <div class="info info-data"> एकूण रक्कम : <br> <b> &#8377; -->
-                                                                            <?= $txnAmount ?>
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        <b>
+                                                                            &#8377; <?= $txnAmount ?>/- &nbsp; &nbsp;
+                                                                            <?= convertAmountToWords($txnAmount); ?>
                                                                         </b>
                                                                     </div>
                                                                 </td>
@@ -384,7 +398,7 @@ function acknowledgementPrinting() {
     var c = document.getElementById("RecepitID").innerHTML;
     var a = window.open("", "print_content", "width=800,height=1000,resizable=1,scrollbars=1");
     a.document.open();
-    a.document.write('<html><head><title>ShopLicenseReceipt</title>');
+    a.document.write('<html><head><title>ShopLicenseInvoice</title>');
     a.document.write(
         '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
     );
@@ -399,8 +413,7 @@ function acknowledgementPrinting() {
     a.document.write('}');
     a.document.write('</style>');
 
-    a.document.write('</head><body onload="window.print()"><center>' + c + '</center></body></html>');
+    a.document.write('</head><body onload="window.print()">' + c + '</body></html>');
     a.document.close();
 }
-
 </script>
