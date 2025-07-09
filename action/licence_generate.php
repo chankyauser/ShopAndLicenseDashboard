@@ -43,7 +43,8 @@
             COALESCE(sm.ShopLength, 0) * COALESCE(sm.ShopWidth, 0) * 0.092903 AS Area_SqM,
             COALESCE(bm.BusinessCatName, '') AS BusinessCatName, 
             COALESCE(td.TransNumber, '') AS TransNumber, 
-            COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar
+            COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar,
+            COALESCE(sb.LicenseNumber, '') AS LicenseNumber
         FROM ShopBilling sb 
         LEFT JOIN 
             ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
@@ -80,6 +81,7 @@
     $TaxRate = $BillingData['TaxRate'];
     $TransNumber = $BillingData['TransNumber'];
     $Shop_Cd = $BillingData['Shop_Cd'];
+    $LicenseNumber = $BillingData['LicenseNumber'];
 
     // $Total =  $Total_Pay  - $past_dues;
     list($startYear, $shortYear) = explode('-', $FinYear);
@@ -122,6 +124,55 @@
     border-radius: 50rem !important;
 }
 
+.watermarked-container {
+  position: relative;
+}
+
+.watermarked-container::before {
+  content: "";
+  background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 300px 300px; /* adjust size as needed */
+  opacity: 0.05;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#PrintApplicationTableID {
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ Ensure watermark shows when printing */
+@media print {
+  .watermarked-container::before {
+    content: "";
+    background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 300px 300px;
+    opacity: 0.05;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  body, html {
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important; /* Chrome/Safari */
+    print-color-adjust: exact !important;
+  }
+}
 </style>
 
 <div class="col-md-12" id="PrintApplicationID" style="padding-left:20%; padding-right:20%">
@@ -136,17 +187,17 @@
                                     <div class="table-responsive">
                                         <br>
                                         <br>
-                                        <div id="PrintApplicationTableID">
+                                        <div id="PrintApplicationTableID" class="watermarked-container">
                                             <div class="row" style="position: relative; font-family: serif;">
                                                 <div style="width:20%">
                                                     <div class="logo d-none d-flex" style="position: absolute; top: 0px; left: 0px; display: flex">
-                                                            <!-- <img src="../assets/imgs/theme/logo.png" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
+                                                            <!-- <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
                                                             <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px; border-radius: 50px;"/>
                                                     </div>
                                                 </div>
                                                 <div style="width: 100%;text-align: center;">
                                                     <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
-                                                        <b style="margin-top:15px;">	छत्रपती संभाजीनगर महानगरपालिका <br>Chhtrapati Sambhajinagar Municipal Corporation</b>
+                                                        <b style="margin-top:15px;">छत्रपती संभाजीनगर महानगरपालिका <br>Chhtrapati Sambhajinagar Municipal Corporation</b>
                                                     </h2>
                                                 </div>
     
@@ -163,7 +214,7 @@
                                                     </div>
                                                     <div class="col-12" style="display: flex; ">
                                                         <div class="col-6" style="width: 80%">
-                                                            <p style="font-size: 14px;">पावती क्र. <span><?= $TransNumber ?> </span> </p>
+                                                            <p style="font-size: 14px;">परवाना क्र. <span><?= $LicenseNumber ?> </span> </p>
                                                         </div>
                                                         <div class="col-6"  style="width: 20%">
                                                             <p style="font-size: 14px;">दिनांक: <span><?= $BillingDate ?> </span> </p>
@@ -175,7 +226,7 @@
                                                         <p style="font-size: 14px;"> 
                                                             <!-- छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span>< ?= $Shop_Cd ?></span>) यावर देय्य असलेली सन < ?= $FinYear ?> या आर्थिक वर्षात पुढील प्रमाणे कराची रक्कम अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे. -->
                                                             
-                                                            छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span><?= $Shop_Cd ?></span>) साठी <?= $LicenseStartDate ?> ते <?= $LicenseEndDate ?> या कालावधीत देय असलेली कराची रक्कम पुढील प्रमाणे अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे.
+                                                            छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. <b><span><?= $Shop_Cd ?></span></b> साठी <b><?= $LicenseStartDate ?></b></b> ते <b><?= $LicenseEndDate ?></b> या कालावधीत देय असलेली कराची रक्कम पुढील प्रमाणे अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे.
                                                         </p>
                                                     </div>
                                                 </div>
@@ -240,6 +291,67 @@ function acknowledgementPrinting() {
         '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
     );
     a.document.write('<style>');
+    a.document.write(`
+        body {
+            font-family: "Laila", serif !important;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .watermarked-container {
+            position: relative;
+        }
+
+        .watermarked-container::before {
+            content: "";
+            background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg'); /* Adjust path if needed */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 300px 300px;
+            opacity: 0.05;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #PrintApplicationTableID {
+            position: relative;
+            z-index: 1;
+        }
+
+        @page {
+            margin: 10mm;
+        }
+
+        @media print {
+            header { display: none; }
+            .logo { margin-left: 10px !important; }
+
+            .watermarked-container::before {
+                content: "";
+                background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 300px 300px;
+                opacity: 0.05;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    `);
     a.document.write('@media print {');
     a.document.write('  header { display: none; }');
     a.document.write(
