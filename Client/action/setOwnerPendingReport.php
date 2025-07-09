@@ -8,6 +8,11 @@ include "../../api/includes/DbOperation.php";
 
 function fetchData()
 {
+    session_start();
+    // echo "<pre>"; print_r($_SESSION);exit;
+
+    $electionName=$_SESSION['SAL_ElectionName'];
+    $developmentMode=$_SESSION['SAL_DevelopmentMode'];
     $db = new DbOperation();
 
     $draw = $_POST['draw'] ?? 1;
@@ -73,14 +78,14 @@ function fetchData()
                     COALESCE(CONVERT(VARCHAR, sb.LicenseStartDate, 105), '') AS LicenseStartDate, 
                     COALESCE(CONVERT(VARCHAR, sb.LicenseEndDate, 105), '') AS LicenseEndDate, 
                     COALESCE(CONVERT(VARCHAR, sb.BillingDate, 105), '') AS BillingDate,
-                    ISNULL(td.Amount, 0) AS Amount,
+                    ISNULL(sb.BillAmount, 0) AS Amount,
                     COALESCE(nm.Node_Cd, 0) AS Node_Cd,
                     COALESCE(nm.NodeName, '') AS NodeName 
-                FROM Aurangabad_ShopAndLicense..ShopBilling sb
-                INNER JOIN Aurangabad_ShopAndLicense..ShopMaster sm ON sm.Shop_Cd = sb.Shop_Cd 
-                LEFT JOIN Aurangabad_ShopAndLicense..TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
-				INNER JOIN Aurangabad_ShopAndLicense..NodeMaster nm ON nm.Ward_No = sm.Ward_No AND nm.IsActive = 1
-                WHERE  td.PaymentStatus <> 'SUCCESS'
+                FROM ShopBilling sb
+                INNER JOIN ShopMaster sm ON sm.Shop_Cd = sb.Shop_Cd 
+                INNER JOIN TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
+				INNER JOIN NodeMaster nm ON nm.Ward_No = sm.Ward_No AND nm.IsActive = 1
+                WHERE (td.PaymentStatus IS NULL OR td.PaymentStatus <> 'SUCCESS')
                 -- WHERE  (td.Billing_Cd IS NULL OR td.PaymentStatus <> 'SUCCESS')
                 $whereClause
                 ORDER BY sb.LicenseEndDate DESC
@@ -88,33 +93,34 @@ function fetchData()
     ";
     // echo $query;
     // exit;
-    $data = $db->getMultiRecordsAJAXDatatable($query);
+    // $data = $db->getMultiRecordsAJAXDatatable($query);
+    $data = $db->ExecutveQueryMultipleRowSALData($query, $electionName, $developmentMode);
     // print_r($data);
     if (isset($data['Shop_Cd'])) {
         $data = [$data]; // ensure array format
     }
     // Total count
-    $countAll = "SELECT COUNT(*) as total FROM Aurangabad_ShopAndLicense..ShopMaster WHERE IsActive = 1";
-    $resAll = $db->getSingleAJAXDatatable($countAll);
-    $recordsTotal = $resAll['total'] ?? 0;
+    // $countAll = "SELECT COUNT(*) as total FROM ShopMaster WHERE IsActive = 1";
+    // $resAll = $db->getSingleAJAXDatatable($countAll);
+    // $recordsTotal = $resAll['total'] ?? 0;
 
-    $countFiltered = "SELECT COUNT(*) as total 
-        FROM Aurangabad_ShopAndLicense..ShopBilling sb
-        INNER JOIN Aurangabad_ShopAndLicense..ShopMaster as sm ON sm.Shop_Cd = sb.Shop_Cd
-        LEFT JOIN Aurangabad_ShopAndLicense..TransactionDetails as td ON sb.Billing_Cd = td.Billing_Cd
-        INNER JOIN Aurangabad_ShopAndLicense..NodeMaster as nm ON sm.Ward_No = nm.Ward_No
-        WHERE  (td.Billing_Cd IS NULL OR td.PaymentStatus <> 'SUCCESS')
-         $whereClause";
+    // $countFiltered = "SELECT COUNT(*) as total 
+    //     FROM ShopBilling sb
+    //     INNER JOIN ShopMaster as sm ON sm.Shop_Cd = sb.Shop_Cd
+    //     LEFT JOIN TransactionDetails as td ON sb.Billing_Cd = td.Billing_Cd
+    //     INNER JOIN NodeMaster as nm ON sm.Ward_No = nm.Ward_No
+    //     WHERE  (td.Billing_Cd IS NULL OR td.PaymentStatus <> 'SUCCESS')
+    //      $whereClause";
 
     // echo $countFiltered;
 
-    $resFiltered = $db->getSingleAJAXDatatable($countFiltered);
-    $recordsFiltered = $resFiltered['total'] ?? 0;
+    // $resFiltered = $db->getSingleAJAXDatatable($countFiltered);
+    // $recordsFiltered = $resFiltered['total'] ?? 0;
 
     return [
         "draw" => intval($draw),
-        "recordsTotal" => $recordsFiltered,
-        "recordsFiltered" => $recordsFiltered,
+        "recordsTotal" => count($data),
+        "recordsFiltered" => count($data),
         "data" => $data
     ];
 }
