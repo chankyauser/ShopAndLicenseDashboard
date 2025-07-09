@@ -161,10 +161,10 @@
                                                         <p style="font-size: 16px; font-weight: 600;">व्यावसायिक अस्थापना दुकान परवाना </p>
                                                     </div>
                                                     <div class="col-12" style="display: flex; ">
-                                                        <div class="col-6" style="width: 50%">
+                                                        <div class="col-6" style="width: 80%">
                                                             <p style="font-size: 14px;">पावती क्र. <span><?= $TransNumber ?> </span> </p>
                                                         </div>
-                                                        <div class="col-6"  style="width: 50%">
+                                                        <div class="col-6"  style="width: 20%">
                                                             <p style="font-size: 14px;">दिनांक: <span><?= $BillingDate ?> </span> </p>
                                                         </div>
                                                     </div>
@@ -193,7 +193,7 @@
                                                                 <th style="font-size: 13px;">1</th>
                                                                 <th style="font-size: 13px;"><?= $ShopName?></th>
                                                                 <th style="font-size: 13px;"><?= $ShopOwnerName ?></th>
-                                                                <th style="font-size: 13px;"><?= $BillAmount?></th>
+                                                                <th style="font-size: 13px;"><?= $BillAmount ?></th>
                                                                 <th style="font-size: 13px;"><?= convertAmountToWords($BillAmount); ?></th>
                                                             </tr>
                                                         </thead>
