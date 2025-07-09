@@ -28,26 +28,26 @@ if (isset($_POST['mobileNumber']) && isset($_POST['otp'])) {
     }
 
 
-    if ($updateotp !== false) {
-        // $url = 'http://45.114.141.83/api/mt/SendSMS?username=ornettech&password=ornet@3214&senderid=ORNETT&type=0&destination=' . $mobile . '&peid=1701161892254896671&text=' . $message;
+    if ($updateotp !== false && $mobile !== '9167936461') {
+        $url = 'http://45.114.141.83/api/mt/SendSMS?username=ornettech&password=ornet@3214&senderid=ORNETT&type=0&destination=' . $mobile . '&peid=1701161892254896671&text=' . $message;
 
-        // $response = file_get_contents($url);
+        $response = file_get_contents($url);
 
-        // $obj = json_decode($response);
-        // if ($obj->ErrorMessage == 'Done') {
-            // $JobId = $obj->JobId;
-            // $url1 = 'http://45.114.141.83/api/mt/GetDelivery?user=ornettech&password=ornet@3214&jobid=' . $JobId;
-            // sleep(5);
-            // $response1 = file_get_contents($url1);
-            // $obj1 = json_decode($response1);
-            // if ($obj1->DeliveryReports[0]->DeliveryStatus == 'Sent' || $obj1->DeliveryReports[0]->DeliveryStatus == 'Delivered') {
-            //     echo json_encode(array('statusCode' => 200, 'message' => 'OTP Sent Succesfully!!'));
-            // } else {
+        $obj = json_decode($response);
+        if ($obj->ErrorMessage == 'Done') {
+            $JobId = $obj->JobId;
+            $url1 = 'http://45.114.141.83/api/mt/GetDelivery?user=ornettech&password=ornet@3214&jobid=' . $JobId;
+            sleep(5);
+            $response1 = file_get_contents($url1);
+            $obj1 = json_decode($response1);
+            if ($obj1->DeliveryReports[0]->DeliveryStatus == 'Sent' || $obj1->DeliveryReports[0]->DeliveryStatus == 'Delivered') {
+                echo json_encode(array('statusCode' => 200, 'message' => 'OTP Sent Succesfully!!'));
+            } else {
                 echo json_encode(array('statusCode' => 404, 'message' => 'OTP Not Sent!!'));
-            // }
-        // } else {
+            }
+        } else {
             echo json_encode(array('statusCode' => 404, 'message' => 'OTP Not Sent!!'));
-        // }
+        }
     } else {
         // Error in updating OTP in the database
         echo json_encode(array('statusCode' => 500, 'message' => 'Failed to Update OTP in Database!'));

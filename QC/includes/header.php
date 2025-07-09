@@ -3,7 +3,6 @@
     include '../api/includes/DbOperation.php';
   
     $qcTypeArray = array(array('QC_Title' => 'Shop Listing', 'QC_Type' =>'ShopList', 'QC_Flag' =>1), array('QC_Title' => 'Shop Survey', 'QC_Type' =>'ShopSurvey', 'QC_Flag' =>2), array('QC_Title' => 'Shop Board', 'QC_Type' =>'ShopBoard', 'QC_Flag' =>5), array('QC_Title' => 'Shop Document', 'QC_Type' =>'ShopDocument', 'QC_Flag' =>3), array('QC_Title' => 'Shop Calling', 'QC_Type' =>'ShopCalling', 'QC_Flag' =>4));
-        
 ?>
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -20,8 +19,10 @@
     <title> 
            <?php if(isset($_GET['p']) && $_GET['p'] == 'shop-license-defaulters-detail' ){ ?>  Shop & License | Defaulters List <?php }else{ ?>  Shop & License | QC Dashboard <?php }   ?>    
     </title>
-    <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico">
+    <!-- <link rel="apple-touch-icon" href="app-assets/images/ico/apple-icon-120.png">
+    <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico"> -->
+    <link rel="apple-touch-icon" href="<?php echo '../assets/imgs/' . ($_SESSION["SAL_ElectionName"]) . '_Logo.jpeg'; ?>">
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo '../assets/imgs/' . ($_SESSION["SAL_ElectionName"]) . '_Logo.jpeg'; ?>">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <!-- BEGIN: Vendor CSS-->

@@ -207,7 +207,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=All">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Shop-Visited.png" alt="" /> -->
@@ -240,8 +240,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                 </div>
 
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a
-                                        href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=PermissionDenied">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permission-Denied.png" alt="" /> -->
@@ -272,7 +271,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                     </a>
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=DocPending">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Document-Pending.png" alt="" /> -->
@@ -306,7 +305,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
 
 
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=DocReceived">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Document-Received.png" alt="" /> -->
@@ -339,7 +338,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                 </div>
 
                                 <div class="col-lg-3 col-md-2 col-sm-6 col-12">
-                                    <a href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=NonCooperative">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Non-Cooperative.png" alt="" /> -->
@@ -374,8 +373,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                             <div class="row">
                                 
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a
-                                        href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=PermanentlyClosed">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permanently-Closed.png" alt="" /> -->
@@ -409,8 +407,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
 
                                 <?php if($shopBillingCountData["LicenseRenewedShops"] != 0) { ?>
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a
-                                        href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=PermanentlyClosed">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permanently-Closed.png" alt="" /> -->
@@ -442,8 +439,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                     </a>
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a
-                                        href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=PermanentlyClosed">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permanently-Closed.png" alt="" /> -->
@@ -475,8 +471,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                     </a>
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a
-                                        href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=PermanentlyClosed">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permanently-Closed.png" alt="" /> -->
@@ -509,8 +504,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                 </div>
                                 <?php } ?>
                                 <div class="col-lg-3 col-md-2 col-sm-6 col-12">
-                                    <a
-                                        href="index.php?p=survey-shops&nodeName=All&nodeId=All&docStatus=PermissionDenied">
+                                    <a>
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permission-Denied.png" alt="" /> -->

@@ -5,8 +5,6 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
     date_default_timezone_set('Asia/Kolkata');
-
-    // include '../Client/setOwnerCollectionReport.php'; 
     include 'setShopSurveyDetailFilterData.php'; 
     include './datatbl/tblShopOwnerCollectionReport.php';
 ?>

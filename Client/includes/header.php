@@ -59,6 +59,12 @@
         $businessCatCd = $_SESSION['SAL_BusinessCat_Cd'];
     }
 
+    $db=new DbOperation();
+    $getCorporationNameQuery = "SELECT ISNULL(Description, '') as Description FROM Survey_Entry_Data..SALCorporationMaster WHERE ElectionName = '$electionName'";
+    $CorporationName = $db->ExecutveQuerySingleRowSALData($getCorporationNameQuery, $electionName, $developmentMode);
+    $_SESSION['SAL_Corporation_Name'] = $CorporationName['Description'];
+    
+
 
     $queryNode = "SELECT COUNT(DISTINCT(ShopMaster.Shop_Cd))  as ShopCount,
         ISNULL(NodeMaster.Node_Cd,0) as Node_Cd,
@@ -107,7 +113,8 @@
     <meta property="og:url" content="" />
     <meta property="og:image" content="" />
     <!-- <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/logo/logo.png" /> -->
-      <link rel="shortcut icon" type="image/x-icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" />
+    <link rel="shortcut icon" type="image/x-icon"
+        href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" />
     <link rel="stylesheet" href="assets/css/plugins/animate.min.css" />
 
     <link rel="stylesheet" type="text/css" href="assets/css/select/select2.min.css">
@@ -116,7 +123,7 @@
     <link rel="stylesheet" type="text/css" href="assets/css/tables/datatable/extensions/dataTables.checkboxes.css">
 
     <link rel="stylesheet" type="text/css" href="assets/css/forms/select/select2.min.css">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
     <link rel="stylesheet" type="text/css" href="assets/css/pickers/pickadate/pickadate.css">
     <link rel="stylesheet" href="assets/css/main.css?v=5.3" />
@@ -127,8 +134,8 @@
 </head>
 
 <body>
-    
-    
+
+
     <input type="hidden" name="electionName" value="<?php echo $electionName; ?>">
     <div class="search-style-2" style="display: none;">
         <?php 
@@ -164,43 +171,35 @@
             $dataNodeName = $db->ExecutveQueryMultipleRowSALData($dataNodeName, $electionName, $developmentMode);
             // print_r($dataNodeName);
         ?>
-<!-- onchange="setShopBusinessCategoriesWardFilter(1)" -->
-        <select class="select-active" id="node_id"  name="nodeCd"
-
-            <?php
+        <!-- onchange="setShopBusinessCategoriesWardFilter(1)" -->
+        <select class="select-active" id="node_id" name="nodeCd" <?php
                //if (isset($_SESSION['SAL_FullName']) && !empty($_SESSION['SAL_FullName']) && !isset($_GET['p'])) {
-            ?>
-                   
-            <?php
+            ?> <?php
                // }else
 
                 if (isset($_SESSION['SAL_FullName']) && !empty($_SESSION['SAL_FullName']) && isset($_GET['p'])  && ($_GET['p']=='survey-shops' || $_GET['p']=='shop-license' || $_GET['p']=='shop-tracking') ) {
-            ?>
-                   
-            <?php
+            ?> <?php
                }else{   
-            ?>
-                    
-            <?php
+            ?> <?php
                }
-            ?>
+            ?>>
 
-        >
-    
-        <option value="All">All Ward </option>
-        <?php 
+            <option value="All">All Ward </option>
+            <?php 
             foreach ($dataNode as $key => $valueNode) {
                 if($nodeCd==$valueNode["Node_Cd"]){
         ?>
-                    <option selected value="<?php echo $valueNode["Node_Cd"]; ?>"><?php echo "".$valueNode["Ward_No"]." - ".$valueNode["Area"]; ?></option>
-        <?php
+            <option selected value="<?php echo $valueNode["Node_Cd"]; ?>">
+                <?php echo "".$valueNode["Ward_No"]." - ".$valueNode["Area"]; ?></option>
+            <?php
                 }else{
          ?>
-                    <option value="<?php echo $valueNode["Node_Cd"]; ?>"><?php echo "".$valueNode["Ward_No"]." - ".$valueNode["Area"]; ?></option>
-        <?php            
+            <option value="<?php echo $valueNode["Node_Cd"]; ?>">
+                <?php echo "".$valueNode["Ward_No"]." - ".$valueNode["Area"]; ?></option>
+            <?php            
                 }
             }
-        ?>    
+        ?>
         </select>
     </div>
     <input type="hidden" id="business_cat_id" name="businessCatCd" value="<?php echo $businessCatCd; ?>">
@@ -210,7 +209,7 @@
         <div class="preloader d-flex align-items-center justify-content-center">
             <div class="preloader-inner position-relative">
                 <div class="text-center">
-                    <img src="assets/imgs/theme/load.gif" alt="" height="100" width="100"/>
+                    <img src="assets/imgs/theme/load.gif" alt="" height="100" width="100" />
                 </div>
             </div>
         </div>
@@ -258,25 +257,32 @@
         </div>
     </div> -->
     <!-- View Shop Detail -->
-    <div class="modal fade custom-modal" id="quickViewShopDetailModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal fade custom-modal" id="quickViewShopDetailModal" tabindex="-1"
+        aria-labelledby="quickViewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
             <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseId" style="display: none;"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalCloseId"
+                    style="display: none;"></button>
                 <div class="modal-header" id="modalHeaderId">
                     <h4 class="modal-title">Shop Details And Documents</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row" id="showQuickShopDetails">
-                        
+
                     </div>
                 </div>
                 <div class="modal-footer" id="modalFooterId">
                     <div class="row">
-                        
+
                         <div class="col-md-12 col-sm-12">
-                            <button type="button" class="btn-sm btn-success" id="verifyShopDetailId" <?php if($_SESSION['SAL_ElectionName']=='PCMC' && isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ){ ?> onclick="setVerifyAndApproveShopDetail()" <?php } ?>  style="display: none;" >Verify</button>
-                            <button type="button" class="btn-sm btn-danger" id="verifyShopDetailId" <?php if($_SESSION['SAL_ElectionName']=='PCMC' && isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ){ ?> onclick="setRejectShopDetail()" <?php } ?> style="display: none;"  >Reject</button>
+                            <button type="button" class="btn-sm btn-success" id="verifyShopDetailId"
+                                <?php if($_SESSION['SAL_ElectionName']=='PCMC' && isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ){ ?>
+                                onclick="setVerifyAndApproveShopDetail()" <?php } ?>
+                                style="display: none;">Verify</button>
+                            <button type="button" class="btn-sm btn-danger" id="verifyShopDetailId"
+                                <?php if($_SESSION['SAL_ElectionName']=='PCMC' && isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ){ ?>
+                                onclick="setRejectShopDetail()" <?php } ?> style="display: none;">Reject</button>
                         </div>
                     </div>
                 </div>
@@ -284,21 +290,25 @@
         </div>
     </div>
 
-    <div class="modal fade custom-modal" id="payShopLicenseFeeModal" tabindex="-1" aria-labelledby="payShopLicenseFeeModalLabel" aria-hidden="true">
+    <div class="modal fade custom-modal" id="payShopLicenseFeeModal" tabindex="-1"
+        aria-labelledby="payShopLicenseFeeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" role="document">
             <div class="modal-content">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalPaymentCloseId" style="display: none;"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    id="modalPaymentCloseId" style="display: none;"></button>
                 <div class="modal-header" id="modalPaymentHeaderId">
                     <h4 class="modal-title">License Fee</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row" id="showShopLicenseFeeDetails">
-                        
+
                     </div>
                 </div>
                 <div class="modal-footer" id="modalPaymentFooterId">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="payShopLicenseFeeBtnId" <?php if($_SESSION['SAL_ElectionName']=='PCMC' && isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ){ ?> onclick="setPayShopLicenseFeeDetail()" <?php } ?> style="display: none;">Pay Now</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="payShopLicenseFeeBtnId"
+                        <?php if($_SESSION['SAL_ElectionName']=='PCMC' && isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ){ ?>
+                        onclick="setPayShopLicenseFeeDetail()" <?php } ?> style="display: none;">Pay Now</button>
                 </div>
             </div>
         </div>
@@ -309,11 +319,12 @@
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1">
                         <a href="index.php">
-                              <div class="logo d-none d-lg-flex" style="width: max-content">
-                                    <!-- <img src="assets/imgs/theme/logo.png" height="50" alt="logo" /> -->
-                                    <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50" alt="logo" />
-                                    <p> <?= trim($_SESSION["SAL_ElectionName"]) ?><br> Bazaar Trace</p>
-                              </div>
+                            <div class="logo d-none d-lg-flex" style="width: max-content">
+                                <!-- <img src="assets/imgs/theme/logo.png" height="50" alt="logo" /> -->
+                                <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50"
+                                    alt="logo" />
+                                <p> <?= trim($_SESSION["SAL_ElectionName"]) ?><br> Bazaar Trace</p>
+                            </div>
                         </a>
                     </div>
                     <div class="header-nav d-none d-lg-flex">
@@ -324,7 +335,9 @@
                                         <a href="../"><i class="fa-solid fa-house"></i> Home </a>
                                     </li>
                                     <li>
-                                        <a <?php if  ((!isset($_GET['p'])) || $_GET['p'] == 'home-dashboard') { ?> class="active" <?php } ?> href="home.php"><i class="fa-solid fa-chart-line"></i> Dashboard </a>
+                                        <a <?php if  ((!isset($_GET['p'])) || $_GET['p'] == 'home-dashboard') { ?>
+                                            class="active" <?php } ?> href="home.php"><i
+                                                class="fa-solid fa-chart-line"></i> Dashboard </a>
                                     </li>
                                     <li>
                                         <a <?php if
@@ -335,16 +348,24 @@
                                             (isset($_GET['p']) && $_GET['p'] == 'shop-survey-summary') ||
                                             (isset($_GET['p']) && $_GET['p'] == 'survey-shops')
 
-                                        ){ ?>   class="active"  <?php } ?> href="#"><i class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
+                                        ){ ?> class="active" <?php } ?> href="#"><i
+                                                class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
                                         <ul class="sub-menu">
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-survey-summary') ){ ?> class="active" <?php }  ?> href="index.php?p=shop-survey-summary"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-map') ){ ?> class="active" <?php }  ?> href="index.php?p=survey-map"><i class="fa-solid fa-location-dot"></i> &nbsp; GIS Map</a></li>
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-shops') ){ ?> class="active" <?php }  ?> href="index.php?p=survey-shops"> <i class="fa-solid fa-file-circle-check"></i> &nbsp; Survey Details</a></li>
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-survey-summary') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=shop-survey-summary">
+                                                    <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-map') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=survey-map"><i
+                                                        class="fa-solid fa-location-dot"></i> &nbsp; GIS Map</a></li>
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-shops') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=survey-shops"> <i
+                                                        class="fa-solid fa-file-circle-check"></i> &nbsp; Survey
+                                                    Details</a></li>
                                             <!-- <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-grid') ){ ?> class="active" <?php }  ?> href="index.php?p=survey-grid">Survey Grid</a></li>
                                             <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-list') ){ ?> class="active" <?php }  ?> href="index.php?p=survey-list">Survey List</a></li> -->
                                         </ul>
                                     </li>
-                                   
+
 
                                     <!-- <li>
                                         <a <?php if
@@ -361,46 +382,59 @@
                                         </ul>
                                     </li> -->
                                     <li>
-                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-license' || $_GET['p']== 'shop-license-summary') ) { ?>   class="active"  <?php } ?>
-                                        href="#"><i class="fa-solid fa-id-card"></i> Shop License 
+                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-license' || $_GET['p']== 'shop-license-summary') ) { ?>
+                                            class="active" <?php } ?> href="#"><i class="fa-solid fa-id-card"></i> Shop
+                                            License
                                         </a>
                                         <ul class="sub-menu">
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license-summary') ){ ?> class="active" <?php }  ?> href="index.php?p=shop-license-summary"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license') ){ ?> class="active" <?php }  ?> href="index.php?p=shop-license"> <i class="fa-solid fa-id-card"></i> &nbsp; License Details</a></li>
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license-summary') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=shop-license-summary">
+                                                    <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=shop-license"> <i
+                                                        class="fa-solid fa-id-card"></i> &nbsp; License Details</a></li>
                                         </ul>
                                     </li>
                                     <li>
-                                        <a <?php if (isset($_GET['p']) && $_GET['p'] == 'shop-tracking') { ?> class="active" <?php } ?>
-                                        href="index.php?p=shop-tracking"> <i class="fa-solid fa-clock"></i> Shop Tracking </a>
+                                        <a <?php if (isset($_GET['p']) && $_GET['p'] == 'shop-tracking') { ?>
+                                            class="active" <?php } ?> href="index.php?p=shop-tracking"> <i
+                                                class="fa-solid fa-clock"></i> Shop Tracking </a>
                                     </li>
 
-                                  <li>
-                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'Billing-reports' || $_GET['p']== 'collection-report' || $_GET['p'] == 'pending-report') ){ ?> class="active" <?php } ?>
-                                        href="index.php?p=Billing-reports"><img src="./assets/imgs/logo/rupee.png" style="width:20px; height:20px; object-fit:contain"> Revenue Dashboard</a>
-                                        <ul class="sub-menu">
-                                        <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'collection-report') ){ ?> class="active" <?php }  ?> href="index.php?p=collection-report"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Collection Report</a></li>
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'pending-report') ){ ?> class="active" <?php }  ?> href="index.php?p=pending-report"> <i class="fa-solid fa-filter-circle-dollar"></i> &nbsp; Pending Report</a></li>
-                                            
-                                        </ul>
-                                    </li>
                                     <li>
-                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-revenue-summary' || $_GET['p']== 'shop-license-defaulters' ) ){ ?> class="active" <?php } ?>
-                                        href="#"><i class="fa-solid fa-indian-rupee-sign"></i> Revenue Statistics </a>
+                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'Billing-reports' || $_GET['p']== 'collection-report' || $_GET['p'] == 'pending-report') ){ ?>
+                                            class="active" <?php } ?> href="index.php?p=Billing-reports"><i
+                                                class="fa-solid fa-indian-rupee-sign"></i> Revenue Dashboard</a>
                                         <ul class="sub-menu">
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-revenue-summary') ){ ?> class="active" <?php }  ?> href="index.php?p=shop-revenue-summary"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
-                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license-defaulters') ){ ?> class="active" <?php }  ?> href="index.php?p=shop-license-defaulters"> <i class="fa-solid fa-filter-circle-dollar"></i> &nbsp; License Defaulters</a></li>
-                                            
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'collection-report') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=collection-report"> <i
+                                                        class="fa-solid fa-chart-pie"></i> &nbsp; Collection Report</a>
+                                            </li>
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'pending-report') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=pending-report"> <i
+                                                        class="fa-solid fa-filter-circle-dollar"></i> &nbsp; Pending
+                                                    Report</a></li>
+
                                         </ul>
                                     </li>
                                     <!-- <li>
-                                        <a <?php if (isset($_GET['p']) && $_GET['p'] == 'all-report') { ?> class="active" <?php } ?>
+                                        <a < ?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-revenue-summary' || $_GET['p']== 'shop-license-defaulters' ) ){ ?> class="active" < ?php } ?>
+                                        href="#"><i class="fa-solid fa-indian-rupee-sign"></i> Revenue Statistics </a>
+                                        <ul class="sub-menu">
+                                            <li><a < ?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-revenue-summary') ){ ?> class="active" < ?php }  ?> href="index.php?p=shop-revenue-summary"> <i class="fa-solid fa-chart-pie"></i> &nbsp; Summary</a></li>
+                                            <li><a < ?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license-defaulters') ){ ?> class="active" < ?php }  ?> href="index.php?p=shop-license-defaulters"> <i class="fa-solid fa-filter-circle-dollar"></i> &nbsp; License Defaulters</a></li>
+                                            
+                                        </ul>
+                                    </li> -->
+                                    <!-- <li>
+                                        <a < ?php if (isset($_GET['p']) && $_GET['p'] == 'all-report') { ?> class="active" < ?php } ?>
                                         href="index.php?p=all-report"><i class="fa-solid fa-file-pdf"></i> Reports  -->
-                                        
 
-                                        <!-- <a href="https://datastudio.google.com/reporting/42f90ce4-bcee-46a4-8029-39720d624736/page/39C5C" target="_blank"><i class="fa-solid fa-file-pdf"></i> Reports -->
 
-                                         <!-- <a href="index.php?p=all-report" target="_blank">Reports<i class="fi-rs-angle-down"></i></a> -->
-                                        <!-- <ul class="sub-menu">
+                                    <!-- <a href="https://datastudio.google.com/reporting/42f90ce4-bcee-46a4-8029-39720d624736/page/39C5C" target="_blank"><i class="fa-solid fa-file-pdf"></i> Reports -->
+
+                                    <!-- <a href="index.php?p=all-report" target="_blank">Reports<i class="fi-rs-angle-down"></i></a> -->
+                                    <!-- <ul class="sub-menu">
                                             <li><a href="https://datastudio.google.com/embed/reporting/a68c38a2-8234-4e57-a7c9-00e3271c4c4b/page/yQ64C" target="_blank">Survey Report</a></li>
                                             <li><a href="https://datastudio.google.com/embed/reporting/2c8793f8-483e-4ffc-a9a6-a3c24963c02b/page/RB84C" target="_blank">Revenue Report</a></li>
                                         </ul> -->
@@ -411,53 +445,56 @@
                         </div>
                     </div>
 
-                            <div class="header-action-right">
-                                <div class="header-action-2">
-                                    <div class="header-action-icon-2">
-                                          <div class="hotline d-none d-lg-flex">
-                                                <img src="assets/imgs/theme/icons/icon-user.svg" alt="hotline" />
-                                                <p style="font-size:18px;">
-                                                    <?php 
+                    <div class="header-action-right">
+                        <div class="header-action-2">
+                            <div class="header-action-icon-2">
+                                <div class="hotline d-none d-lg-flex">
+                                    <img src="assets/imgs/theme/icons/icon-user.svg" alt="hotline" />
+                                    <p style="font-size:18px;">
+                                        <?php 
                                                         if (!isset($_SESSION['SAL_FullName'])) {
                                                     ?>
-                                                        Log In
-                                                    <span>User </span>
-                                                    <?php        
+                                        Log In
+                                        <span>User </span>
+                                        <?php        
                                                         }else{
                                                     ?>
-                                                    <?php echo $_SESSION['SAL_FullName']; ?>
-                                                    <span><?php echo $_SESSION['SAL_UserType']; ?></span>
-                                                    <?php
+                                        <?php echo $_SESSION['SAL_FullName']; ?>
+                                        <span><?php echo $_SESSION['SAL_UserType']; ?></span>
+                                        <?php
                                                         }
                                                     ?>
-                                                </p>
-                                          </div>
-                                          <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
-                                              <ul>
-												<?php 
+                                    </p>
+                                </div>
+                                <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                                    <ul>
+                                        <?php 
 													if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && $_SESSION['SAL_UserType']== 'Admin' ) {
 												?>
-														<li>
-															<a href="../admin/index.php" ><i class="fi fi-rs-home mr-10"></i> Admin Dashboard</a>
-														</li>
-														<li>
-															<a href="../qc/index.php" ><i class="fi fi-rs-home mr-10"></i> QC Dashboard</a>
-														</li>
-														<li>
-															<a href="../index.php?p=home-dashboard" ><i class="fi fi-rs-home mr-10"></i> Ward Officer Dashboard</a>
-														</li>
-												<?php    
+                                        <li>
+                                            <a href="../admin/index.php"><i class="fi fi-rs-home mr-10"></i> Admin
+                                                Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="../qc/index.php"><i class="fi fi-rs-home mr-10"></i> QC
+                                                Dashboard</a>
+                                        </li>
+                                        <li>
+                                            <a href="../index.php?p=home-dashboard"><i class="fi fi-rs-home mr-10"></i>
+                                                Ward Officer Dashboard</a>
+                                        </li>
+                                        <?php    
 													}
 												?>
-                                                  <li>
-                                                      <a href="logout.php"><i class="fi fi-rs-sign-out mr-10"></i>Sign out</a>
-                                                  </li>
-                                              </ul>
-                                          </div>
-                                    </div>
+                                        <li>
+                                            <a href="logout.php"><i class="fi fi-rs-sign-out mr-10"></i>Sign out</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                    
+                        </div>
+                    </div>
+
                     <div class="header-action-icon-2 d-block d-lg-none">
                         <div class="burger-icon burger-icon-white">
                             <span class="burger-icon-top"></span>
@@ -483,7 +520,8 @@
                                     <ul>
                                         <li>
                                             <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Nest" src="assets/imgs/shop/thumbnail-3.jpg" /></a>
+                                                <a href="shop-product-right.html"><img alt="Nest"
+                                                        src="assets/imgs/shop/thumbnail-3.jpg" /></a>
                                             </div>
                                             <div class="shopping-cart-title">
                                                 <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
@@ -495,7 +533,8 @@
                                         </li>
                                         <li>
                                             <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Nest" src="assets/imgs/shop/thumbnail-4.jpg" /></a>
+                                                <a href="shop-product-right.html"><img alt="Nest"
+                                                        src="assets/imgs/shop/thumbnail-4.jpg" /></a>
                                             </div>
                                             <div class="shopping-cart-title">
                                                 <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>

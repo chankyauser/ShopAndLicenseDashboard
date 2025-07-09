@@ -5,8 +5,6 @@
     error_reporting(E_ALL);
     date_default_timezone_set('Asia/Kolkata');
 
-    // include 'api/includes/DbOperation.php';
-
     if(isset($_SESSION['SAL_UserName']) && !empty($_SESSION['SAL_UserName'])){
         $userName=$_SESSION['SAL_UserName'];
     }
@@ -68,15 +66,14 @@
     $dataNodeName = "SELECT COUNT(DISTINCT(ShopMaster.Shop_Cd))  as ShopCount,
         ISNULL(NodeMaster.NodeName,'') as NodeName,
         ISNULL(NodeMaster.NodeNameMar,'') as NodeNameMar
-        FROM Aurangabad_ShopAndLicense..NodeMaster 
-        INNER JOIN Aurangabad_ShopAndLicense..PocketMaster on PocketMaster.Node_Cd = NodeMaster.Node_Cd 
-        INNER JOIN Aurangabad_ShopAndLicense..ShopMaster on ( ShopMaster.Pocket_Cd = PocketMaster.Pocket_Cd AND ShopMaster.IsActive = 1  AND ShopMaster.AddedDate IS NOT NULL )
+        FROM NodeMaster 
+        INNER JOIN PocketMaster on PocketMaster.Node_Cd = NodeMaster.Node_Cd 
+        INNER JOIN ShopMaster on ( ShopMaster.Pocket_Cd = PocketMaster.Pocket_Cd AND ShopMaster.IsActive = 1  AND ShopMaster.AddedDate IS NOT NULL )
         WHERE NodeMaster.IsActive = 1 
         GROUP BY NodeMaster.NodeName, NodeMaster.NodeNameMar
         ORDER BY NodeMaster.NodeName";
     $db=new DbOperation();
     $dataNodeName = $db->ExecutveQueryMultipleRowSALData($dataNodeName, $electionName, $developmentMode);
-    print_r($dataNodeName); exit;
 
     $queryNode = "SELECT COUNT(DISTINCT(ShopMaster.Shop_Cd))  as ShopCount,
             ISNULL(NodeMaster.Node_Cd,0) as Node_Cd,
@@ -86,9 +83,9 @@
             ISNULL(NodeMaster.Ward_No,0) as Ward_No,
             ISNULL(NodeMaster.Address,'') as Address,
             ISNULL(NodeMaster.Area,'') as Area
-            FROM Aurangabad_ShopAndLicense..NodeMaster 
-            INNER JOIN Aurangabad_ShopAndLicense..PocketMaster on PocketMaster.Node_Cd = NodeMaster.Node_Cd 
-            INNER JOIN Aurangabad_ShopAndLicense..ShopMaster on ( ShopMaster.Pocket_Cd = PocketMaster.Pocket_Cd AND ShopMaster.IsActive = 1  AND ShopMaster.AddedDate IS NOT NULL )
+            FROM NodeMaster 
+            INNER JOIN PocketMaster on PocketMaster.Node_Cd = NodeMaster.Node_Cd 
+            INNER JOIN ShopMaster on ( ShopMaster.Pocket_Cd = PocketMaster.Pocket_Cd AND ShopMaster.IsActive = 1  AND ShopMaster.AddedDate IS NOT NULL )
             WHERE NodeMaster.IsActive = 1 
             $nodeNameCondition
             GROUP BY NodeMaster.Node_Cd, NodeMaster.NodeName,

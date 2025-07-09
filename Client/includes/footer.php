@@ -75,7 +75,10 @@
                 <div class="footer-bottom"></div>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6">
-                <p class="font-sm mb-0">&copy; <?php echo date('Y'); ?> <strong class="text-brand"><?php echo $_SESSION['SAL_ElectionName']; ?>.</strong> | Buddi Lane, Naralibag, Aurangabad, Maharashtra - 431001.</p>
+                <!-- <p class="font-sm mb-0">&copy; < ?php echo date('Y'); ?> <strong class="text-brand">< ?php echo $_SESSION['SAL_ElectionName']; ?>.</strong> | Buddi Lane, Naralibag, Aurangabad, Maharashtra - 431001.</p> -->
+
+                <p class="font-sm mb-0">&copy; <?php echo date('Y'); ?> <strong
+                        class="text-brand"><?php echo $_SESSION['SAL_ElectionName']; ?></strong> | <?php echo $_SESSION['SAL_Corporation_Name']; ?></p>
         
             </div>
 

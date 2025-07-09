@@ -27,7 +27,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="app-assets/images/ico/favicon.ico"> -->
     <link rel="apple-touch-icon" href="<?php echo '../assets/imgs/' . ($_SESSION["SAL_ElectionName"]) . '_Logo.jpeg'; ?>">
     <link rel="shortcut icon" type="image/x-icon" href="<?php echo '../assets/imgs/' . ($_SESSION["SAL_ElectionName"]) . '_Logo.jpeg'; ?>">
-    
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <!-- BEGIN: Vendor CSS-->
@@ -502,9 +502,10 @@
     <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mr-auto"><a class="navbar-brand" href="home.php">
-                        <div class="brand-logo"></div>
-                        <h2 class="brand-text mb-0">Bazaar Trace</h2>
+                <li class="nav-item mr-auto">
+                    <a class="navbar-brand" href="home.php"  style="margin:unset">
+                        <div class="brand-logo" style="background: url('<?php echo '../assets/imgs/' . ($_SESSION["SAL_ElectionName"]) . '_Logo.jpeg'; ?>') no-repeat center center; background-size: contain; width: 60px; height: 60px;"></div>
+                        <h2 class="brand-text mb-2 mt-2" style="font-size: 16px !important"> <?= trim($_SESSION["SAL_ElectionName"]) ?> <br> Bazaar Trace</h2>
                     </a></li>
                 <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="feather icon-x d-block d-xl-none font-medium-4 primary toggle-icon"></i><i class="toggle-icon feather icon-disc font-medium-4 d-none d-xl-block collapse-toggle-icon primary" data-ticon="icon-disc"></i></a></li>
             </ul>
