@@ -465,6 +465,12 @@ function acknowledgementPrinting() {
                 print-color-adjust: exact !important;
             }
         }
+
+        td:first-child .info::before {
+            content: "• ";
+            margin-right: 5px;
+            color: black;
+        }
     `);
     a.document.write('@media print {');
     a.document.write('  header { display: none; }');
