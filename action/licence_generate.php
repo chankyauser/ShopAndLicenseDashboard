@@ -83,6 +83,9 @@
     $TransNumber = $BillingData['TransNumber'];
     $Shop_Cd = $BillingData['Shop_Cd'];
     $LicenseNumber = $BillingData['LicenseNumber'];
+    $ZoneName = $BillingData['ZoneName'];
+    $Ward_No = $BillingData['Ward_No'];
+    $ShopAddress = $BillingData['ShopAddress'];
 
     // $Total =  $Total_Pay  - $past_dues;
     list($startYear, $shortYear) = explode('-', $FinYear);
@@ -90,9 +93,10 @@
     $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
     
 ?>
+
 <head>
-    <title> Bazaar Trace | <?= trim($_SESSION['SAL_ElectionName'])?>  </title>
-     <link rel="shortcut icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg">
+    <title> Bazaar Trace | <?= trim($_SESSION['SAL_ElectionName'])?> </title>
+    <link rel="shortcut icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg">
     <link rel="icon" href="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" type="image/x-icon">
 </head>
 
@@ -126,38 +130,16 @@
 }
 
 .watermarked-container {
-  position: relative;
+    position: relative;
 }
 
 .watermarked-container::before {
-  content: "";
-  background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 300px 300px; /* adjust size as needed */
-  opacity: 0.05;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-#PrintApplicationTableID {
-  position: relative;
-  z-index: 1;
-}
-
-/* ✅ Ensure watermark shows when printing */
-@media print {
-  .watermarked-container::before {
     content: "";
     background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: 300px 300px;
+    /* adjust size as needed */
     opacity: 0.05;
     position: absolute;
     top: 0;
@@ -165,14 +147,59 @@
     width: 100%;
     height: 100%;
     z-index: 0;
-  }
+    pointer-events: none;
+}
 
-  body, html {
-    height: auto !important;
-    overflow: visible !important;
-    -webkit-print-color-adjust: exact !important; /* Chrome/Safari */
-    print-color-adjust: exact !important;
-  }
+#PrintApplicationTableID {
+    position: relative;
+    z-index: 1;
+}
+
+/* ✅ Ensure watermark shows when printing */
+@media print {
+    .watermarked-container::before {
+        content: "";
+        background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 300px 300px;
+        opacity: 0.05;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    body,
+    html {
+        height: auto !important;
+        overflow: visible !important;
+        -webkit-print-color-adjust: exact !important;
+        /* Chrome/Safari */
+        print-color-adjust: exact !important;
+    }
+}
+
+td .info {
+    margin: 4px !important;
+}
+
+th .sub-heading {
+    padding: 5px !important;
+    background: #9e9e9e2b !important;
+    font-size: 18px;
+}
+
+td .info-data {
+    width: 300px;
+}
+
+td:first-child .info::before {
+    content: "• ";
+    margin-right: 5px;
+    color: black;
 }
 </style>
 
@@ -191,17 +218,21 @@
                                         <div id="PrintApplicationTableID" class="watermarked-container">
                                             <div class="row" style="position: relative; font-family: serif;">
                                                 <div style="width:20%">
-                                                    <div class="logo d-none d-flex" style="position: absolute; top: 0px; left: 0px; display: flex">
-                                                            <!-- <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
-                                                            <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px;"/>
+                                                    <div class="logo d-none d-flex"
+                                                        style="position: absolute; top: 0px; left: 0px; display: flex">
+                                                        <!-- <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
+                                                        <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg"
+                                                            alt="logo" style="height: 80px;" />
                                                     </div>
                                                 </div>
                                                 <div style="width: 100%;text-align: center;">
-                                                    <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
-                                                        <b style="margin-top:15px;">छत्रपती संभाजीनगर महानगरपालिका <br>Chhatrapati Sambhajinagar Municipal Corporation</b>
+                                                    <h2
+                                                        style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
+                                                        <b style="margin-top:15px;">छत्रपती संभाजीनगर महानगरपालिका
+                                                            <br>Chhatrapati Sambhajinagar Municipal Corporation</b>
                                                     </h2>
                                                 </div>
-    
+
                                                 <!-- <h4 style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 15px;">
                                                     <b style=""> post box number - 125, Town Hall, Chha. Sambhajinagar – 431009
                                                     </b>
@@ -211,23 +242,35 @@
                                             <div class="row" style="padding: 10px 40px; margin-bottom: 40px;">
                                                 <div class="row">
                                                     <div class="col-12" style="display: flex;justify-content: center;">
-                                                        <p style="font-size: 16px; font-weight: 600;">व्यावसायिक अस्थापना दुकान परवाना </p>
+                                                        <p style="font-size: 16px; font-weight: 600;">व्यावसायिक
+                                                            अस्थापना दुकान परवाना </p>
                                                     </div>
                                                     <div class="col-12" style="display: flex; ">
                                                         <div class="col-6" style="width: 80%">
-                                                            <p style="font-size: 14px;">परवाना क्र. <span><?= $LicenseNumber ?> </span> </p>
+                                                            <p style="font-size: 14px;">परवाना क्र.
+                                                                <span><?= $LicenseNumber ?> </span>
+                                                            </p>
                                                         </div>
-                                                        <div class="col-6"  style="width: 20%">
-                                                            <p style="font-size: 14px;">दिनांक: <span><?= $BillingDate ?> </span> </p>
+                                                        <div class="col-6" style="width: 20%">
+                                                            <p style="font-size: 14px;">दिनांक:
+                                                                <span><?= $BillingDate ?> </span>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="margin-bottom: 50px;">
                                                     <div class="col-12">
-                                                        <p style="font-size: 14px;"> 
+                                                        <p style="font-size: 14px;">
                                                             <!-- छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span>< ?= $Shop_Cd ?></span>) यावर देय्य असलेली सन < ?= $FinYear ?> या आर्थिक वर्षात पुढील प्रमाणे कराची रक्कम अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे. -->
-                                                            
-                                                            महाराष्ट्र महानगरपालिका अधिनियम 1949 चे कलम 376, 383, 386 अन्वये छत्रपती संभाजीनगर महानगरपालिका कार्यक्षेत्रातील दुकाने, कारखाने  इ. व्यापारी आस्थापनांनी आपले व्यवसाय करणेकारीता महानगरपालिकेचा परवाना दुकान क्र. <b><span><?= $Shop_Cd ?></span></b> साठी <b><?= $LicenseStartDate ?></b></b> ते <b><?= $LicenseEndDate ?></b> या कालावधी करिता अदा करण्यात येत आहे.
+
+                                                            महाराष्ट्र महानगरपालिका अधिनियम 1949 चे कलम 376, 383, 386
+                                                            अन्वये छत्रपती संभाजीनगर महानगरपालिका कार्यक्षेत्रातील
+                                                            दुकाने, कारखाने इ. व्यापारी आस्थापनांनी आपले व्यवसाय
+                                                            करणेकरीता महानगरपालिकेचा परवाना दुकान क्र.
+                                                            <b><span><?= $Shop_Cd ?></span></b> साठी
+                                                            <b><?= $LicenseStartDate ?></b></b> ते
+                                                            <b><?= $LicenseEndDate ?></b> या कालावधी करिता अदा करण्यात
+                                                            येत आहे.
                                                         </p>
                                                     </div>
                                                 </div>
@@ -238,41 +281,104 @@
                                                     <div style="width:50%">
 
                                                     </div>
-                                                    
-                                                    <table class="table table-responsive-sm" border="1"
-                                                        style="border-collapse: collapse;width:100%; font-family: serif;">
-                                                        <thead>
-                                                           <tr>
-                                                                <th style="width: 11%; font-size: 13px;"> क्र. </th>
-                                                                <th style="font-size: 13px;"> दुकानाचे नाव  </th>
-                                                                <th style="font-size: 13px;"> दुकानदाराचे नाव  </th>
-                                                                <th style="font-size: 13px;"> रक्कम </th>
-                                                                <th style="font-size: 13px;"> रक्कम अक्षरी  </th>
+
+                                                    <table class="table table-responsive-sm"
+                                                        style="border-collapse: collapse; font-family: serif;">
+                                                        <tbody>
+                                                            <tr>
+
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info" style="font-size: 14px"> दुकानाचे
+                                                                        नाव </div>
+                                                                </td>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        : <?= $ShopName ?></div>
+                                                                </td>
                                                             </tr>
                                                             <tr>
-                                                                <th style="font-size: 13px;">1</th>
-                                                                <th style="font-size: 13px;"><?= $ShopName?></th>
-                                                                <th style="font-size: 13px;"><?= $ShopOwnerName ?></th>
-                                                                <th style="font-size: 13px;"><?= $BillAmount ?></th>
-                                                                <th style="font-size: 13px;"><?= convertAmountToWords($BillAmount); ?></th>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info" style="font-size: 14px">
+                                                                        दुकानदाराचे नाव </div>
+                                                                </td>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        : <?= $ShopOwnerName ?></div>
+                                                                </td>
                                                             </tr>
-                                                        </thead>
+                                                            <tr>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info" style="font-size: 14px"> दुकानाचा
+                                                                        पत्ता </div>
+                                                                </td>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        : <?= $ShopAddress ?></div>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info" style="font-size: 14px"> झोन
+                                                                    </div>
+                                                                </td>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        : <?= $ZoneName ?></div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info" style="font-size: 14px"> वॉर्ड
+                                                                    </div>
+                                                                </td>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        : <?= $Ward_No ?></div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info" style="font-size: 14px"> परवाना फी
+                                                                    </div>
+                                                                </td>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        : <?= $BillAmount ?></div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info" style="font-size: 14px"> परवाना फी
+                                                                        अक्षरी </div>
+                                                                </td>
+                                                                <td style="font-size: 13px;">
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        : <?= convertAmountToWords($BillAmount) ?></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
                                                     </table>
                                                 </div>
                                                 <div class="row">
-                                                    <p style="font-size: 14px;">उपरोक्त व्यावसायिक अस्थापना परवाना पुढील एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना नुतनिकरण करणे अपेक्षित आहे. </p>
+                                                    <p style="font-size: 14px;">उपरोक्त व्यावसायिक अस्थापना परवाना पुढील
+                                                        एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना नुतनिकरण
+                                                        करणे अपेक्षित आहे. </p>
                                                 </div>
-                                                <div class="row" style="display: flex ; justify-content: flex-end; margin-bottom: 50px;">
-                                                    <div style="display: flex ; flex-direction: column; align-content: center; align-items: center;">
+                                                <div class="row"
+                                                    style="display: flex ; justify-content: flex-end; margin-bottom: 50px;">
+                                                    <div
+                                                        style="display: flex ; flex-direction: column; align-content: center; align-items: center;">
                                                         <p style="font-size: 14px;">उपायुक्त </p>
                                                         <p style="font-size: 14px;">छत्रपती संभाजीनगर महानगरपलिका</p>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="display: flex; gap: 10px;">
-                                                    <p style="font-size: 14px;">टीप :- 
+                                                    <p style="font-size: 14px;">टीप :-
                                                     </p>
                                                     <p style="font-size: 14px;">
-                                                        १. हा परवाना सिस्टीम जनरेटेड आहे आणि त्यासाठी स्वाक्षरीची आवश्यकता नाही.<br>
+                                                        १. हा परवाना सिस्टीम जनरेटेड आहे आणि त्यासाठी स्वाक्षरीची
+                                                        आवश्यकता नाही.<br>
                                                         २. सदरील परवाना मालमत्ता मालकीचा पुरावा नाही.
                                                     </p>
                                                 </div>
