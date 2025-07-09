@@ -8,10 +8,8 @@
         header("Access-Control-Allow-Headers: Content-Type");
       
             $date = date('D M d H:i:s') . ' IST ' . date('Y');
-            $returnUrl = 'https://csmcshoplicenses.com/PHP-GetEPay/PG/response.php';  
-            // $returnUrl="http://localhost/ShopLicense/PHP-GetEPay/PG/response.php";
-            // $returnUrl = "";
-
+            $returnUrl = 'https://csmcshoplicenses.com/PHP-GetEPay/PG/response.php';
+            
             // $data = $_POST['data'];
             // $amount = $_POST['Amount'];
             // $ShopKeeperMobile = $_POST['MobileNo'];
@@ -19,20 +17,19 @@
             // $ShopKeeperName = $_POST['Name'];
             // $TransId = $_POST['TransID'];
 
+            // "merchantTransactionId"=> str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
+            // "transactionDate"=>"Mon Oct 03 13:54:33 IST 2022",
+
             $request=array(
                 // "mid"=>"108",
+                // Live
                 "mid"=>"1325212",
-                // "amount"=>"1.00",
                 "amount"=> "$amount",
-                // "merchantTransactionId"=> str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
                 "merchantTransactionId"=>$TransId,
-                // "transactionDate"=>"Mon Oct 03 13:54:33 IST 2022",
                 "transactionDate"=>"$date",
                 // "terminalId"=>"Getepay.merchant61062@icici",
+                // Live
                 "terminalId"=>"getepay.merchant689865@icici",
-                // "udf1"=>"9929002615",
-                // "udf2"=>"patanjali.yogi@ornettech.com",
-                // "udf3"=>"Patanjali Yogi",
                 "udf1" => "$ShopKeeperMobile",
                 "udf2"=>"$ShopEmailAddress",
                 "udf3"=>"$ShopKeeperName",
@@ -52,6 +49,7 @@
                 "productType"=>"IPG",
                 "txnNote"=>"",
                 // "vpa"=>"Getepay.merchant61062@icici"
+                // Live
                 "vpa"=>"getepay.merchant689865@icici"
             );
             $json_requset = json_encode($request);

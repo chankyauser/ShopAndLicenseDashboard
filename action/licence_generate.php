@@ -146,7 +146,7 @@
                                                 </div>
                                                 <div style="width: 100%;text-align: center;">
                                                     <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
-                                                        <b style="margin-top:15px;">	छत्रपती संभाजीनगर महानगरपालिका <br>Chhtrapati Sambhajinagar Municipal Corporation</b>
+                                                        <b style="margin-top:15px;">छत्रपती संभाजीनगर महानगरपालिका <br>Chhtrapati Sambhajinagar Municipal Corporation</b>
                                                     </h2>
                                                 </div>
     
