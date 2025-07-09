@@ -566,8 +566,8 @@
                                             <img src="assets/imgs/theme/icons/icon-user.svg" alt="hotline" />
 
                                             <a href="index.php?p=login">
-                                                <p>Sign In
-                                                    <span>Role</span>
+                                                <p>Dashboard <br> Login
+                                                    <span></span>
                                                 </p>
                                             </a>
                                             <?php        
@@ -890,24 +890,26 @@
                                             </li>
  -->
                                         <?php if(isset($_SESSION['SAL_ShopKeeperMobile']) && !empty($_SESSION['SAL_ShopKeeperMobile'])) {  ?>
-                                        <li>
-                                            <a href="index.php?p=ShopDetalisListOfOwner"
-                                                onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
-                                                    class="fa-solid fa-home"></i> Home 
-                                                <!-- <i class="fi-rs-angle-down"></i> -->
-                                            </a>
-                                        </li>
-                                        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                                        <li>
+                                            <li>
+                                                <a href="index.php?p=ShopDetalisListOfOwner"
+                                                    onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
+                                                        class="fa-solid fa-home"></i> Home 
+                                                    <!-- <i class="fi-rs-angle-down"></i> -->
+                                                </a>
+                                            </li>
+                                            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                            <li>
 
 
-                                            <a href="index.php?p=ShopDetalisListOfOwner"
-                                                onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
-                                                    class="fa-solid fa-store"></i> Shop List
-                                                <!-- <i class="fi-rs-angle-down"></i> -->
-                                            </a>
+                                                <a href="index.php?p=ShopDetalisListOfOwner"
+                                                    onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
+                                                        class="fa-solid fa-store"></i> Shop List
+                                                    <!-- <i class="fi-rs-angle-down"></i> -->
+                                                </a>
 
-                                        </li>
+                                            </li>
+
+                                            
                                         <?php } else { ?>
 
                                         <li>

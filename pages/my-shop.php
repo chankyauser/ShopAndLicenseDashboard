@@ -28,7 +28,6 @@ $_SESSION['SAL_View_Type'] = 'ListView';
 
 
 ?>
-
 <style>
 .loginBg {
     background: url('<?php echo 'Client/assets/imgs/logo/' . trim($_SESSION["SAL_ElectionName"]) . '_bg.jpeg'; ?>');
@@ -36,6 +35,11 @@ $_SESSION['SAL_View_Type'] = 'ListView';
     background-size: cover;
     background-repeat: no-repeat;
     background-position: bottom;
+}
+
+#addnewButton:hover{
+    background-color: #fff !important;
+    color: #C90D41 !important;
 }
 </style>
 
@@ -55,15 +59,15 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                             <div class="card-body">
 
                                 <div class="login_wrap widget-taber-content background-white">
-                                    <div class="form-group mb-0" style="text-align: right;">
+                                    <!-- <div class="form-group mb-0" style="text-align: right;">
                                         <button id="addnewButton" type="button" class="btn btn-brand hover-up mb-5"
                                             name="newlogin">
                                             New Shop
                                         </button>
-                                    </div>
+                                    </div> -->
                                     <div class="padding_eight_all">
                                         <div class="heading_s6 d-flex justify-content-center mb-5 align-items-left">
-                                            <h6 class="mb-5" style="color: #fff; font-size: 40px; text-align: left;">
+                                            <h6 class="mb-5" style="color: #fff; font-size: 32px; text-align: left;">
                                                 Shop Owner Login</h6>
 
                                         </div>
@@ -103,12 +107,14 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                                         <div class="form-group d-flex justify-content-center">
                                             <button id="submitLoginBtnId" type="button"
                                                 class="btn btn-brand btn-block hover-up mb-2" name="login"
-                                                style="border: 1px solid #fff;border-radius: 13px; width: 80%;">Get
+                                                style="border: 1px solid #fff;border-radius: 13px; width: 100%;">Get
                                                 OTP</button>
                                         </div>
-                                        <div class="d-flex justify-content-end">
-                                            <p class="mb-2 text-white" style="cursor: pointer;" id="resend-otp">Resend
-                                                OTP </p>
+                                        <div class="form-group d-flex justify-content-center">
+                                            <button id="addnewButton" type="button" class="btn btn-brand btn-block hover-up mb-2" 
+                                                name="newlogin" style="border: 1px solid #fff;border-radius: 13px; width: 100%; background-color: #fff; color: #C90D41;">
+                                                New Shop
+                                            </button>
                                         </div>
                                         <div id="submitmsgsuccess" class="controls alert alert-success" role="alert"
                                             style="display: none;"></div>
