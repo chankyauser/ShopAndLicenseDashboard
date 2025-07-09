@@ -138,23 +138,24 @@
                                         <br>
                                         <div id="PrintApplicationTableID">
                                             <div class="row" style="position: relative; font-family: serif;">
-                                                <div class="logo d-none d-flex" style="position: absolute; top: 0px; left: 0px; display: flex">
-                                                        <!-- <img src="../assets/imgs/theme/logo.png" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
-                                                         <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 50px; border-radius: 50px;"/>
-                                                        <p style="color: #C90D41; margin-top: 10px; font-size: 14px; font-weight: 700; display: block; line-height: 1;"> <?=trim($_SESSION['SAL_ElectionName'])?> <br> Bazaar Trace</p>
+                                                <div style="width:20%">
+                                                    <div class="logo d-none d-flex" style="position: absolute; top: 0px; left: 0px; display: flex">
+                                                            <!-- <img src="../assets/imgs/theme/logo.png" alt="logo" style="height: 50px; border-radius: 50px;"/> -->
+                                                            <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px; border-radius: 50px;"/>
+                                                    </div>
+                                                </div>
+                                                <div style="width: 100%;text-align: center;">
+                                                    <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
+                                                        <b style="margin-top:15px;">	छत्रपती संभाजीनगर महानगरपालिका <br>Chhtrapati Sambhajinagar Municipal Corporation</b>
+                                                    </h2>
                                                 </div>
     
-                                                
-                                                <h2 style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 17px;">
-                                                    <b>	छत्रपती संभाजीनगर महानगरपालिका</b>
-                                                </h2>
-                                                <h4 style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 15px;">
+                                                <!-- <h4 style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 15px;">
                                                     <b style=""> post box number - 125, Town Hall, Chha. Sambhajinagar – 431009
-                                                        <?= $FinYear ?>
                                                     </b>
-                                                </h4>
+                                                </h4> -->
                                             </div>
-                                            <hr>
+                                            <hr style="margin-top:20px;">
                                             <div class="row" style="padding: 10px 40px; margin-bottom: 40px;">
                                                 <div class="row">
                                                     <div class="col-12" style="display: flex;justify-content: center;">
@@ -212,7 +213,7 @@
                                                     <p style="font-size: 14px;">टीप :- 
                                                     </p>
                                                     <p style="font-size: 14px;">
-                                                        १. हा परवाना सिस्टीम जनरेटेड आहे आणि त्यासाठी स्वाक्षरीची <br>
+                                                        १. हा परवाना सिस्टीम जनरेटेड आहे आणि त्यासाठी स्वाक्षरीची आवश्यकता नाही.<br>
                                                         २. सदरील परवाना मालमत्ता मालकीचा पुरावा नाही.
                                                     </p>
                                                 </div>
