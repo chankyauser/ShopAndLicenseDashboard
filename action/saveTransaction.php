@@ -3,7 +3,6 @@
 
 if (isset($json) && !empty($json)) {
     $data = json_decode($json, true);
-    // echo "<pre>"; print_r($json);exit;
     $getepayTxnId = $data['getepayTxnId'];
     $txnAmount = $data['txnAmount'];
     $txnStatus = $data['txnStatus'];
@@ -12,6 +11,14 @@ if (isset($json) && !empty($json)) {
     $txnDate = $data['txnDate'];
     $totalAmount = $data['totalAmount'];
     $paymentMode = $data['paymentMode'];
+    $mobileNo = $data['udf1'];
+
+    if(!isset($_SESSION['SAL_ElectionName'])){
+        $_SESSION['SAL_ElectionName']='CSMC';
+        $_SESSION['SAL_DevelopmentMode']='Live';
+    }
+    
+    $_SESSION['SAL_ShopKeeperMobile'] = $mobileNo;
 
     $UpdateQuery = "UPDATE TransactionDetails 
         SET 
@@ -30,35 +37,51 @@ if (isset($json) && !empty($json)) {
 
     if ($result) {
     ?>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const paymentStatus = '<?php echo strtolower($paymentStatus); ?>';
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const paymentStatus = '<?php echo strtolower($paymentStatus); ?>';
 
-    if (paymentStatus === 'success') {
-        Swal.fire({
-            icon: 'success',
-            title: 'Payment Successful',
-            text: 'Redirecting...',
-            timer: 2000,
-            showConfirmButton: false,
-            didClose: () => {
-                window.location.href = "../../index.php?p=ShopDetalisListOfOwner";
-            }
-        });
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Payment Failed',
-            text: 'Oops! Your payment could not be processed.',
-            showConfirmButton: false,
-            didClose: () => {
-                window.location.href = "../../index.php?p=ShopDetalisListOfOwner";
-            }
-        });
-    }
-});
-</script>
+                if (paymentStatus === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Payment Successful',
+                        text: 'Redirecting...',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        didClose: () => {
+                            window.location.href = "../../index.php?p=ShopDetalisListOfOwner";
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Failed',
+                        text: 'Oops! Your payment could not be processed.',
+                        showConfirmButton: true,
+                        didClose: () => {
+                            window.location.href = "../../index.php?p=ShopDetalisListOfOwner";
+                        }
+                    });
+                }
+            });
+        </script>
 <?php
     }
+}else{
+    ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Failed',
+                    text: 'Oops! Your payment could not be processed.',
+                    showConfirmButton: false,
+                    didClose: () => {
+                        window.location.href = "../../index.php?p=ShopDetalisListOfOwner";
+                    }
+                });
+            });
+        </script>
+    <?php
 }
 ?>
