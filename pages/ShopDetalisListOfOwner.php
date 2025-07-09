@@ -551,6 +551,7 @@ function getBillDetails() {
     });
 }
 
+<?php $currentDate = date('d F Y'); ?>
 function applyforlicense(shopCd, renewDate) {
     var currentDate = new Date();
     var renewFlag = 0;
@@ -559,8 +560,9 @@ function applyforlicense(shopCd, renewDate) {
         month: 'long',
         year: 'numeric'
     };
-    var StartDate = currentDate.toLocaleDateString('en-GB', options);
-
+    // var StartDate = currentDate.toLocaleDateString('en-GB', options);
+    var StartDate = <?php echo json_encode($currentDate); ?>;
+// console.log(StartDate);
     var nextYearDate = new Date(currentDate);
     nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
     nextYearDate.setDate(nextYearDate.getDate() - 1);

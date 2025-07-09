@@ -110,6 +110,56 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
     .amt-words {
         text-transform: capitalize;
     }
+    
+.watermarked-container {
+  position: relative;
+}
+
+.watermarked-container::before {
+  content: "";
+  background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 300px 300px; /* adjust size as needed */
+  opacity: 0.05;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#PrintApplicationTableID {
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ Ensure watermark shows when printing */
+@media print {
+  .watermarked-container::before {
+    content: "";
+    background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 300px 300px;
+    opacity: 0.05;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  body, html {
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important; /* Chrome/Safari */
+    print-color-adjust: exact !important;
+  }
+}
     </style>
 
     <title> Bazaar Trace | <?= trim($_SESSION['SAL_ElectionName'])?> </title>
@@ -129,7 +179,7 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                 <section id="basic-datatable">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card">
+                            <div class="card watermarked-container">
                                 <div class="card-content">
                                     <div class="card-body card-dashboard">
                                         <div class="table-responsive">
@@ -144,23 +194,19 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                 <div class="logo d-flex align-items-center"
                                                                     style="position: absolute; top: 20px; left: 12px; display: flex; align-items: center;">
 
-                                                                    <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg"
-                                                                        alt="logo"
-                                                                        style="height: 50px; width: 50px; border-radius: 50%; margin-right: 10px;" />
+                                                                        <img src="../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" alt="logo" style="height: 80px; border-radius: 50px;margin-top: -15px;"/>
 
-                                                                    <div
+                                                                    <!-- <div
                                                                         style="display: flex; flex-direction: column; justify-content: center; text-align: left; color: #C90D41; font-size: 16px; font-weight: 700; line-height: 1.2;">
                                                                        <?=trim($_SESSION['SAL_ElectionName'])?> <br>
                                                                         Bazaar Trace
-                                                                    </div>
+                                                                    </div> -->
                                                                 </div>
 
 
                                                                 <h4
                                                                     style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 13px;">
-                                                                    <b style=""> दुकान परवाना बिल - दुकान परवाना फी जमा
-                                                                        पावती
-                                                                    </b>
+                                                                    <b style="">दुकान परवाना फी जमा पावती</b>
                                                                 </h4>
 
                                                                 <h2
@@ -172,8 +218,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                 <h2
                                                                     style="display: flex; justify-content: center; margin: 0; padding-bottom: 10px; font-size: 14px;">
                                                                     <!-- <b>छत्रपती संभाजी नगर - 431001</b> -->
-                                                                    <b> ( पोस्ट बॉक्स क्रमांक - 125, टाऊन हॉल, छ.
-                                                                        संभाजीनगर - 431009 ) </b>
+                                                                    <b> पोस्ट बॉक्स क्रमांक - 125, टाऊन हॉल, छ.
+                                                                        संभाजीनगर - 431009 </b>
                                                                 </h2>
                                                             </center>
                                                         </td>
@@ -217,7 +263,7 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                 <!-- <div class="sub-heading">Property Details ( मालमत्तेची
                                                                     माहिती )</div> -->
                                                                 <div class="sub-heading" style="font-size: 16px">
-                                                                    PROPERTY DETAILS
+                                                                    SHOP DETAILS
                                                                 </div>
                                                             </th>
                                                         </thead>
@@ -273,9 +319,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                         </thead>
                                                         <tbody>
 
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <td>
-                                                                    <!-- <div class="info"> Transaction Id :</div> -->
                                                                     <div class="info" style="font-size: 14px"> बिल
                                                                         क्रमांक :</div>
                                                                 </td>
@@ -284,12 +329,12 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                         <?= $BillNo ?>
                                                                     </div>
                                                                 </td>
-                                                            </tr>
+                                                            </tr> -->
 
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Payer Name :</div> -->
-                                                                    <div class="info" style="font-size: 14px"> देयकाचे
+                                                                    <div class="info" style="font-size: 14px"> देयकाराचे
                                                                         नाव :
                                                                     </div>
                                                                 </td>
@@ -403,6 +448,67 @@ function acknowledgementPrinting() {
         '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
     );
     a.document.write('<style>');
+    a.document.write(`
+        body {
+            font-family: "Laila", serif !important;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .watermarked-container {
+            position: relative;
+        }
+
+        .watermarked-container::before {
+            content: "";
+            background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg'); /* Adjust path if needed */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 300px 300px;
+            opacity: 0.05;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #PrintApplicationTableID {
+            position: relative;
+            z-index: 1;
+        }
+
+        @page {
+            margin: 10mm;
+        }
+
+        @media print {
+            header { display: none; }
+            .logo { margin-left: 10px !important; }
+
+            .watermarked-container::before {
+                content: "";
+                background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 300px 300px;
+                opacity: 0.05;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    `);
     a.document.write('@media print {');
     a.document.write('  header { display: none; }');
     a.document.write(
