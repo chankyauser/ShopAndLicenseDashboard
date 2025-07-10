@@ -12,6 +12,7 @@ if (isset($json) && !empty($json)) {
     $totalAmount = $data['totalAmount'];
     $paymentMode = $data['paymentMode'];
     $mobileNo = $data['udf1'];
+    $txtnote = $data['txnNote'];
 
     if(!isset($_SESSION['SAL_ElectionName'])){
         $_SESSION['SAL_ElectionName']='CSMC';
@@ -29,7 +30,8 @@ if (isset($json) && !empty($json)) {
             paymentMode = '$paymentMode',
             paymentStatus = '$paymentStatus',
             txnAmount = '$totalAmount',
-            TransNumber = '$getepayTxnId'
+            TransNumber = '$getepayTxnId',
+            txnNote = '$txnNote'
         WHERE Transaction_Cd = $merchantOrderNo";
 
     $UpdateDB = new DBOperation();
