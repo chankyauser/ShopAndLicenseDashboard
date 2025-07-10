@@ -19,6 +19,7 @@ isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
   
     $OwnerQuery = "SELECT ISNULL(NULLIF(ShopKeeperMobile, ''), ShopOwnerMobile) AS ShopKeeperMobile,
                             ISNULL(NULLIF(ShopEmailAddress, ''), ShopOwnerEmail) AS ShopEmailAddress,
+                            ISNULL(ShopName, '') AS ShopName,
                             ISNULL(CASE
                                 WHEN ShopKeeperName = '.....' OR NULLIF(ShopKeeperName, '') IS NULL THEN ShopOwnerName
                                 ELSE ShopKeeperName
@@ -30,7 +31,8 @@ isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
     if($OwnerDetails){
         $ShopKeeperMobile = $OwnerDetails['ShopKeeperMobile'];
         $ShopEmailAddress = $OwnerDetails['ShopEmailAddress'];
-        $ShopKeeperName = $OwnerDetails['ShopKeeperName'];              
+        $ShopKeeperName = $OwnerDetails['ShopKeeperName'];    
+        $ShopName = $OwnerDetails['ShopName'];          
     }
     
     if(!empty($IsExist)){

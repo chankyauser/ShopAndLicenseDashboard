@@ -20,10 +20,14 @@
             // "merchantTransactionId"=> str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
             // "transactionDate"=>"Mon Oct 03 13:54:33 IST 2022",
 
+            // $txtnote = 'Bazaar_Trace_'.$ShopName;
+            $txtnote = 'Bazaar_Trace';
+
             $request=array(
                 // "mid"=>"108",
                 // Live
                 "mid"=>"1325212",
+                // "amount"=> "10.00",
                 "amount"=> "$amount",
                 "merchantTransactionId"=>$TransId,
                 "transactionDate"=>"$date",
@@ -47,7 +51,7 @@
                 "bankId"=>"",
                 "txnType"=>"single",
                 "productType"=>"IPG",
-                "txnNote"=>"",
+                "txnNote"=>"$txtnote",
                 // "vpa"=>"Getepay.merchant61062@icici"
                 // Live
                 "vpa"=>"getepay.merchant689865@icici"
