@@ -216,7 +216,7 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
 
                                                                 <h4
                                                                     style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 13px;">
-                                                                    <b style="">दुकान परवाना फी जमा पावती</b>
+                                                                    <b style="">आस्थापनांना व्यवसाय करणेकरिता परवाना फी जमा पावती</b>
                                                                 </h4>
 
                                                                 <h2

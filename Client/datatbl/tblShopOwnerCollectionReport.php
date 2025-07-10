@@ -61,7 +61,7 @@
                             <?php 
                                 foreach ($dataNode as $key => $valueNode) {
                                     $selected = ($nodeCd == $valueNode["Node_Cd"]) ? "selected" : "";
-                                    echo '<option ' . $selected . ' value="' . $valueNode["Node_Cd"] . '">' . $valueNode["Ward_No"] . ' - ' . $valueNode["Area"] . '</option>';
+                                    echo '<option ' . $selected . ' value="' . $valueNode["Ward_No"] . '">' . $valueNode["Ward_No"] . ' - ' . $valueNode["Area"] . '</option>';
                                 }
                             ?>
                         </select>

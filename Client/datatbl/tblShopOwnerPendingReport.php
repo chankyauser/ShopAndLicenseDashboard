@@ -59,7 +59,7 @@
                                 <?php 
                                 foreach ($dataNode as $key => $valueNode) {
                                     $selected = ($nodeCd == $valueNode["Node_Cd"]) ? "selected" : "";
-                                    echo '<option ' . $selected . ' value="' . $valueNode["Node_Cd"] . '">' . $valueNode["Ward_No"] . ' - ' . $valueNode["Area"] . '</option>';
+                                    echo '<option ' . $selected . ' value="' . $valueNode["Ward_No"] . '">' . $valueNode["Ward_No"] . ' - ' . $valueNode["Area"] . '</option>';
                                 }
                             ?>
                             </select>
@@ -108,12 +108,13 @@
                             <table id="shopTable" class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>SR NO</th>
-                                        <th>Shop Owner</th>
-                                        <th>Shop Details</th>
-                                        <th>Billing Details</th>
-                                        <th>Licence Details</th>
-                                        <th>Pending</th>
+                                        <th class="text-center">SR NO</th>
+                                        <th class="text-left">Node Name</th>
+                                        <th class="text-left">Ward Name</th>
+                                        <th class="text-left">Shop Owner </th>
+                                        <th class="text-left">Shop Details</th>
+                                        <th class="text-right">Bill Count</th>
+                                        <th class="text-right">Pending</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody> <!-- Needed for data -->
@@ -124,124 +125,293 @@
             </div>
         </div>
     </div>
-    <script>
-    $(document).ready(function() {
-        // $('#showPageDetails').addClass('d-none');
-        var shopTable = $('#shopTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                type: "POST",
-                url: "action/setOwnerPendingReport.php",
-                data: function(d) {
-                    d.documentStatus = $('#documentStatus').val();
-                    d.ward = $('#setNodeAndWardDetailId').val();
-                    d.nodeName = $('#nodeName').val();
-                    d.OwnerMobile = $('#OwnerMobile').val();
-                    d.OwnerName = $('#OwnerName').val();
-                }
-            },
-            columns: [{
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    },
-                    orderable: false
-                },
-                {
-                    data: null,
-                    render: function(data) {
-                        let name = data.ShopOwnerName !== '' ? data.ShopOwnerName : data
-                            .ShopKeeperName;
-                        let mobile = data.ShopOwnerMobile !== '' ? data.ShopOwnerMobile : data
-                            .ShopKeeperMobile;
+</div>
 
-                        return `<strong>${name}</strong><br><small>${mobile}</small>`;
-                    },
-                    orderable: false
-                },
-                {
-                    data: null,
-                    render: function(data) {
-                        return `Shop Name: <strong>${data.ShopName}</strong><br>Shop No: <small>${data.Shop_UID}</small>`;
-                    },
-                    orderable: false
-                },
-                {
-                    data: null,
-                    render: function(data) {
-                        var BillDate = "";
-                        if (data.BillingDate != "") {
-                            BillDate = `Date: <small>${data.BillingDate}</small>`;
-                        }
-                        var BillNo = "";
-                        if (data.BillNo != "") {
-                            BillNo = `Bill No: <strong>${data.BillNo}</strong><br>`;
-                        }
-                        return `${BillDate} ${BillNo}`;
-                    },
-                    orderable: false
-                },
-                {
-                    data: null,
-                    render: function(data) {
-                        var condtition = "";
-                        if (data.LicenseStartDate != "") {
-                            condtition =
-                                `Expired : <strong>${data.LicenseStartDate}</strong> to <strong>${data.LicenseEndDate}</strong>`;
-                        }
-                        return `${condtition}`;
-                    },
-                    orderable: false
-                },
-                {
-                    data: null,
-                    render: function(data) {
-                        return `<strong>${data.Amount}</strong>`;
-                    },
-                    orderable: false
-                }
-            ],
-            drawCallback: function(settings) {
-                const totalRecords = settings.json ? settings.json.recordsTotal : 0;
-                if (totalRecords == 1 || totalRecords == 0) {
-                    $('#GetTotalRecods').text(totalRecords + ' Shop');
-                } else {
-                    $('#GetTotalRecods').text(totalRecords + ' Shops');
-                }
+<!-- Billing Details Modal -->
+<div class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header p-2 m-2">
+                <h5 class="modal-title" id="billingModalLabel">Billing Details</h5>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="billingModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// $(document).ready(function() {
+//     // $('#showPageDetails').addClass('d-none');
+//     var shopTable = $('#shopTable').DataTable({
+//         processing: true,
+//         serverSide: true,
+//         ajax: {
+//             type: "POST",
+//             url: "action/setOwnerPendingReport.php",
+//             data: function(d) {
+//                 d.documentStatus = $('#documentStatus').val();
+//                 d.ward = $('#setNodeAndWardDetailId').val();
+//                 d.nodeName = $('#nodeName').val();
+//                 d.OwnerMobile = $('#OwnerMobile').val();
+//                 d.OwnerName = $('#OwnerName').val();
+//             }
+//         },
+//         columns: [{
+//                 data: null,
+//                 render: function(data, type, row, meta) {
+//                     return meta.row + meta.settings._iDisplayStart + 1;
+//                 },
+//                 orderable: false
+//             },
+//             {
+//                 data: null,
+//                 render: function(data) {
+//                     let name = data.ShopOwnerName !== '' ? data.ShopOwnerName : data
+//                         .ShopKeeperName;
+//                     let mobile = data.ShopOwnerMobile !== '' ? data.ShopOwnerMobile : data
+//                         .ShopKeeperMobile;
+
+//                     return `<strong>${name}</strong><br><small>${mobile}</small>`;
+//                 },
+//                 orderable: false
+//             },
+//             {
+//                 data: null,
+//                 render: function(data) {
+//                     return `Shop Name: <strong>${data.ShopName}</strong><br>Shop No: <small>${data.Shop_UID}</small>`;
+//                 },
+//                 orderable: false
+//             },
+//             {
+//                 data: null,
+//                 render: function(data) {
+//                     var BillDate = "";
+//                     if (data.BillingDate != "") {
+//                         BillDate = `Date: <small>${data.BillingDate}</small>`;
+//                     }
+//                     var BillNo = "";
+//                     if (data.BillNo != "") {
+//                         BillNo = `Bill No: <strong>${data.BillNo}</strong><br>`;
+//                     }
+//                     return `${BillDate} ${BillNo}`;
+//                 },
+//                 orderable: false
+//             },
+//             {
+//                 data: null,
+//                 render: function(data) {
+//                     var condtition = "";
+//                     if (data.LicenseStartDate != "") {
+//                         condtition =
+//                             `Expired : <strong>${data.LicenseStartDate}</strong> to <strong>${data.LicenseEndDate}</strong>`;
+//                     }
+//                     return `${condtition}`;
+//                 },
+//                 orderable: false
+//             },
+//             {
+//                 data: null,
+//                 render: function(data) {
+//                     return `<strong>${data.Amount}</strong>`;
+//                 },
+//                 orderable: false
+//             }
+//         ],
+//         drawCallback: function(settings) {
+//             const totalRecords = settings.json ? settings.json.recordsTotal : 0;
+//             if (totalRecords == 1 || totalRecords == 0) {
+//                 $('#GetTotalRecods').text(totalRecords + ' Shop');
+//             } else {
+//                 $('#GetTotalRecods').text(totalRecords + ' Shops');
+//             }
+//         }
+//     });
+
+//     $('#setNodeAndWardDetailId').on('change', function() {
+
+//         shopTable.ajax.reload();
+//     });
+
+//     $('#nodeName').on('change', function() {
+//         shopTable.ajax.reload();
+//     });
+
+//     $('#OwnerName').on('input', function() {
+//         setTimeout(() => {
+//             shopTable.ajax.reload();
+//         }, 500);
+//     });
+
+//     $('#OwnerMobile').on('input', function() {
+//         setTimeout(() => {
+//             shopTable.ajax.reload();
+//         }, 500)
+//     });
+
+
+// });
+
+
+$(document).ready(function() {
+    var shopTable = $('#shopTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: "POST",
+            url: "./action/setOwnerPendingReport.php",
+            data: function(d) {
+                d.documentStatus = $('#documentStatus').val();
+                d.ward = $('#setNodeAndWardDetailId').val();
+                d.nodeName = $('#nodeName').val();
+                d.OwnerMobile = $('#OwnerMobile').val();
+                d.OwnerName = $('#OwnerName').val();
             }
-        });
+        },
+        columns: [{
+                data: null,
+                render: function(data, type, row, meta) {
+                    return `
+                        ${meta.row + meta.settings._iDisplayStart + 1} 
+                        `;
+                },
+                orderable: false,
+                className: 'text-center'
+            },
+            {
+                data: null,
+                render: function(data) {
+                    return `${data.NodeName}`;
+                },
+                orderable: false,
+                className: 'text-left'
+            },
+            {
+                data: null,
+                render: function(data) {
+                    return `${data.Area}`;
+                },
+                orderable: false,
+                className: 'text-left'
 
-        $('#setNodeAndWardDetailId').on('change', function() {
-
-            shopTable.ajax.reload();
-        });
-
-        $('#nodeName').on('change', function() {
-            shopTable.ajax.reload();
-        });
-
-        $('#OwnerName').on('input', function() {
-            setTimeout(() => {
-                shopTable.ajax.reload();
-            }, 500);
-        });
-
-        $('#OwnerMobile').on('input', function() {
-            setTimeout(() => {
-                shopTable.ajax.reload();
-            }, 500)
-        });
-
-
+            },
+            {
+                data: null,
+                render: function(data) {
+                    return `<strong>${data.ShopOwnerName}</strong><br><small>${data.ShopOwnerMobile}</small>`;
+                },
+                orderable: false
+            },
+            {
+                data: null,
+                render: function(data) {
+                    return `Shop Name: <strong>${data.ShopName}</strong><br>Shop No: <small>${data.Shop_UID}</small>`;
+                },
+                orderable: false
+            },
+            {
+                data: null,
+                render: function(data) {
+                    return `${data.BillCount}
+                    &nbsp;&nbsp;
+                    <i class="fas fa-eye text-primary view-bills-icon text-danger" data-bill='${data.BillDetailsArray || "[]"}' data-shopname='${data.ShopName || ''}'style="cursor: pointer;" title="View Bill Details"> </i>`;
+                },
+                orderable: false,
+                className: 'text-right'
+            },
+            {
+                data: null,
+                render: function(data) {
+                    return `<strong>${data.Amount}</strong>`;
+                },
+                orderable: false,
+                className: 'text-right'
+            }
+        ],
+        drawCallback: function(settings) {
+            const totalRecords = settings.json ? settings.json.recordsTotal : 0;
+            if (totalRecords == 1 || totalRecords == 0) {
+                $('#GetTotalRecods').text(totalRecords + ' Shop');
+            } else {
+                $('#GetTotalRecods').text(totalRecords + ' Shops');
+            }
+        }
     });
 
-    $('#clearFilter').click(function() {
-        $('#nodeName').val('All');
-        $('#setNodeAndWardDetailId').val('All');
-        $('#OwnerName').val('');
-        $('#OwnerMobile').val('');
-        $('#shopTable').DataTable().ajax.reload();
+    $('#shopTable tbody').on('click', '.view-bills-icon', function() {
+        const billData = $(this).attr('data-bill');
+        const shopName = $(this).attr('data-shopname');
+        let billDetailsArray = [];
 
+        try {
+            billDetailsArray = JSON.parse(billData || '[]');
+        } catch (e) {
+            console.error("Invalid billing data", e);
+        }
+
+        const billingTable = `
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Bill No</th>
+                        <th>Bill Date</th>
+                        <th>Payment Status</th> 
+                        <th>Amount</th>
+                        <th>License Period</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${billDetailsArray.map((bill, index) => `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${bill.BillNo || ''}</td>
+                            <td>${bill.BillingDate || ''}</td>
+                            <td>${bill.PaymentStatus || 'Cancelled'}</td>
+                            <td>₹${parseFloat(bill.Amount || 0).toFixed(2)}</td>
+                            <td>${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+
+        $('#billingModalBody').html(billingTable);
+        $('#billingModalLabel').text(`Billing Details for ${shopName}`);
+
+        const modal = new bootstrap.Modal(document.getElementById('billingModal'));
+        modal.show();
     });
-    </script>
+
+
+    $('#setNodeAndWardDetailId').on('change', function() {
+        shopTable.ajax.reload();
+    });
+
+    $('#nodeName').on('change', function() {
+        shopTable.ajax.reload();
+    });
+
+    $('#OwnerName').on('input', function() {
+        setTimeout(() => {
+            shopTable.ajax.reload();
+        }, 500);
+    });
+
+    $('#OwnerMobile').on('input', function() {
+        setTimeout(() => {
+            shopTable.ajax.reload();
+        }, 500)
+    });
+});
+
+
+$('#clearFilter').click(function() {
+    $('#nodeName').val('All');
+    $('#setNodeAndWardDetailId').val('All');
+    $('#OwnerName').val('');
+    $('#OwnerMobile').val('');
+    $('#shopTable').DataTable().ajax.reload();
+
+});
+</script>

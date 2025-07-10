@@ -130,7 +130,7 @@ function fetchData()
                     nm.Area";
 
 
-
+    // echo $query;exit;
     // $data = $db->getMultiRecordsAJAXDatatable($query);
     $data = $db->ExecutveQueryMultipleRowSALData($query, $electionName, $developmentMode);
 
