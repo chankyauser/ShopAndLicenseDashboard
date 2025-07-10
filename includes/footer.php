@@ -337,7 +337,8 @@ $(document).ready(function() {
                                                         id="shopkeeper_mobile" name="mobile"
                                                         placeholder="Enter your Mobile"
                                                         oninput="this.value = this.value.replace(/[^\d]/g, '').slice(0, 10);">
-                                                    <span id="shopkeeper_mobile-error" class="text-danger error-below-form-fields"></span>
+                                                    <span id="shopkeeper_mobile-error"
+                                                        class="text-danger error-below-form-fields"></span>
                                                     <!-- Get OTP Button -->
                                                     <button type="button" class="btn btn-primary btn-sm mb-2"
                                                         id="verifyOtpBtn" onclick="showOtpInput()"
@@ -410,10 +411,10 @@ $(document).ready(function() {
                                         <div id="submitmsg" style="display: none;">
                                             <img height="50" width="50" src="assets/imgs/loader/loading.gif" />
                                         </div>
-                                        <div id="submitmsgsuccess" class="controls alert alert-success col-md-10" role="alert"
-                                            style="display: none;"></div>
-                                        <div id="submitmsgfailed" class="controls alert alert-danger col-md-10" role="alert"
-                                            style="display: none;"></div>
+                                        <div id="submitmsgsuccess" class="controls alert alert-success col-md-10"
+                                            role="alert" style="display: none;"></div>
+                                        <div id="submitmsgfailed" class="controls alert alert-danger col-md-10"
+                                            role="alert" style="display: none;"></div>
                                     </div>
                                 </form>
                             </div>
@@ -621,33 +622,33 @@ $(document).ready(function() {
                                     </div>
                                     <button type="button" class="btn btn-primary m-3" style="float: right;"
                                         onclick="submitForm('shop-details-form')">Next</button>
-                                    <div id="submitmsgsuccess" class="controls alert alert-success col-md-10" role="alert"
-                                        style="display: none;"></div>
+                                    <div id="submitmsgsuccess" class="controls alert alert-success col-md-10"
+                                        role="alert" style="display: none;"></div>
                                     <div id="submitmsgfailed" class="controls alert alert-danger col-md-10" role="alert"
                                         style="display: none;"></div>
                                 </form>
                             </div>
                             <div class="tab-pane" id="shop-documents-content">
-                                    <h3 class="m-2">Shop Documents</h3>
-                                    <?php   $DocFormatSpan = '';
+                                <h3 class="m-2">Shop Documents</h3>
+                                <?php   $DocFormatSpan = '';
                                             $electionName = $_SESSION['SAL_ElectionName'];
                                             $developmentMode = $_SESSION['SAL_DevelopmentMode']; 
                                             $sql = "SELECT Document_Cd,DocumentName,DocumentNameMar, DocumentType,IsCompulsory FROM ShopDocumentMaster WHERE IsActive = 1 ORDER BY DocumentType";
                                             $dbdoc = new DbOperation();
                                             $docType = $dbdoc->ExecutveQueryMultipleRowSALData($sql, $electionName, $developmentMode);
                                     ?>
-                                    <form id="shopDocForm">
-                                        <div class="row">
-                                            <?php foreach($docType as $key => $doc) {
+                                <form id="shopDocForm">
+                                    <div class="row">
+                                        <?php foreach($docType as $key => $doc) {
                                             ?>
-                                            <input type="hidden" name="is_compulsory[]" id="is_compulsory_<?= $key ?>"
-                                                value="<?= $doc['IsCompulsory'] ?>">
-                                            <input type="hidden" name="document_type[]" id="document_type_<?= $key ?>"
-                                                value="<?= $doc['DocumentType'] ?>">
-                                            <input type="hidden" name="document_cd[]" id="document_cd_<?= $key ?>"
-                                                value="<?= $doc['Document_Cd'] ?>">
+                                        <input type="hidden" name="is_compulsory[]" id="is_compulsory_<?= $key ?>"
+                                            value="<?= $doc['IsCompulsory'] ?>">
+                                        <input type="hidden" name="document_type[]" id="document_type_<?= $key ?>"
+                                            value="<?= $doc['DocumentType'] ?>">
+                                        <input type="hidden" name="document_cd[]" id="document_cd_<?= $key ?>"
+                                            value="<?= $doc['Document_Cd'] ?>">
 
-                                            <?php if($doc['DocumentType'] == 'image') {       
+                                        <?php if($doc['DocumentType'] == 'image') {       
                                                     $accept = 'image/jpeg, image/png, image/jpg';
                                                     $imgExt = '.jpg, .jpeg, .png';
                                                 } else{
@@ -656,57 +657,57 @@ $(document).ready(function() {
                                                 }
                                             ?>
 
-                                            <input type="hidden" name="ShopDocDet_Cd[]"
-                                                id="ShopDocDet_Cd_<?= $doc['Document_Cd'] ?>">
+                                        <input type="hidden" name="ShopDocDet_Cd[]"
+                                            id="ShopDocDet_Cd_<?= $doc['Document_Cd'] ?>">
 
-                                            <?php if($DocFormatSpan != $doc['DocumentType']) { ?>
-                                            <div class="alert alert-info" role="alert">
-                                                Note : Upload below file only <?=$imgExt?> upto 2MB
-                                            </div>
-                                            <?php } $DocFormatSpan = $doc['DocumentType']; ?>
-
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="file"><?= $doc['DocumentName']?>
-                                                        <?php if($doc['IsCompulsory'] == 1){ ?> <span
-                                                            class="required">*</span> <?php } ?>
-                                                        <br>
-                                                        (<?= $doc['DocumentNameMar'] ?>)
-
-                                                    </label>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="file" class="form-control"
-                                                            id="file_<?= $doc['Document_Cd'] ?>" name="file[]"
-                                                            accept="<?= $accept ?>">
-
-                                                        <input type="hidden" name="file_url[]"
-                                                            id="file_url_<?= $doc['Document_Cd']?>">
-
-                                                        <a href="" id="FileTag_<?= $doc['Document_Cd']?>"
-                                                            class="btn btn-info shadow btn-sm sharp file-btn mr-1 m-2 d-none"
-                                                            target="_blank">
-                                                            <i class="fa fa-file"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <span id="file_<?= $doc['Document_Cd'] ?>-error"
-                                                    class="text-danger error-below-form-fields m-2"></span>
-                                            </div>
-                                            <?php } ?>
+                                        <?php if($DocFormatSpan != $doc['DocumentType']) { ?>
+                                        <div class="alert alert-info" role="alert">
+                                            Note : Upload below file only <?=$imgExt?> upto 2MB
                                         </div>
-                                    </form>
+                                        <?php } $DocFormatSpan = $doc['DocumentType']; ?>
 
-                                    <div class="docList d-none"></div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="file"><?= $doc['DocumentName']?>
+                                                    <?php if($doc['IsCompulsory'] == 1){ ?> <span
+                                                        class="required">*</span> <?php } ?>
+                                                    <br>
+                                                    (<?= $doc['DocumentNameMar'] ?>)
 
-                                    <div class="col-md-3 btn-div" style="margin-top:2rem;">
-                                        <button type="button" class="btn btn-primary m-3" id="upload_btn"
-                                            onclick="submitForm('shopDocForm')">Submit</button>
-                                        <div id="FromMsgSuccess" class="controls alert alert-success" role="alert"
-                                            style="display: none;"></div>
-                                        <div id="FormMsgFailed" class="controls alert alert-danger" role="alert"
-                                            style="display: none;"></div>
+                                                </label>
+                                                <div class="d-flex align-items-center">
+                                                    <input type="file" class="form-control"
+                                                        id="file_<?= $doc['Document_Cd'] ?>" name="file[]"
+                                                        accept="<?= $accept ?>">
+
+                                                    <input type="hidden" name="file_url[]"
+                                                        id="file_url_<?= $doc['Document_Cd']?>">
+
+                                                    <a href="" id="FileTag_<?= $doc['Document_Cd']?>"
+                                                        class="btn btn-info shadow btn-sm sharp file-btn mr-1 m-2 d-none"
+                                                        target="_blank">
+                                                        <i class="fa fa-file"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <span id="file_<?= $doc['Document_Cd'] ?>-error"
+                                                class="text-danger error-below-form-fields m-2"></span>
+                                        </div>
+                                        <?php } ?>
                                     </div>
+                                </form>
+
+                                <div class="docList d-none"></div>
+
+                                <div class="col-md-3 btn-div" style="margin-top:2rem;">
+                                    <button type="button" class="btn btn-primary m-3" id="upload_btn"
+                                        onclick="submitForm('shopDocForm')">Submit</button>
+                                    <div id="FromMsgSuccess" class="controls alert alert-success" role="alert"
+                                        style="display: none;"></div>
+                                    <div id="FormMsgFailed" class="controls alert alert-danger" role="alert"
+                                        style="display: none;"></div>
                                 </div>
+                            </div>
                         </div>
 
                     </div>
@@ -1555,7 +1556,7 @@ $(document).ready(function() {
         $('#verifyOtpBtn').hide();
         $('#resendOTP').show();
         $('#otpvalue').show();
-        
+
         sendOTPToMobileverify(mobileValue, otp);
 
     });
@@ -1639,6 +1640,54 @@ function generateOtp() {
 </script>
 
 <!-- New Shop Owner Shop Details End -->
+
+<script>
+document.addEventListener('contextmenu', event => event.preventDefault());
+document.addEventListener('copy', event => event.preventDefault());
+document.addEventListener('paste', event => event.preventDefault());
+
+// // Disable right click
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// Disable F12 and Ctrl+Shift+I
+document.addEventListener('keydown', function(e) {
+ if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+     e.preventDefault();
+ }
+});
+
+document.addEventListener('keydown', function(e) {
+    // keyCode 44 is for the Print Screen key
+    if (e.keyCode == 44) {
+        e.preventDefault();
+        alert('Print Screen is disabled');
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    // Disable F12 (Open DevTools)
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
+
+    // Disable Ctrl+Shift+I (Open DevTools in some browsers)
+    if (e.ctrlKey && e.shiftKey && e.key === "I") {
+        e.preventDefault();
+    }
+
+    // Disable Ctrl+Shift+C (Element inspector)
+    if (e.ctrlKey && e.shiftKey && e.key === "C") {
+        e.preventDefault();
+    }
+
+    // Disable Ctrl+U (View Page Source)
+    if (e.ctrlKey && e.key === "u") {
+        e.preventDefault();
+    }
+});
+</script>
 </body>
 
 </html>

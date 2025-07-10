@@ -9,6 +9,7 @@
       
             $date = date('D M d H:i:s') . ' IST ' . date('Y');
             $returnUrl = 'https://csmcshoplicenses.com/PHP-GetEPay/PG/response.php';
+            // $returnUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/PHP-GetEPay/PG/response.php';  
             
             // $data = $_POST['data'];
             // $amount = $_POST['Amount'];
@@ -19,21 +20,22 @@
 
             // "merchantTransactionId"=> str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
             // "transactionDate"=>"Mon Oct 03 13:54:33 IST 2022",
+            // $amount = 10;
 
             // $txtnote = 'Bazaar_Trace_'.$ShopName;
-            $txtnote = 'Bazaar_Trace';
+            $txtnote = $ShopName;
 
             $request=array(
-                // "mid"=>"108",
+                "mid"=>"108",
                 // Live
                 "mid"=>"1325212",
                 // "amount"=> "10.00",
                 "amount"=> "$amount",
                 "merchantTransactionId"=>$TransId,
                 "transactionDate"=>"$date",
-                // "terminalId"=>"Getepay.merchant61062@icici",
+                "terminalId"=>"Getepay.merchant61062@icici",
                 // Live
-                "terminalId"=>"getepay.merchant689865@icici",
+                // "terminalId"=>"getepay.merchant689865@icici",
                 "udf1" => "$ShopKeeperMobile",
                 "udf2"=>"$ShopEmailAddress",
                 "udf3"=>"$ShopKeeperName",
@@ -54,7 +56,7 @@
                 "txnNote"=>"$txtnote",
                 // "vpa"=>"Getepay.merchant61062@icici"
                 // Live
-                "vpa"=>"getepay.merchant689865@icici"
+                // "vpa"=>"getepay.merchant689865@icici"
             );
             $json_requset = json_encode($request);
             
