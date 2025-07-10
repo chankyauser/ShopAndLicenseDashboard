@@ -253,7 +253,7 @@ a[data-tooltip]:hover::before {
 
                                 <!-- Shop Details -->
                                 <div class="col-12 col-xl-5">
-                                    <span class="badge badge-pill badge-primary">Primary</span>
+                                    <span class="badge badge-pill badge-primary"> </span>
                                     <div class="product-content-wrap">
                                         <h5 class="card-title">
                                             <?= $shopData['ShopName']; ?>
