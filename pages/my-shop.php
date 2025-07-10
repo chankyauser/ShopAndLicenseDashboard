@@ -110,6 +110,11 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                                                 style="border: 1px solid #fff;border-radius: 13px; width: 100%;">Get
                                                 OTP</button>
                                         </div>
+                                          <div class="d-flex justify-content-end">
+                                            <p class="mb-2 text-white" style="cursor: pointer;" id="resend-otp">Resend
+                                                OTP </p>
+                                        </div>
+                                        
                                         <div class="form-group d-flex justify-content-center">
                                             <button id="addnewButton" type="button"
                                                 class="btn btn-brand btn-block hover-up mb-2" name="newlogin"
@@ -117,6 +122,7 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                                                 New Shop
                                             </button>
                                         </div>
+                                      
                                         <div id="submitmsgsuccess" class="controls alert alert-success" role="alert"
                                             style="display: none;"></div>
                                         <div id="submitmsgfailed" class="controls alert alert-danger" role="alert"

@@ -155,6 +155,10 @@
     z-index: 1;
 }
 
+.watermarked-container {
+    border: 1px solid #000;
+}
+
 /* ✅ Ensure watermark shows when printing */
 @media print {
     .watermarked-container::before {
@@ -242,8 +246,8 @@ td:first-child .info::before {
                                             <div class="row" style="padding: 10px 40px; margin-bottom: 40px;">
                                                 <div class="row">
                                                     <div class="col-12" style="display: flex;justify-content: center;">
-                                                        <p style="font-size: 16px; font-weight: 600;">व्यावसायिक
-                                                            अस्थापना दुकान परवाना </p>
+                                                        <p style="font-size: 16px; font-weight: 600;"> आस्थापनांना
+                                                            व्यवसाय करणेकरिता परवाना</p>
                                                     </div>
                                                     <div class="col-12" style="display: flex; ">
                                                         <div class="col-6" style="width: 80%">
@@ -263,14 +267,21 @@ td:first-child .info::before {
                                                         <p style="font-size: 14px;">
                                                             <!-- छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span>< ?= $Shop_Cd ?></span>) यावर देय्य असलेली सन < ?= $FinYear ?> या आर्थिक वर्षात पुढील प्रमाणे कराची रक्कम अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे. -->
 
-                                                            महाराष्ट्र महानगरपालिका अधिनियम 1949 चे कलम 376, 383, 386
+                                                            <!-- महाराष्ट्र महानगरपालिका अधिनियम 1949 चे कलम 376, 383, 386
                                                             अन्वये छत्रपती संभाजीनगर महानगरपालिका कार्यक्षेत्रातील
                                                             दुकाने, कारखाने इ. व्यापारी आस्थापनांनी आपले व्यवसाय
                                                             करणेकरीता महानगरपालिकेचा परवाना दुकान क्र.
-                                                            <b><span><?= $Shop_Cd ?></span></b> साठी
-                                                            <b><?= $LicenseStartDate ?></b></b> ते
-                                                            <b><?= $LicenseEndDate ?></b> या कालावधी करिता अदा करण्यात
-                                                            येत आहे.
+                                                            <b><span>< ?= $Shop_Cd ?></span></b> साठी
+                                                            <b>< ?= $LicenseStartDate ?></b></b> ते
+                                                            <b>< ?= $LicenseEndDate ?></b> या कालावधी करिता अदा करण्यात
+                                                            येत आहे. -->
+
+                                                           <p> महाराष्ट्र महानगरपालिका अधिनियम, १९४९ अंतर्गत कलम ३७६, ३८३ व
+                                                            ३८६ अन्वये, छत्रपती संभाजीनगर महानगरपालिका कार्यक्षेत्रातील
+                                                            दुकाने, कारखाने इत्यादी व्यापारी आस्थापनांनी आपल्या व्यवसाय
+                                                            करण्याकरिता महानगरपालिकेचा परवाना प्राप्त करणे आवश्यक आहे.<p>
+
+                                                            <p> या अनुषंगाने, दुकान क्रमांक <b><span><?= $Shop_Cd ?></span></b> नाव <b><span><?= $ShopName ?></span></b> साठी दिनांक <b><span><?= $LicenseStartDate ?></span></b> पासून दिनांक <b><span><?= $LicenseEndDate ?></span></b> पर्यंतच्या कालावधीसाठी परवाना शुल्क अदा करण्यात आले असून सदर आस्थापनेस परवाना अदा करण्यात येत आहे.<p>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -440,6 +451,7 @@ function acknowledgementPrinting() {
         @page {
             margin: 10mm;
         }
+        
 
         @media print {
             header { display: none; }
@@ -471,13 +483,17 @@ function acknowledgementPrinting() {
             margin-right: 5px;
             color: black;
         }
+
+        .watermarked-container {
+            border: 1px solid #000;
+        }
     `);
     a.document.write('@media print {');
     a.document.write('  header { display: none; }');
     a.document.write(
         '  body { padding-left: 10; padding-right: 10; font-family: "Laila", serif !important;font-weight: 300;font-style: normal;}'
     );
-    a.document.write('  .logo { margin-left: 10px !important;}');
+    a.document.write('  .logo { margin-left: 10px !important; margin-top : 2px;}');
     a.document.write('  @page { margin: 10;}');
     a.document.write('}');
     a.document.write('</style>');
