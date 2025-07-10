@@ -33,9 +33,9 @@
                 "amount"=> "$amount",
                 "merchantTransactionId"=>$TransId,
                 "transactionDate"=>"$date",
-                "terminalId"=>"Getepay.merchant61062@icici",
+                // "terminalId"=>"Getepay.merchant61062@icici",
                 // Live
-                // "terminalId"=>"getepay.merchant689865@icici",
+                "terminalId"=>"getepay.merchant689865@icici",
                 "udf1" => "$ShopKeeperMobile",
                 "udf2"=>"$ShopEmailAddress",
                 "udf3"=>"$ShopKeeperName",
@@ -56,7 +56,7 @@
                 "txnNote"=>"$txtnote",
                 // "vpa"=>"Getepay.merchant61062@icici"
                 // Live
-                // "vpa"=>"getepay.merchant689865@icici"
+                "vpa"=>"getepay.merchant689865@icici"
             );
             $json_requset = json_encode($request);
             

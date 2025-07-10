@@ -36,7 +36,7 @@ if (isset($json) && !empty($json)) {
 
     $UpdateDB = new DBOperation();
     $result = $UpdateDB->RunQuerySALData($UpdateQuery, $electionName, $developmentMode);
-
+    
     if ($result) {
     ?>
         <script>
