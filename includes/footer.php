@@ -1596,10 +1596,12 @@ function validateOtponpage(mobileNumber, otpEntered) {
             success: function(response) {
                 var responseData = JSON.parse(response);
                 if (responseData.statusCode === 200) {
+                    $('#resendOTP').hide();
                     alert("Mobile Verified successfully!!!")
                     $('#shopkeeper_mobile').attr('readonly', true);
                     $('#otpvalue').hide();
                 } else {
+                    $('#resendOTP').show();
                     alert(responseData.msg || 'OTP verification failed.');
                 }
             },

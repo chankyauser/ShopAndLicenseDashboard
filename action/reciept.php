@@ -22,7 +22,8 @@ $PaymentQuery = "SELECT
             COALESCE(sb.Billing_Cd, 0) AS Billing_Cd, 
             COALESCE(sb.BillNo, '') AS BillNo, 
             COALESCE(sb.FinYear, '') AS FinYear, 
-            COALESCE(CONVERT(VARCHAR, sb.BillingDate, 105), '') AS BillingDate, 
+            COALESCE(CONVERT(VARCHAR, sb.BillingDate, 105), '') AS BillingDate,
+            COALESCE(sm.Shop_Cd, '') AS Shop_Cd, 
             COALESCE(sm.Shop_UID, '') AS Shop_UID, 
             COALESCE(sm.ShopName, '') AS ShopName, 
             COALESCE(sm.ShopNameMar, '') AS ShopNameMar,
@@ -59,6 +60,7 @@ $paymentMode = $BillingData['paymentMode'];
 $BillNo = $BillingData['BillNo'];
 $FinYear = $BillingData['FinYear'];
 
+$Shop_Cd = $BillingData['Shop_Cd'];
 $Shop_UID = $BillingData['Shop_UID'];
 $ShopName = $BillingData['ShopName'];
 $ShopCategory = $BillingData['ShopCategory'];
@@ -309,18 +311,18 @@ function convertAmount($amount){
                                                             </th>
                                                         </thead>
                                                         <tbody>
-                                                            <!-- <tr>
-                                                                < ?php if (!empty($Shop_UID)) { ?>
-                                                                <td colspan="9">
-                                                                    <div class="info" style="font-size: 14px">दुकान
-                                                                        क्रमांक
-                                                                        : < ?= $Shop_UID ?>
+                                                            <tr>
+                                                                <td>
+                                                                   
+                                                                    <div class="info" style="font-size: 14px">
+                                                                        Shop No </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="info info-data" style="font-size: 14px">
+                                                                        <?= $Shop_Cd ?>
                                                                     </div>
                                                                 </td>
-
-                                                                < ?php } ?>
-
-                                                            </tr> -->
+                                                            </tr>
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
