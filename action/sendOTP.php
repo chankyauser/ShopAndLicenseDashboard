@@ -49,11 +49,9 @@ if (isset($_POST['mobileNumber']) && isset($_POST['otp'])) {
             echo json_encode(array('statusCode' => 404, 'message' => 'OTP Not Sent!!'));
         }
     } else {
-        // Error in updating OTP in the database
         echo json_encode(array('statusCode' => 500, 'message' => 'Failed to Update OTP in Database!'));
     }
 
-    // Handle OTP verification
 } elseif (isset($_POST['verifyMobileNumber']) && isset($_POST['verifyOtp'])) {
 
     $mobile = $_POST['verifyMobileNumber'];
