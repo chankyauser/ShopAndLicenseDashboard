@@ -74,13 +74,38 @@ $Ward_No = $BillingData['Ward_No'];
 $ShopAddress = $BillingData['ShopAddress'];
 
 
-
-
 list($startYear, $shortYear) = explode('-', $FinYear);
 $nextYear = (int) $startYear + 1;
 $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
 
+function titleCaseWithHyphen($text) {
+    $text = ucwords(strtolower($text));
+    $text = preg_replace_callback('/\b(\w+)-(\w+)\b/', function ($matches) {
+        return ucfirst($matches[1]) . '-' . ucfirst($matches[2]);
+    }, $text);
 
+    return $text;
+}
+
+
+function convertAmount($amount){
+    $formatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+
+    $rupees = floor($amount);
+    $paise = round(($amount - $rupees) * 100);
+
+    $words = $formatter->format($rupees) . " Rupees";
+
+    if ($paise > 0) {
+        $words .= " and " . $formatter->format($paise) . " Paise";
+    }
+
+    $words .= " Only";
+
+    $words = titleCaseWithHyphen($words);
+
+    return $words;
+}
 ?>
 
 <head>
@@ -216,7 +241,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
 
                                                                 <h4
                                                                     style="display: flex; justify-content: center; margin: 0; padding: 7px 0;font-size: 13px;">
-                                                                    <b style="">आस्थापनांना व्यवसाय करणेकरिता परवाना फी जमा पावती</b>
+                                                                    <b style="">आस्थापनांना व्यवसाय करणेकरिता परवाना फी
+                                                                        जमा पावती</b>
                                                                 </h4>
 
                                                                 <h2
@@ -248,14 +274,18 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td colspan="9">
                                                                     <!-- <div class="info"> Bill No. : < ?= $BillNo ?></div> -->
-                                                                    <div class="info" style="font-size: 14px"> पावती
+                                                                    <!-- <div class="info" style="font-size: 14px"> पावती
                                                                         क्रमांक :
+                                                                        < ?= $TransNumber ?>
+                                                                    </div> -->
+                                                                    <div class="info" style="font-size: 14px"> Receipt
+                                                                        No :
                                                                         <?= $TransNumber ?>
                                                                     </div>
                                                                 </td>
                                                                 <td colspan="3">
                                                                     <!-- <div class="info"> Payment Date : < ?= $PaymentDate ?> </div>-->
-                                                                    <div class="info" style="font-size: 14px">दिनांक :
+                                                                    <div class="info" style="font-size: 14px"> Date :
                                                                         <?= $TranDateTime ?>
                                                                     </div>
                                                                 </td>
@@ -293,7 +323,7 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
                                                                     <div class="info" style="font-size: 14px">
-                                                                        दुकानदाराचे नाव </div>
+                                                                        Shop Owner Name </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -305,8 +335,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 14px"> दुकान
-                                                                        क्रमांक</div>
+                                                                    <div class="info" style="font-size: 14px"> Shop No
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -318,8 +348,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 14px"> दुकानाचे
-                                                                        नाव </div>
+                                                                    <div class="info" style="font-size: 14px"> Shop Name
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -330,8 +360,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 14px"> दुकानाचे
-                                                                        प्रकार </div>
+                                                                    <div class="info" style="font-size: 14px"> Shop Type
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -343,8 +373,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 14px"> दुकानाचा
-                                                                        पत्ता </div>
+                                                                    <div class="info" style="font-size: 14px"> Shop
+                                                                        Address </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -356,7 +386,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 14px"> झोन </div>
+                                                                    <div class="info" style="font-size: 14px"> Zone
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -368,7 +399,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 14px"> वॉर्ड </div>
+                                                                    <div class="info" style="font-size: 14px"> Ward
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -376,13 +408,13 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                                     </div>
                                                                 </td>
                                                             </tr>
-                                                            
+
 
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info"> Mobile No. : </div> -->
-                                                                    <div class="info" style="font-size: 14px"> मोबाईल
-                                                                        क्रमांक  </div>
+                                                                    <div class="info" style="font-size: 14px"> Mobile No
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -396,9 +428,9 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info "> Payment Mode :</div> -->
-                                                                    <div class="info" style="font-size: 14px"> देय
-                                                                        प्रकार
-                                                                        </div>
+                                                                    <div class="info" style="font-size: 14px"> Payment
+                                                                        Mode
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -410,8 +442,8 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <!-- <div class="info "> Payment Mode :</div> -->
-                                                                    <div class="info" style="font-size: 14px"> मागील
-                                                                        शिल्लक मागणी  </div>
+                                                                    <div class="info" style="font-size: 14px"> Past Dues
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
@@ -423,14 +455,15 @@ $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
                                                             <tr>
                                                                 <td>
                                                                     <div class="info amt-words" style="font-size: 14px">
-                                                                        परवाना फी <br>
+                                                                        Amount <br>
                                                                     </div>
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
                                                                         <b>
-                                                                            &#8377; <?= $txnAmount ?>/- &nbsp; 
-                                                                            <?= convertAmountToWords($txnAmount); ?> 
+                                                                            &#8377; <?= $txnAmount ?>/- &nbsp;
+                                                                            <!-- < ?= convertAmountToWords($txnAmount); ?> -->
+                                                                            <?= convertAmount($txnAmount); ?>
                                                                         </b>
                                                                     </div>
                                                                 </td>
