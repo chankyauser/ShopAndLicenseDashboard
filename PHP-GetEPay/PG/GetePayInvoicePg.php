@@ -26,7 +26,7 @@
             $txtnote = $ShopName;
 
             $request=array(
-                "mid"=>"108",
+                // "mid"=>"108",
                 // Live
                 "mid"=>"1325212",
                 // "amount"=> "10.00",
