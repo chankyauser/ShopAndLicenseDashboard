@@ -38,7 +38,8 @@ $PaymentQuery = "SELECT
             COALESCE(bm.BusinessCatNameMar, '') AS BusinessCatNameMar,
 			COALESCE(sm.Ward_No,0) AS Ward_No,
 			CONCAT(COALESCE(sm.ShopAddress_1,''),' ',COALESCE(sm.ShopAddress_2,'')) AS ShopAddress,
-			COALESCE(nm.NodeName,'') AS ZoneName
+			COALESCE(nm.NodeName,'') AS ZoneName,
+            COALESCE(nm.Area,'') AS Area
         FROM TransactionDetails td
         LEFT JOIN ShopBilling sb ON td.Billing_Cd = sb.Billing_Cd
         LEFT JOIN ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
@@ -72,6 +73,7 @@ $PastDues = $BillingData['PastDues'];
 $ZoneName = $BillingData['ZoneName'];
 $Ward_No = $BillingData['Ward_No'];
 $ShopAddress = $BillingData['ShopAddress'];
+$WardName = $BillingData['Area'];
 
 
 list($startYear, $shortYear) = explode('-', $FinYear);
@@ -404,7 +406,7 @@ function convertAmount($amount){
                                                                 </td>
                                                                 <td>
                                                                     <div class="info info-data" style="font-size: 14px">
-                                                                        <?= $Ward_No ?>
+                                                                        <?= $WardName ?>
                                                                     </div>
                                                                 </td>
                                                             </tr>
