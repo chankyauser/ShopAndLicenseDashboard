@@ -64,6 +64,24 @@
         $nodeCondition = " AND PocketMaster.Node_Cd <> 0  ";
     }
 
+    $searchShopCondition="";
+    $shopName = "";
+    if(isset($_SESSION['SAL_Search_ShopName']) && !empty($_SESSION['SAL_Search_ShopName'])){
+        $shopName = $_SESSION['SAL_Search_ShopName'];
+    }
+    if(!empty($shopName)){
+        // echo $shopName;
+        if ($shopName == trim($shopName) && strpos($shopName, ' ') !== false) {
+            $strArr = explode(" ", $shopName);
+            foreach($strArr as $valueShop){
+                $searchShopCondition .= " AND ShopMaster.ShopName like '%$valueShop%' ";
+            }
+        }else{
+             $searchShopCondition = " AND ShopMaster.ShopName like '%$shopName%' ";
+        }
+
+    }
+
     $dataNodeName = "SELECT COUNT(DISTINCT(ShopMaster.Shop_Cd))  as ShopCount,
         ISNULL(NodeMaster.NodeName,'') as NodeName,
         ISNULL(NodeMaster.NodeNameMar,'') as NodeNameMar
@@ -124,6 +142,7 @@
     WHERE ShopMaster.IsActive = 1 
     $nodeNameCondition
     $nodeCondition
+    $searchShopCondition
     AND ISNULL(ShopLatitude,'0')  <> '0' 
     ORDER BY ShopMaster.AddedDate DESC;";
     // echo $queryMap;
@@ -304,6 +323,11 @@
 
     </script>
 
+    <?php 
+    
+        unset($_SESSION['SAL_Search_ShopName']);
+
+    ?>
 
      <?php 
         if(sizeof($pocketShopsSurveyMapAndListDetail)>0){
