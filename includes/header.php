@@ -1069,12 +1069,17 @@
 
                     <?php if(isset($_GET['p']) && $_GET['p'] == "survey-map"){  ?>
                         <div class="mobile-search search-style-3 mobile-header-border">
-                        
+                            <div style="position: relative; width: 100%;">
                                 <input type="text" name="shopNameMobileView" placeholder="Search by Shop Name"
-                                    onkeydown="if (event.keyCode == 13) document.getElementById('submitSearchShopHeaderMobileViewBtnId').click()" />
-                                <input id="submitSearchShopHeaderMobileViewBtnId" type="hidden" class="btn btn-brand"
-                                    onclick="searchShopNameFilterMobileView(1)">
-                    
+                                    onkeydown="if (event.keyCode == 13) document.getElementById('submitSearchShopHeaderMobileViewBtnId').click()"
+                                    style="width: 100%; padding-right: 40px;" class="form-control" />
+
+                                <button type="button" id="submitSearchShopHeaderMobileViewBtnId" 
+                                    onclick="searchShopNameFilterMobileView(1)" 
+                                    style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: none;">
+                                    <i class="fi-rs-search"></i>
+                                </button>
+                            </div>
                         </div>
                      <?php } ?>
 
