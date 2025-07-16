@@ -37,7 +37,10 @@
             $SerialNo = $_POST['SerialNo'];
             $remark = $_POST['remark'];
             $IsActive = $_POST['IsActive'];
-    
+            
+            if(empty($DropDown_Cd)){
+                $DropDown_Cd = 0;
+            }
             $query1 ="SELECT DropDown_Cd FROM DropDownMaster WHERE DropDown_Cd = $DropDown_Cd ;";
             $chkDropDown = $db->ExecutveQuerySingleRowSALData($query1, $electionName, $developmentMode);
 
