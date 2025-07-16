@@ -68,7 +68,6 @@ if (isset($_POST['mobileNumber']) && isset($_POST['otp'])) {
         }
         if ($otpFound) {
             $id = $result['id'];
-            $_SESSION['SAL_ShopKeeperMobile'] = $mobile;
             $_SESSION['SAL_UserName'] = '';
             $_SESSION['SAL_UserType'] = 'U';
             $_SESSION['SAL_AppName'] = "ShopAndLicence";

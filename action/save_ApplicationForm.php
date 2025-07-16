@@ -47,6 +47,8 @@ if (isset($_POST['fullname'])) {
         $messaage = "Shop Application Updated successfully";
     }
 
+    $_SESSION['SAL_ShopKeeperMobile'] = $mobile;
+
     $db = new DBOperation();
     $result = $db->RunQuerySALData($sql, $electionName, $developmentMode);
 
