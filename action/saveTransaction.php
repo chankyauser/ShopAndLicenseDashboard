@@ -31,7 +31,7 @@ if (isset($json) && !empty($json)) {
             paymentStatus = '$paymentStatus',
             txnAmount = '$totalAmount',
             TransNumber = '$getepayTxnId',
-            txnNote = '$txnNote'
+            txnNote = '$txtnote'
         WHERE Transaction_Cd = $merchantOrderNo";
 
     $UpdateDB = new DBOperation();

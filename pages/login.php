@@ -108,7 +108,7 @@ button.eyeBtn:active {
                                                 <label for="" class="text-white">Mobile <span
                                                         class="text-danger">*</span></label>
                                                 <input type="text" name="mobile" placeholder="Enter Mobile No"
-                                                    class="bg-white" maxlength="10" required
+                                                    id="mobile" class="bg-white" maxlength="10" required
                                                     onkeypress="return (event.charCode >= 48 && event.charCode <= 57) " />
                                             </div>
                                             <div class="form-group" style="margin-bottom: 30px; position: relative;">
@@ -120,11 +120,20 @@ button.eyeBtn:active {
                                                     onkeydown="if (event.keyCode == 13) document.getElementById('submitLoginBtnId').click()" />
 
                                                 <!-- Eye toggle button -->
-                                                <button class = "eyeBtn" type="button" onclick="togglePassword()"
+                                                <button class="eyeBtn" type="button"
+                                                    onclick="togglePassword('user-password', 'eyebtn_icon')"
                                                     style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%); border: none; background: transparent; cursor: pointer;">
-                                                    <i class="fa fa-eye"></i>
+                                                    <i class="fa fa-eye" id="eyebtn_icon"></i>
                                                 </button>
                                             </div>
+
+                                            <div class="form-group">
+                                                <label class="text-white">
+                                                    <a class="text-white" href="#" id="forgot_password">Forgot your
+                                                        password?</a>
+                                                </label>
+                                            </div>
+
                                             <div class="form-group d-flex justify-content-center">
                                                 <input type="hidden" name="loginType" value="<?php echo $loginType; ?>">
                                                 <input type="hidden" name="loginMode" value="<?php echo $loginMode; ?>">
@@ -155,9 +164,9 @@ button.eyeBtn:active {
                                                     <img height="50" width="50" src="assets/imgs/loader/loading.gif" />
                                                 </div>
                                                 <div id="submitmsgsuccess" class="controls alert alert-success"
-                                                    role="alert" style="display: none; padding: 4px 10px;">adfa</div>
+                                                    role="alert" style="display: none; padding: 4px 10px;"></div>
                                                 <div id="submitmsgfailed" class="controls alert alert-danger"
-                                                    role="alert" style="display: none;  padding: 4px 10px;">sdrf</div>
+                                                    role="alert" style="display: none;  padding: 4px 10px;"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -171,9 +180,364 @@ button.eyeBtn:active {
     </div>
 </div>
 
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header p-2 m-2">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Forgot Password</h5>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="forgot_mobile">Mobile</label>
+                        <input type="text" class="form-control" id="forgot_mobile"
+                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" required>
+                        <span id="forgot_mobile_error" style="color:red"></span>
+                    </div>
+
+                    <!-- OTP Section -->
+                    <div class="form-group mb-4" id="otpFieldForgot" style="display: none;">
+                        <label for="">Enter OTP <span class="text-danger">*</span></label>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="otp-input form-control" id="otp_id_1" maxlength="1" />
+                            <input type="text" class="otp-input form-control" id="otp_id_2" maxlength="1" />
+                            <input type="text" class="otp-input form-control" id="otp_id_3" maxlength="1" />
+                            <input type="text" class="otp-input form-control" id="otp_id_4" maxlength="1" />
+                        </div>
+                        <input type="hidden" name="otp" id="forgot_otp" required />
+                        <span id="otpFieldForgot_error" style="color:red"></span>
+                        <p id="otpTimerForgot" style="color: red; font-size: 12px;">OTP expires in <span
+                                id="countdown">05:00</span></p>
+                    </div>
+
+                    <!-- Password Section -->
+                    <div class="form-group password-field"
+                        style="display: none; margin-bottom: 30px; position: relative;">
+                        <label for="new-password">New Password</label>
+                        <!-- <div class="input-group"> -->
+                        <input type="password" name="new_password" placeholder="Enter New Password" class="form-control"
+                            id="new-password" required />
+                        <button class="eyeBtn" type="button"
+                            onclick="togglePassword('new-password', 'eyeIconNewPassword')"
+                            style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%); border: none; background: transparent; cursor: pointer;">
+                            <i class="fa fa-eye" id="eyeIconNewPassword"></i>
+                        </button>
+                        <!-- </div> -->
+                        <span id="new_password_error" style="color:red"></span>
+                    </div>
+                    <div class="form-group password-field"
+                        style="display: none; margin-bottom: 30px; position: relative;">
+                        <label for="retype-password">Retype New Password</label>
+                        <!-- <div class="input-group"> -->
+                        <input type="password" name="retype_password" placeholder="Retype New Password"
+                            class="form-control" id="retype-password" required />
+                        <button class="eyeBtn" type="button"
+                            onclick="togglePassword('retype-password', 'eyeIconRetypePassword')"
+                            style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%); border: none; background: transparent; cursor: pointer;">
+                            <i class="fa fa-eye" id="eyeIconRetypePassword"></i>
+                        </button>
+                        <!-- </div> -->
+                        <span id="retype_password_error" style="color:red"></span>
+                    </div>
+
+                    <!-- Resend OTP -->
+                    <div class="form-group">
+                        <a class="text-danger" style="display: none;" href="#" id="resend-otp">Resend OTP</a>
+                        <button type="button" class="btn btn-primary" id="send_otp_forgot">Send OTP</button>
+                    </div>
+
+                    <button type="button" class="btn btn-success" id="resetPasswordBtn" style="display: none;">Update
+                        Password</button>
+
+                    <div id="forgotmsgsuccess" class="controls alert alert-success" role="alert"
+                        style="display: none; padding: 4px 10px;"></div>
+                    <div id="forgotmsgfailed" class="controls alert alert-danger" role="alert"
+                        style="display: none; padding: 4px 10px;"></div>
+
+                    <input type="hidden" id="appname" value="<?php echo $appName; ?>">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-function togglePassword() {
-    const pwdInput = document.getElementById('user-password');
-    pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+let otpExpirationTime = 300;
+let otpTimerInterval;
+
+function startOtpTimer() {
+    clearInterval(otpTimerInterval);
+    otpExpirationTime = 300;
+
+    otpTimerInterval = setInterval(() => {
+        let minutes = Math.floor(otpExpirationTime / 60);
+        let seconds = otpExpirationTime % 60;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        document.getElementById('countdown').textContent = `${minutes}:${seconds}`;
+
+        if (otpExpirationTime <= 0) {
+            clearInterval(otpTimerInterval);
+            document.getElementById('countdown').textContent = '00:00';
+            $('#resend-otp').show();
+            $('.otp-input').prop('disabled', true);
+        }
+        otpExpirationTime--;
+    }, 1000);
+}
+
+function togglePassword(pwdInputId, eyeIconId) {
+    const pwdInput = document.getElementById(pwdInputId);
+    const eyeIcon = document.getElementById(eyeIconId);
+    if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+    } else {
+        pwdInput.type = 'password';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+    }
+}
+
+$(document).ready(function() {
+    $('#forgot_password').on('click', function(e) {
+        e.preventDefault();
+        $('#forgot_mobile').val('');
+        var mobile = $('#mobile').val();
+        if (mobile != '') {
+            $('#forgot_mobile').val(mobile);
+            $('#forgot_mobile').attr('readonly', true);
+        } else {
+            $('#forgot_mobile').val('');
+            $('#forgot_mobile').attr('readonly', false);
+        }
+        $('#otpFieldForgot').hide();
+        $('.password-field').hide();
+        $('#forgotPasswordModal').modal('show');
+    });
+
+
+
+    $('#send_otp_forgot').on('click', function(e) {
+        e.preventDefault();
+        var mobileNumber = $('#forgot_mobile').val().trim();
+        var mobileRegex = /^[6-9]\d{9}$/;
+
+        if (mobileNumber !== '') {
+            if (!mobileRegex.test(mobileNumber)) {
+                $('#forgot_mobile_error').text('Please enter a valid 10-digit mobile number.').show();
+                return;
+            } else {
+                $('#forgot_mobile_error').text('').hide();
+            }
+
+            $('#send_otp_forgot').text('Reset Password');
+
+            if ($('#otpFieldForgot').is(':visible')) {
+                var otp = $('#forgot_otp').val().trim();
+                if (otp === '') {
+                    $('#otpFieldForgot_error').text("Please enter OTP").show();
+                } else {
+                    $('#forgot_otp').val('');
+                    $('#otpTimerForgot').hide();
+                    otpExpirationTime = 5 * 60;
+                    startOtpTimer();
+                    $('#otpFieldForgot_error').text('').hide();
+                    validateForgotOtp(mobileNumber, otp);
+                }
+            } else if ($('.password-field').is(':visible')) {
+                updatePassword();
+            } else {
+                checkmobileNoExists(mobileNumber);
+            }
+        } else {
+            $('#mobileerror').text('Please enter a mobile number.').show();
+        }
+    });
+
+    $('#resend-otp').on('click', function() {
+        const mobileNumber = $('#forgot_mobile').val().trim();
+        if (mobileNumber) {
+            const newOtp = generateOtp();
+            sendForgotOTPToMobile(mobileNumber, newOtp);
+            $('.otp-input').val('').prop('disabled', false);
+            $('#resend-otp').hide();
+            $('#otpTimerForgot').show();
+            startOtpTimer();
+        }
+    });
+
+    $('.otp-input').on('input', function() {
+        const $input = $(this);
+        const value = $input.val().replace(/[^0-9]/g, '');
+        $input.val(value);
+        if (value && $input.next('.otp-input').length) {
+            $input.next('.otp-input').focus();
+        }
+        updateOTP();
+    });
+
+    $('.otp-input').on('keydown', function(e) {
+        const $input = $(this);
+        if (e.key === 'Backspace' && !$input.val() && $input.prev('.otp-input').length) {
+            $input.prev('.otp-input').focus();
+        }
+    });
+});
+
+function updateOTP() {
+    let otp = '';
+    $('.otp-input').each(function() {
+        otp += $(this).val();
+    });
+    $('#forgot_otp').val(otp);
+}
+
+function checkmobileNoExists(mobileNumber) {
+    $.ajax({
+        type: "POST",
+        url: 'action/checkMobileExists.php',
+        data: {
+            mobileNumber: mobileNumber
+        },
+        beforeSend: function() {
+            $('#send_otp_forgot').prop("disabled", true);
+        },
+        success: function(dataResult) {
+            dataResult = JSON.parse(dataResult);
+            if (dataResult.exists === 1) {
+                var otp = generateOtp();
+                sendForgotOTPToMobile(mobileNumber, otp);
+                $('#otpFieldForgot').show();
+                $('#fullNameField').hide();
+                // $("#forgotmsgsuccess").html('OTP sent to your mobile.').hide().fadeIn(800).delay(3000)
+                //     .fadeOut("fast");
+            } else {
+                $("#forgotmsgfailed").html('Mobile number does not exist. Please check and try again.')
+                    .hide().fadeIn(800).delay(3000).fadeOut("fast");
+                $('#forgot_mobile').val('');
+                $('#forgot_mobile').attr('readonly', false);
+            }
+        },
+        complete: function() {
+            $('#send_otp_forgot').prop("disabled", false);
+        }
+    });
+}
+
+function sendForgotOTPToMobile(mobileNumber, otp) {
+    $.ajax({
+        type: "POST",
+        url: 'action/sendOTP.php',
+        data: {
+            mobileNumber: mobileNumber,
+            otp: otp
+        },
+        success: function(response) {
+            response = JSON.parse(response);
+            if (response.statusCode === 200) {
+                $('#generatedOtp').val(otp);
+                $("#forgotmsgsuccess").html('OTP sent to your mobile.').hide().fadeIn(800).delay(3000)
+                    .fadeOut("fast");
+                $('#otpTimerForgot').show();
+                startOtpTimer();
+            }
+        },
+        error: function() {
+            $("#forgotmsgfailed").html('Error occurred while sending OTP.')
+                .hide().fadeIn(800).delay(3000).fadeOut("fast");
+        }
+    });
+}
+
+function validateForgotOtp(mobileNumber, otpEntered) {
+    $.ajax({
+        type: "POST",
+        url: 'action/sendOTP.php',
+        data: {
+            verifyMobileNumber: mobileNumber,
+            verifyOtp: otpEntered
+        },
+        success: function(response) {
+            var responseData = JSON.parse(response);
+            if (responseData.statusCode === 200) {
+                $("#forgotmsgsuccess").html(responseData.msg).hide().fadeIn(800).delay(3000).fadeOut(
+                    "fast");
+                $('#otpFieldForgot').hide();
+                $('.password-field').show();
+
+            } else {
+                $("#forgotmsgfailed").html(responseData.msg || 'OTP verification failed.').hide().fadeIn(
+                    800).delay(3000).fadeOut("fast");
+                $('#otp').val('');
+                $('#resend-otp').show();
+            }
+        },
+        error: function() {
+            alert('Error occurred during OTP verification.');
+        }
+    });
+}
+
+function updatePassword() {
+    var newPassword = $('#new-password').val().trim();
+    var retypePassword = $('#retype-password').val().trim();
+
+    if (newPassword === '') {
+        $('#new_password_error').text('Please enter a new password.').show();
+        return;
+    } else {
+        $('#new_password_error').text('').hide();
+    }
+
+    if (retypePassword === '') {
+        $('#retype_password_error').text('Please retype the new password.').show();
+        return;
+    } else {
+        $('#retype_password_error').text('').hide();
+    }
+
+    if (newPassword !== retypePassword) {
+        $('#retype_password_error').text('Passwords do not match.').show();
+        return;
+    } else {
+        $('#retype_password_error').text('').hide();
+    }
+
+    $.ajax({
+        type: "POST",
+        url: 'action/updatePassword.php',
+        data: {
+            mobileNumber: $('#forgot_mobile').val().trim(),
+            newPassword: newPassword,
+            appname: '<?= $appName ?>',
+            developmentMode: '<?= $developmentMode ?>'
+        },
+        success: function(response) {
+            var responseData = JSON.parse(response);
+            if (responseData.error === false) {
+                $("#forgotmsgsuccess").html(responseData.message).hide().fadeIn(800).delay(3000).fadeOut(
+                    "fast",
+                    function() {
+                        $('#forgotPasswordModal').modal(
+                            'hide');
+                    });
+            } else {
+                $("#forgotmsgfailed").html(responseData.message || 'Failed to update password.').hide()
+                    .fadeIn(800).delay(3000).fadeOut("fast");
+            }
+        },
+        error: function() {
+            alert('Error occurred while updating password.');
+        }
+    });
+}
+
+function generateOtp() {
+    return Math.floor(1000 + Math.random() * 9000).toString();
 }
 </script>

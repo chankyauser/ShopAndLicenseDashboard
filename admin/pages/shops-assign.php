@@ -1,16 +1,16 @@
  <style type="text/css">
-     .avatar .avatar-content .avatar-icon {
-        font-size: 2.2rem;
-    }
-    .btn {
-        padding: 0.9rem 1rem;
-    }
+.avatar .avatar-content .avatar-icon {
+    font-size: 2.2rem;
+}
+.btn {
+    padding: 0.9rem 1rem;
+}
    
  </style>
 
-<section id="dashboard-analytics">
+ <section id="dashboard-analytics">
 
-<?php 
+     <?php 
         if(!isset($_SESSION['SAL_ShopAssign_Filter_Type'])){
             $shopAssignFilterType = "New";
             $_SESSION['SAL_ShopAssign_Filter_Type'] = $shopAssignFilterType;
@@ -70,6 +70,11 @@
             $callingCategoryCd = $_SESSION['SAL_Calling_Category_Cd'];
         }
 
+        $categoryCondition = '';
+        if($callingCategoryCd !== '' && $callingCategoryCd !== 'All'){
+            $categoryCondition = " AND sd.Calling_Category_Cd = $callingCategoryCd";
+        }
+          
         if($nodeName == 'All'){
             $nodeNameCondition = " AND nm.NodeName <> '' ";
         }else{
@@ -83,78 +88,111 @@
         }
 
     ?>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <!-- <div class="card-header">
+     <div class="row">
+         <div class="col-md-12">
+             <div class="card">
+                 <!-- <div class="card-header">
                     <h4 class="card-title">Survey Assign</h4>
                 </div> -->
-                <div class="card-content">
-                    <div class="card-body">
-                       
-                            <div class="row">
-                                <input type="hidden" name="electionName" value="<?php echo $electionName; ?>">
-                                <div class="col-md-3 col-12">
-                                    <?php include 'dropdown-node.php'; ?>
-                                </div>
-                                <div class="col-md-3 col-12">
-                                    <?php include 'dropdown-nodecd-and-wardno.php'; ?>
-                                </div>
-                                <div class="col-xs-12 col-md-3 col-xl-3">
-                                    <div class="form-group">
-                                        <label>Filter Type</label>
-                                        <div class="controls"> 
-                                            <select class="select2 form-control" name="shopAssignFilterType" onchange="setShopAssignFilterType(this.value)">
-                                                <option <?php echo $shopAssignFilterType == 'New' ? 'selected' : '' ; ?> value="New">New</option>  
-                                                <?php if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) && ( $_SESSION['SAL_ElectionName']== 'PCMC' ) ){ ?> 
-                                                    <option <?php echo $shopAssignFilterType == 'SurveyShopReVisitUsingQuery' ? 'selected' : '' ; ?> value="SurveyShopReVisitUsingQuery">Shop Survey Re-Visit Using Query</option>
-                                                    <option <?php echo $shopAssignFilterType == 'ShopDocumentReVisitUsingQuery' ? 'selected' : '' ; ?> value="ShopDocumentReVisitUsingQuery">Shop Document Re-Visit Using Query</option>
-                                                <?php } ?>
-                                                    <option <?php echo $shopAssignFilterType == 'InvalidMobilePhoto' ? 'selected' : '' ; ?> value="InvalidMobilePhoto">Invalid Mobile, Photo, Documents</option>
+                 <div class="card-content">
+                     <div class="card-body">
 
-                                                    <option <?php echo $shopAssignFilterType == 'DocumentsDenied' ? 'selected' : '' ; ?> value="DocumentsDenied">Documents Denied</option>
+                         <div class="row">
+                             <input type="hidden" name="electionName" value="<?php echo $electionName; ?>">
+                             <div class="col-md-3 col-12">
+                                 <?php include 'dropdown-node.php'; ?>
+                             </div>
+                             <div class="col-md-3 col-12">
+                                 <?php include 'dropdown-nodecd-and-wardno.php'; ?>
+                             </div>
+                             <div class="col-xs-12 col-md-3 col-xl-3">
+                                 <div class="form-group">
+                                     <label>Filter Type</label>
+                                     <div class="controls">
+                                         <select class="select2 form-control" name="shopAssignFilterType"
+                                             onchange="setShopAssignFilterType(this.value)">
+                                             <option <?php echo $shopAssignFilterType == 'New' ? 'selected' : '' ; ?>
+                                                 value="New">New</option>
+                                             <?php if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) && ( $_SESSION['SAL_ElectionName'] == 'PCMC' ) ){ ?>
+                                             <option
+                                                 <?php echo $shopAssignFilterType == 'SurveyShopReVisitUsingQuery' ? 'selected' : '' ; ?>
+                                                 value="SurveyShopReVisitUsingQuery">Shop Survey Re-Visit Using Query
+                                             </option>
+                                             <option
+                                                 <?php echo $shopAssignFilterType == 'ShopDocumentReVisitUsingQuery' ? 'selected' : '' ; ?>
+                                                 value="ShopDocumentReVisitUsingQuery">Shop Document Re-Visit Using
+                                                 Query</option>
+                                             <?php } ?>
+                                             <option
+                                                 <?php echo $shopAssignFilterType == 'InvalidMobilePhoto' ? 'selected' : '' ; ?>
+                                                 value="InvalidMobilePhoto">Invalid Mobile, Photo, Documents</option>
 
-                                                    <option <?php echo $shopAssignFilterType == 'NoDocument' ? 'selected' : '' ; ?> value="NoDocument">No Document Collected</option>
-                                                    
-													<option <?php echo $shopAssignFilterType == 'QCDocumentPending' ? 'selected' : '' ; ?> value="QCDocumentPending">QC - Document Pending</option>
-                                                <?php if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) && ( $_SESSION['SAL_ElectionName']== 'PCMC' ) ){ ?> 
-                                                    
+                                             <option
+                                                 <?php echo $shopAssignFilterType == 'DocumentsDenied' ? 'selected' : '' ; ?>
+                                                 value="DocumentsDenied">Documents Denied</option>
 
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-12">
-                                    <?php include 'dropdown-calling-type.php'; ?>
-                                </div>
-                                <div class="col-md-4 col-12" style="display: none;">
-                                    <?php //include 'dropdown-calling-category.php'; ?>
-                                </div>
-                                <div class="col-md-3 col-12">
-                                    <div class="form-group">
-                                        <label for="assign_date">Assign Date</label>
-                                        <input type='text' name="assign_date" value="<?php echo $assign_date;?>" class="form-control pickadate-disable-assigndates" onchange="setAssignDateInSession()"  />
-                                    </div>
-                                </div>
-                                
-                                
-                                <div class="col-md-4 col-12">
-                                    <?php include 'dropdown-assign-executive-name.php'; ?>
-                                </div>
-                                <div class="col-md-1 col-12">
-                                    <div class="form-group">
-                                        <label for="shops">Shops</label>
-                                        <input type="text" class="form-control" name="shopsAssignCount" value="" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" required>
-                                    </div>
-                                </div>
+                                             <option
+                                                 <?php echo $shopAssignFilterType == 'NoDocument' ? 'selected' : '' ; ?>
+                                                 value="NoDocument">No Document Collected</option>
 
-                                <div class="col-md-3 col-12"  style="margin-top: 25px;">
-                                    <div class="form-group">
-                                        <label for="pockets">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                        <?php if($shopAssignFilterType == "New"){ ?>
-                                                <button id="submitProcessSurveyShopTrackingFlagBtnId" type="button" name="refesh" class="btn btn-primary" onclick="setProcessSurveyShopTrackingFlag('<?php echo $shopAssignFilterType; ?>')" style="display: none;" >Survey Process</button>
-                                        <?php 
+                                             <option
+                                                 <?php echo $shopAssignFilterType == 'QCDocumentPending' ? 'selected' : '' ; ?>
+                                                 value="QCDocumentPending">QC - Document Pending</option>
+                                             <?php if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) && ( $_SESSION['SAL_ElectionName']== 'PCMC' ) ){ ?>
+
+
+                                             <?php } ?>
+                                         </select>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="col-md-3 col-12">
+                                 <?php include 'dropdown-calling-type.php'; ?>
+                             </div>
+                             <div class="col-md-3 col-12">
+                                 <?php include 'dropdown-calling-category.php'; ?>
+                             </div>
+                             <div class="col-md-3 col-12">
+                                 <div class="form-group">
+                                     <label for="assign_date">Assign Date</label>
+                                     <input type='text' name="assign_date" value="<?php echo $assign_date;?>"
+                                         class="form-control pickadate-disable-assigndates"
+                                         onchange="setAssignDateInSession()" />
+                                 </div>
+                             </div>
+
+
+                             <div class="col-md-3 col-12">
+                                 <?php include 'dropdown-assign-executive-name.php'; ?>
+                             </div>
+                             <div class="col-md-3 col-12">
+                                 <div class="form-group">
+                                     <label for="shops">Shops</label>
+                                     <input type="text" class="form-control" name="shopsAssignCount" value=""
+                                         onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"
+                                         required>
+                                 </div>
+                             </div>
+
+                             <div class="col-md-3 col-12">
+                                 <div class="form-group">
+                                     <input type="hidden" class="form-control" name="multiplePockets">
+                                     <label for="refesh"></label>
+                                     <button id="submitShopsAssignBtnId" type="button" name="refesh"
+                                         class="btn btn-primary"
+                                         onclick="setAssignShopsToExecutiveByPockets()">Assign</button>
+                                 </div>
+                             </div>
+
+                             <div class="col-md-3 col-12" style="margin-top: 25px;">
+                                 <div class="form-group">
+                                     <label for="pockets">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                     <?php if($shopAssignFilterType == "New"){ ?>
+                                     <button id="submitProcessSurveyShopTrackingFlagBtnId" type="button" name="refesh"
+                                         class="btn btn-primary"
+                                         onclick="setProcessSurveyShopTrackingFlag('<?php echo $shopAssignFilterType; ?>')"
+                                         style="display: none;">Survey Process</button>
+                                     <?php 
 
                                             }elseif($shopAssignFilterType == "SurveyShopReVisitUsingQuery"){ 
 
@@ -181,6 +219,7 @@
                                                                 ISNULL(sm.ShopStatus,'') = '' OR 
                                                                 sm.ShopStatus in (SELECT ApplicationStatus as ShopStatus FROM StatusMaster WHERE ISNULL(Remark,'') <> 'ShopAccess' AND IsActive = 1) 
                                                             )
+                                                            $categoryCondition
                                                             $nodeNameCondition
                                                             $nodeWardCondition
                                                            -- order by SurveyDate desc
@@ -204,6 +243,7 @@
                                                         INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                                                         LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                                                         WHERE sd.ScheduleCall_Cd IS NULL 
+                                                        $categoryCondition
                                                         $nodeNameCondition
                                                         $nodeWardCondition
                                                     ";
@@ -212,15 +252,18 @@
                                                     if(sizeof($dataProcessScheduling)>0){
                                                         if($dataProcessScheduling["ShopCount"]>0){
                                             ?>
-                                                <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh" class="btn btn-primary" onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')" ><?php echo $dataProcessScheduling["ShopCount"]; ?> Process Scheduling</button>
+                                     <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh"
+                                         class="btn btn-primary"
+                                         onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')"><?php echo $dataProcessScheduling["ShopCount"]; ?>
+                                         Process Scheduling</button>
 
-                                                <?php
+                                     <?php
                                                         }
                                                     }
                                                 ?>
 
-                                            <?php } ?>
-                                        <?php }elseif($shopAssignFilterType == "InvalidMobilePhoto"){ 
+                                     <?php } ?>
+                                     <?php }elseif($shopAssignFilterType == "InvalidMobilePhoto"){ 
 
                                                 if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) ){ 
                                                     $dataProcessScheduling = array();
@@ -279,23 +322,26 @@
                                                         INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                                                         LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                                                         WHERE sd.ScheduleCall_Cd IS NULL
+                                                        $categoryCondition
                                                         $nodeNameCondition
                                                         $nodeWardCondition 
                                                     ";
-                                                    // echo $query;
-                                                $dataProcessScheduling = $db->ExecutveQuerySingleRowSALData($query, $electionName, $developmentMode);
+                                                    $dataProcessScheduling = $db->ExecutveQuerySingleRowSALData($query, $electionName, $developmentMode);
                                                     if(sizeof($dataProcessScheduling)>0){
                                                         if($dataProcessScheduling["ShopCount"]>0){
-                                            ?>
-                                                <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh" class="btn btn-primary" onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')" ><?php echo $dataProcessScheduling["ShopCount"]; ?> Process Scheduling</button>
+                                                    ?>
+                                     <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh"
+                                         class="btn btn-primary"
+                                         onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')"><?php echo $dataProcessScheduling["ShopCount"]; ?>
+                                         Process Scheduling</button>
 
-                                                <?php
+                                     <?php
                                                         }
                                                     }
-                                                ?>
+                                    ?>
 
-                                            <?php } ?>
-                                        <?php }else if($shopAssignFilterType == "NoDocument"){
+                                     <?php } ?>
+                                     <?php }else if($shopAssignFilterType == "NoDocument"){
 
                                                 if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) ){ 
                                                     $dataProcessScheduling = array();
@@ -353,6 +399,7 @@
                                                         INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                                                         LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                                                         WHERE sd.ScheduleCall_Cd IS NULL
+                                                        $categoryCondition
                                                         $nodeNameCondition
                                                         $nodeWardCondition
                                                     ";
@@ -361,16 +408,19 @@
                                                     if(sizeof($dataProcessScheduling)>0){
                                                         if($dataProcessScheduling["ShopCount"]>0){
                                             ?>
-                                                <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh" class="btn btn-primary" onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')" ><?php echo $dataProcessScheduling["ShopCount"]; ?> Process Scheduling</button>
+                                     <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh"
+                                         class="btn btn-primary"
+                                         onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')"><?php echo $dataProcessScheduling["ShopCount"]; ?>
+                                         Process Scheduling</button>
 
-                                                <?php
+                                     <?php
                                                         }
                                                     }
                                                 ?>
 
-                                            <?php } ?>
+                                     <?php } ?>
 
-                                        <?php }else if($shopAssignFilterType == "QCDocumentPending"){
+                                     <?php }else if($shopAssignFilterType == "QCDocumentPending"){
                                                  if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) ){ 
                                                     $dataProcessScheduling = array();
                                                     $db=new DbOperation();
@@ -408,8 +458,6 @@
                                                                 --( ISNULL(sm.MaleEmp,0) = 0 OR ISNULL(sm.FemaleEmp,0) = 0 OR ISNULL(sm.OtherEmp,0) = 0)  
                                                                 
                                                             )
-                                                            
-
                                                             $nodeNameCondition
                                                             $nodeWardCondition
                                                         --ORDER BY sm.SurveyDate 
@@ -430,6 +478,7 @@
                                                         INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                                                         LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                                                         WHERE sd.ScheduleCall_Cd IS NULL
+                                                        $categoryCondition
                                                         $nodeNameCondition
                                                         $nodeWardCondition
                                                     ";
@@ -438,16 +487,19 @@
                                                     if(sizeof($dataProcessScheduling)>0){
                                                         if($dataProcessScheduling["ShopCount"]>0){
                                             ?>
-                                                <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh" class="btn btn-primary" onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')" ><?php echo $dataProcessScheduling["ShopCount"]; ?> Process Scheduling</button>
+                                     <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh"
+                                         class="btn btn-primary"
+                                         onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')"><?php echo $dataProcessScheduling["ShopCount"]; ?>
+                                         Process Scheduling</button>
 
-                                                <?php
+                                     <?php
                                                         }
                                                     }
                                                 ?>
 
-                                            <?php } ?>
+                                     <?php } ?>
 
-                                        <?php }elseif($shopAssignFilterType == "DocumentsDenied"){
+                                     <?php }elseif($shopAssignFilterType == "DocumentsDenied"){
 
                                                   if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' )  ){ 
                                                 $dataProcessScheduling = array();
@@ -486,6 +538,7 @@
                                                         INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                                                         LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                                                         WHERE sd.ScheduleCall_Cd IS NULL
+                                                        $categoryCondition
                                                         $nodeNameCondition
                                                         $nodeWardCondition 
                                                     ";
@@ -494,42 +547,41 @@
                                                     if(sizeof($dataProcessScheduling)>0){
                                                         if($dataProcessScheduling["ShopCount"]>0){
                                             ?>
-                                                <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh" class="btn btn-primary" onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')" ><?php echo $dataProcessScheduling["ShopCount"]; ?> Process Scheduling</button>
+                                     <button id="submitProcessScheduleShopsBtnId" type="button" name="refesh"
+                                         class="btn btn-primary"
+                                         onclick="setProcessScheduleShops('<?php echo $shopAssignFilterType; ?>')"><?php echo $dataProcessScheduling["ShopCount"]; ?>
+                                         Process Scheduling</button>
 
-                                                <?php
+                                     <?php
                                                         }
                                                     }
                                                 ?>
 
-                                            <?php } ?>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                                <input type="hidden" class="form-control" name="pocketsCount" value="" disabled>
-                                <input type="hidden" class="form-control" name="shopsCount" value="" disabled>
-                                
+                                     <?php } ?>
+                                     <?php } ?>
+                                 </div>
+                             </div>
+                             <input type="hidden" class="form-control" name="pocketsCount" value="" disabled>
+                             <input type="hidden" class="form-control" name="shopsCount" value="" disabled>
 
-                                <div class="col-md-1 col-12 text-right" >
-                                     <div class="form-group">
-                                        <input type="hidden" class="form-control" name="multiplePockets" >
-                                        <label for="refesh"></label>
-                                        <button id="submitShopsAssignBtnId" type="button" name="refesh" class="btn btn-primary" onclick="setAssignShopsToExecutiveByPockets()" >Assign</button>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-12 col-xl-12" >
-                                    <img id="idAssignShopsLoading" src="app-assets/images/loader/loading.gif" style="display: none;" height="64" width="64" />
-                                    <span id="idAssignShopsMsgSuccess" class="btn btn-success" style="display: none;"></span>
-                                    <span id="idAssignShopsMsgFailure" class="btn btn-danger" style="display: none;"></span>
-                                </div>
-                            </div>
-                       
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <?php
+
+                             <div class="col-xs-12 col-md-12 col-xl-12">
+                                 <img id="idAssignShopsLoading" src="app-assets/images/loader/loading.gif"
+                                     style="display: none;" height="64" width="64" />
+                                 <span id="idAssignShopsMsgSuccess" class="btn btn-success"
+                                     style="display: none;"></span>
+                                 <span id="idAssignShopsMsgFailure" class="btn btn-danger"
+                                     style="display: none;"></span>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+     <?php
         $dataSurveyAssignSummary = array();
         $db3=new DbOperation();
         $userName=$_SESSION['SAL_UserName'];
@@ -585,6 +637,7 @@
                     INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                     LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                     WHERE st.ScheduleCall_Cd IS NULL
+                    $categoryCondition
                     $nodeNameCondition
                     $nodeWardCondition
                 ) a,
@@ -595,7 +648,11 @@
                 GROUP BY a.Pocket_Cd,pm.PocketName,
                 nm.Ward_No,nm.NodeName
                 ORDER BY nm.Ward_No ";
+
+                // echo $query3; exit;
+
                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
+
         }else if($shopAssignFilterType=="SurveyShopReVisitUsingQuery"){
             if($callingType=="Survey"){
                 $query3 = "SELECT
@@ -610,7 +667,6 @@
                             sm.Shop_Cd = sd.Shop_Cd AND CONVERT(VARCHAR,sd.CallingDate,23) <= '$assign_date' 
                             AND sd.Calling_Category_Cd in ( SELECT Calling_Category_Cd 
                                 FROM CallingCategoryMaster WHERE Calling_Type = '$callingType')
-
                             --AND sm.surveyby ='AMIRODDIN_S'
                             AND sm.surveyby ='BHUSHAN_P16'
                             AND MONTH(sm.SurveyDate) = 12
@@ -625,6 +681,7 @@
                     INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                     LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                     WHERE st.ScheduleCall_Cd IS NULL
+                    $categoryCondition
                     $nodeNameCondition
                     $nodeWardCondition
                 ) a,
@@ -635,6 +692,7 @@
                 GROUP BY a.Pocket_Cd,pm.PocketName,
                 nm.Ward_No,nm.NodeName
                 ORDER BY nm.Ward_No ";
+                // echo $query3; exit;
                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
             }
         }else if($shopAssignFilterType=="InvalidMobilePhoto"){
@@ -672,6 +730,7 @@
                     INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                     LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                     WHERE st.ScheduleCall_Cd IS NULL
+                    $categoryCondition
                     $nodeNameCondition
                     $nodeWardCondition
                 ) a,
@@ -682,6 +741,7 @@
                 GROUP BY a.Pocket_Cd,pm.PocketName,
                 nm.Ward_No,nm.NodeName
                 ORDER BY nm.Ward_No ";
+                // echo $query3; exit;
                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
             }
         }else if($shopAssignFilterType=="NoDocument"){
@@ -722,16 +782,18 @@
                     INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                     LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                     WHERE st.ScheduleCall_Cd IS NULL 
+                    $categoryCondition
                     $nodeNameCondition
                     $nodeWardCondition
                 ) a,
                 PocketMaster pm, NodeMaster nm
                 WHERE pm.Pocket_Cd = a.Pocket_Cd
-                AND nm.Node_Cd = pm.Node_Cd
-                 
+                AND nm.Node_Cd = pm.Node_Cd 
                 GROUP BY a.Pocket_Cd,pm.PocketName,
                 nm.Ward_No,nm.NodeName
                 ORDER BY nm.Ward_No ";
+
+                // echo $query3; exit;
                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
             }
         }else if($shopAssignFilterType=="QCDocumentPending"){
@@ -773,6 +835,7 @@
                     INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                     LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                     WHERE st.ScheduleCall_Cd IS NULL 
+                    $categoryCondition
                     $nodeNameCondition
                     $nodeWardCondition
                 ) a,
@@ -783,6 +846,7 @@
                 GROUP BY a.Pocket_Cd,pm.PocketName,
                 nm.Ward_No,nm.NodeName
                 ORDER BY nm.Ward_No ";
+                // echo $query3; exit;
                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
             }
         }else if($shopAssignFilterType=="DocumentsDenied"){
@@ -809,102 +873,111 @@
                     INNER JOIN NodeMaster nm on (nm.Node_Cd = pm.Node_Cd)
                     LEFT JOIN ShopTracking st on st.ScheduleCall_Cd = sd.ScheduleCall_Cd
                     WHERE st.ScheduleCall_Cd IS NULL
+                    $categoryCondition
                     $nodeNameCondition
                     $nodeWardCondition
                 ) a,
                 PocketMaster pm, NodeMaster nm
                 WHERE pm.Pocket_Cd = a.Pocket_Cd
                 AND nm.Node_Cd = pm.Node_Cd
-                 
                 GROUP BY a.Pocket_Cd,pm.PocketName,
                 nm.Ward_No,nm.NodeName
                 ORDER BY nm.Ward_No";
+                // echo $query3; exit;
                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
             }
         }
 
     ?>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5><?php if($shopAssignFilterType=="InvalidMobilePhoto"){ ?> Invalid ShopKeeper Name or Mobile And Shop Outside Photo - <?php }else if($shopAssignFilterType=="SurveyShopReVisitUsingQuery"){ ?> Survey Re-Visit Using Query - <?php }else if($shopAssignFilterType=="NoDocument"){ ?> Survey but No Documents Collected - <?php }else if($shopAssignFilterType=="QCDocumentPending"){ ?> QC Done But Documents Pending - <?php }else if($shopAssignFilterType=="DocumentsDenied"){ ?> Documents Denied - <?php }else{ }  ?>  Shops Assigning for <?php echo $callingType; ?>  -  <?php echo date('d/m/Y',strtotime($assign_date)); ?>
-                    </h5>
-                </div>
-                <div class="card-content">
-                    <div class="card-body card-dashboard">
-                        <div class="table-responsive">
-                            <table  class="table table-striped table-bordered complex-headers">
-                                <thead>
-                                    <tr>
-                                        <th>Select</th>
-                                        <th>Pocket Name</th>
-                                        <th>Ward No</th>
-                                        <th>Zone Office</th>
-                                        <th>Shops</th>
-                                        <?php 
+     <div class="row">
+         <div class="col-12">
+             <div class="card">
+                 <div class="card-header">
+                     <h5><?php if($shopAssignFilterType=="InvalidMobilePhoto"){ ?> Invalid ShopKeeper Name or Mobile And
+                         Shop Outside Photo - <?php }else if($shopAssignFilterType=="SurveyShopReVisitUsingQuery"){ ?>
+                         Survey Re-Visit Using Query - <?php }else if($shopAssignFilterType=="NoDocument"){ ?> Survey
+                         but No Documents Collected - <?php }else if($shopAssignFilterType=="QCDocumentPending"){ ?> QC
+                         Done But Documents Pending - <?php }else if($shopAssignFilterType=="DocumentsDenied"){ ?>
+                         Documents Denied - <?php }else{ }  ?> Shops Assigning for <?php echo $callingType; ?> -
+                         <?php echo date('d/m/Y',strtotime($assign_date)); ?>
+                     </h5>
+                 </div>
+                 <div class="card-content">
+                     <div class="card-body card-dashboard">
+                         <div class="table-responsive">
+                             <table class="table table-striped table-bordered complex-headers">
+                                 <thead>
+                                     <tr>
+                                         <th>Select</th>
+                                         <th>Pocket Name</th>
+                                         <th>Ward No</th>
+                                         <th>Zone Office</th>
+                                         <th>Shops</th>
+                                         <?php 
                                            // if($callingType != "Calling"){
                                         ?>
-                                            <!-- <th>Action</th> -->
-                                        <?php
+                                         <!-- <th>Action</th> -->
+                                         <?php
                                           //  }
                                         ?>
-                                       
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
+                                     </tr>
+                                 </thead>
+                                 <tbody>
+                                     <?php 
                                         $totalShops = 0;
+                                        // echo "<pre>"; print_r($dataSurveyAssignSummary);exit;
                                         foreach ($dataSurveyAssignSummary as $key => $value) {
                                             $totalShops = $totalShops + $value["ShopCount"];
                                     ?>
-                                        <tr>
-                                            <td> 
-                                                <div class="vs-checkbox-con vs-checkbox-primary">
-                                                    <input type="checkbox" value="<?php echo $value["Pocket_Cd"]; ?>,<?php echo $value["ShopCount"]; ?>" name="assignPockets" onclick="setSelectMultiplePockets()" >
-                                                    <span class="vs-checkbox">
-                                                        <span class="vs-checkbox--check">
-                                                            <i class="vs-icon feather icon-check"></i>
-                                                        </span>
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td><?php echo $value["PocketName"]; ?></td>
-                                            <td><?php echo "W-".$value["Ward_No"]; ?></td>
-                                            <td><?php echo $value["NodeName"]; ?></td>
-                                            <td><?php echo $value["ShopCount"]; ?></td>
-                                            <?php 
+                                     <tr>
+                                         <td>
+                                             <div class="vs-checkbox-con vs-checkbox-primary">
+                                                 <input type="checkbox"
+                                                     value="<?php echo $value["Pocket_Cd"]; ?>,<?php echo $value["ShopCount"]; ?>"
+                                                     name="assignPockets" onclick="setSelectMultiplePockets()">
+                                                 <span class="vs-checkbox">
+                                                     <span class="vs-checkbox--check">
+                                                         <i class="vs-icon feather icon-check"></i>
+                                                     </span>
+                                                 </span>
+                                             </div>
+                                         </td>
+                                         <td><?php echo $value["PocketName"]; ?></td>
+                                         <td><?php echo "W-".$value["Ward_No"]; ?></td>
+                                         <td><?php echo $value["NodeName"]; ?></td>
+                                         <td><?php echo $value["ShopCount"]; ?></td>
+                                         <?php 
                                                 //if($callingType != "Calling"){
                                             ?>
-                                                <!-- <td>
+                                         <!-- <td>
                                                     <a href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&pocktCd=<?php echo $value["Pocket_Cd"]; ?>&action=assign" ><i class="feather icon-layers" style="font-size: 1.5rem;color:#c90d41;" title="Assign Shops"></i></a>
                                                 </td> -->
-                                            <?php
+                                         <?php
                                                 //}
                                             ?>
-                                        </tr>
-                                    
-                                    <?php
+                                     </tr>
+
+                                     <?php
                                         }
                                     ?>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="4"></th>
-                                        <th><?php echo $totalShops; ?></th>
-                                        <!-- <th colspan="1"></th> -->
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-           
+                                 </tbody>
+                                 <tfoot>
+                                     <tr>
+                                         <th colspan="4"></th>
+                                         <th><?php echo $totalShops; ?></th>
+                                         <!-- <th colspan="1"></th> -->
+                                 </tfoot>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
 
-    <?php
+
+     <?php
         $dataAssignExeSummary = array();
 
         if($callingType=='Survey'){
@@ -1220,69 +1293,89 @@
         // }
     ?>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5><?php if($shopAssignFilterType=="InvalidMobilePhoto"){ ?> Invalid ShopKeeper Name or Mobile And Shop Outside Photo - <?php }else if($shopAssignFilterType=="SurveyShopReVisitUsingQuery"){ ?> Shop Survey Re-Visit Using Query - <?php }else if($shopAssignFilterType=="NoDocument"){ ?> Survey but No Documents Collected - <?php }else if($shopAssignFilterType=="QCDocumentPending"){ ?> QC Done But Documents Pending - <?php }else if($shopAssignFilterType=="DocumentsDenied"){ ?> Documents Denied - <?php }else{ }  ?> Executive <?php echo $callingType; ?> Summary - <?php echo date('d/m/Y',strtotime($assign_date)); ?> </h5>
-                </div>
-                <div class="card-content">
-                    <div class="card-body card-dashboard">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered complex-headers">
-                                <thead>
-                                    <tr>
-                                    
-                                        <th colspan="2" style="text-align:center;">Executive </th>
-                                        <th colspan="2" style="text-align:center;">Assigned</th>
-                                        <th colspan="2" style="text-align:center;">Completed</th>
-                                        <th colspan="2" style="text-align:center;">Last Active</th>
-                                       
-                                        
-                                    </tr>
-                                    <tr>
-                                    
-                                        <th style="text-align:center;">Sr.No.</th>
-                                        <th style="text-align:center;">Executive Name</th>
-                                        <th style="text-align:center;">Pockets</th>
-                                        <th style="text-align:center;">Shops</th>
-                                        <th style="text-align:center;">Pockets</th>
-                                        <th style="text-align:center;">Shops</th>
-                                        <th style="text-align:center;">Datetime</th>
-                                        <th style="text-align:center;">Action</th>
-                                   </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
+     <div class="row">
+         <div class="col-12">
+             <div class="card">
+                 <div class="card-header">
+                     <h5><?php if($shopAssignFilterType=="InvalidMobilePhoto"){ ?> Invalid ShopKeeper Name or Mobile And
+                         Shop Outside Photo - <?php }else if($shopAssignFilterType=="SurveyShopReVisitUsingQuery"){ ?>
+                         Shop Survey Re-Visit Using Query - <?php }else if($shopAssignFilterType=="NoDocument"){ ?>
+                         Survey but No Documents Collected -
+                         <?php }else if($shopAssignFilterType=="QCDocumentPending"){ ?> QC Done But Documents Pending -
+                         <?php }else if($shopAssignFilterType=="DocumentsDenied"){ ?> Documents Denied -
+                         <?php }else{ }  ?> Executive <?php echo $callingType; ?> Summary -
+                         <?php echo date('d/m/Y',strtotime($assign_date)); ?> </h5>
+                 </div>
+                 <div class="card-content">
+                     <div class="card-body card-dashboard">
+                         <div class="table-responsive">
+                             <table class="table table-striped table-bordered complex-headers">
+                                 <thead>
+                                     <tr>
+
+                                         <th colspan="2" style="text-align:center;">Executive </th>
+                                         <th colspan="2" style="text-align:center;">Assigned</th>
+                                         <th colspan="2" style="text-align:center;">Completed</th>
+                                         <th colspan="2" style="text-align:center;">Last Active</th>
+
+
+                                     </tr>
+                                     <tr>
+
+                                         <th style="text-align:center;">Sr.No.</th>
+                                         <th style="text-align:center;">Executive Name</th>
+                                         <th style="text-align:center;">Pockets</th>
+                                         <th style="text-align:center;">Shops</th>
+                                         <th style="text-align:center;">Pockets</th>
+                                         <th style="text-align:center;">Shops</th>
+                                         <th style="text-align:center;">Datetime</th>
+                                         <th style="text-align:center;">Action</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody>
+                                     <?php 
                                         $srNo=1;
                                         foreach ($dataAssignExeSummary as $key => $value) {
                                     ?>
-                                        <tr>
-                                            <td style="text-align:center;"><?php echo $srNo++; ?></td>
-                                            <td style="text-align:center;"><?php echo $value["ExecutiveName"]; ?></br><?php echo $value["MobileNo"]; ?></td>
-                                            <td style="text-align:center;"><?php echo $value["PocketCount"]; ?></td>
-                                            <td style="text-align:center;"><?php echo $value["ShopCount"]; ?></td>
-                                            <td style="text-align:center;"><?php echo $value["PocketsCompleted"]; ?></td>
-                                            <td style="text-align:center;"><?php echo $value["ShopsCompleted"]; ?></td>
-                                            <td style="text-align:center;"><?php if(!empty($value["LastActiveTime"])){ echo date('h:i a', strtotime($value["LastActiveTime"])); }  ?></td>
-                                            <td style="text-align:center;">
-                                                <a title="View" href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&assignExeCd=<?php echo $value["Executive_Cd"]; ?>&action=view" ><i class="feather icon-eye" style="font-size: 1.2rem;color:#c90d41;"></i></a>&nbsp;&nbsp;&nbsp;
-                                                <a title="Edit" href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&assignExeCd=<?php echo $value["Executive_Cd"]; ?>&action=edit" ><i class="feather icon-edit" style="font-size: 1.2rem;color:#c90d41;"></i></a>&nbsp;&nbsp;&nbsp;
-                                                <a title="Transfer" href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&assignExeCd=<?php echo $value["Executive_Cd"]; ?>&action=transfer" ><i class="feather icon-log-out" style="font-size: 1.2rem;color:#c90d41;"></i></a>&nbsp;&nbsp;&nbsp;
+                                     <tr>
+                                         <td style="text-align:center;"><?php echo $srNo++; ?></td>
+                                         <td style="text-align:center;">
+                                             <?php echo $value["ExecutiveName"]; ?></br><?php echo $value["MobileNo"]; ?>
+                                         </td>
+                                         <td style="text-align:center;"><?php echo $value["PocketCount"]; ?></td>
+                                         <td style="text-align:center;"><?php echo $value["ShopCount"]; ?></td>
+                                         <td style="text-align:center;"><?php echo $value["PocketsCompleted"]; ?></td>
+                                         <td style="text-align:center;"><?php echo $value["ShopsCompleted"]; ?></td>
+                                         <td style="text-align:center;">
+                                             <?php if(!empty($value["LastActiveTime"])){ echo date('h:i a', strtotime($value["LastActiveTime"])); }  ?>
+                                         </td>
+                                         <td style="text-align:center;">
+                                             <a title="View"
+                                                 href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&assignExeCd=<?php echo $value["Executive_Cd"]; ?>&action=view"><i
+                                                     class="feather icon-eye"
+                                                     style="font-size: 1.2rem;color:#c90d41;"></i></a>&nbsp;&nbsp;&nbsp;
+                                             <a title="Edit"
+                                                 href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&assignExeCd=<?php echo $value["Executive_Cd"]; ?>&action=edit"><i
+                                                     class="feather icon-edit"
+                                                     style="font-size: 1.2rem;color:#c90d41;"></i></a>&nbsp;&nbsp;&nbsp;
+                                             <a title="Transfer"
+                                                 href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&assignExeCd=<?php echo $value["Executive_Cd"]; ?>&action=transfer"><i
+                                                     class="feather icon-log-out"
+                                                     style="font-size: 1.2rem;color:#c90d41;"></i></a>&nbsp;&nbsp;&nbsp;
 
-                                            </td>
-                                        </tr>
+                                         </td>
+                                     </tr>
                                      <?php
                                         }
                                     ?>
-                                </tbody>
-                                
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                                 </tbody>
 
-</section>
+                             </table>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+ </section>
