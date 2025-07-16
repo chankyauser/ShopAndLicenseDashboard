@@ -415,8 +415,12 @@
                                                         class="fa-solid fa-filter-circle-dollar"></i> &nbsp; Pending
                                                     Report</a></li>
 
+                                            <li><a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-owner-details') ){ ?>
+                                                    class="active" <?php }  ?> href="index.php?p=shop-owner-details"> <i
+                                                        class="fa-solid fa-store"></i> &nbsp; Shop Details </a></li>
                                         </ul>
                                     </li>
+
                                     <!-- <li>
                                         <a < ?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-revenue-summary' || $_GET['p']== 'shop-license-defaulters' ) ){ ?> class="active" < ?php } ?>
                                         href="#"><i class="fa-solid fa-indian-rupee-sign"></i> Revenue Statistics </a>
