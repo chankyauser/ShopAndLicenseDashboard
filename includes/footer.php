@@ -359,6 +359,10 @@ $(document).ready(function() {
                                                         onclick="showOtpInput()">
                                                         Resend OTP
                                                     </p>
+
+                                                    <p id="otpTimerCount"
+                                                        style="color: red; font-size: 12px; display:none">OTP expires in
+                                                        <span id="countdown_text">05:00</span></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -734,6 +738,8 @@ $(document).ready(function() {
 let globBusinessDetailCd = 0;
 let globalWardNo = 0;
 let globalSpaceType = 0;
+let otpExpiryTime = 300;
+let otpTimeInterval;
 
 function redirectToEditPage(Shop_Cd) {
     // alert('hello');
@@ -1471,7 +1477,39 @@ function calculate_ShopOwnsPeriod(startDate) {
 }
 
 
+function StartOtpTimers() {
+    clearInterval(otpTimeInterval);
+    otpExpiryTime = 300;
+
+    otpTimeInterval = setInterval(() => {
+        let minutes = Math.floor(otpExpiryTime / 60);
+        let seconds = otpExpiryTime % 60;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        console.log(`${minutes}:${seconds}`);
+        document.getElementById('countdown_text').textContent = `${minutes}:${seconds}`;
+
+        if (otpExpiryTime <= 0) {
+            clearInterval(otpTimeInterval);
+            document.getElementById('countdown_text').textContent = '00:00';
+            $('#resendOTP').show();
+            $('.otp-input').prop('disabled', true);
+        }
+
+        otpExpiryTime--;
+    }, 1000);
+}
+
+
 $(document).ready(function() {
+
+    $('#ShopModal').on('hidden.bs.modal', function() {
+        clearInterval(otpTimerInterval);
+        $('#otpTimerCount').hide();
+        $('#countdown_text').text('05:00');
+        $('#otpvalue').hide();
+    });
 
     $('#ShopModal').modal({
         backdrop: 'static',
@@ -1551,12 +1589,11 @@ $(document).ready(function() {
 
 
     $('#verifyOtpBtn').on('click', function() {
-        var mobileValue = $('#shopkeeper_mobile').val()
+        var mobileValue = $('#shopkeeper_mobile').val();
         var otp = generateOtp();
         $('#verifyOtpBtn').hide();
-        $('#resendOTP').show();
+        // $('#resendOTP').show();
         $('#otpvalue').show();
-
         sendOTPToMobileverify(mobileValue, otp);
 
     });
@@ -1565,11 +1602,11 @@ $(document).ready(function() {
         var mobileNumber = $('#shopkeeper_mobile').val();
         if (mobileNumber.length === 10) {
             var otp = generateOtp();
-            // alert(otp)
             sendOTPToMobileverify(mobileNumber, otp);
             $('#otp').val('');
-            $('#otpField').show();
+            // $('#otpField').show();
             $('#resendOTP').hide();
+            // $('#otpTimerCount').show();
         } else {
             $('#mobileerror').text('Please enter a valid mobile number.');
         }
@@ -1597,11 +1634,15 @@ function validateOtponpage(mobileNumber, otpEntered) {
                 var responseData = JSON.parse(response);
                 if (responseData.statusCode === 200) {
                     $('#resendOTP').hide();
+                    otpExpiryTime = 5 * 60;
+                    $('#otpTimerCount').hide();
                     alert("Mobile Verified successfully!!!")
                     $('#shopkeeper_mobile').attr('readonly', true);
                     $('#otpvalue').hide();
                 } else {
+                    $('#otpvalue').val('');
                     $('#resendOTP').show();
+                    $('#otpTimerCount').hide();
                     alert(responseData.msg || 'OTP verification failed.');
                 }
             },
@@ -1623,8 +1664,11 @@ function sendOTPToMobileverify(mobileNumber, otp) {
         },
         success: function(response) {
             response = JSON.parse(response);
-            if (response.statusCode == 200) {
+            if (response.statusCode === 200) {
                 alert('OTP has been sent to your mobile number!');
+                $('#otpTimerCount').show();
+                otpExpiryTime = 5 * 60;
+                StartOtpTimers();
             } else {
                 alert('Failed to send OTP. Please try again.');
             }
@@ -1643,7 +1687,7 @@ function generateOtp() {
 
 <!-- New Shop Owner Shop Details End -->
 
-<script>
+<!-- <script>
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('copy', event => event.preventDefault());
 document.addEventListener('paste', event => event.preventDefault());
@@ -1689,7 +1733,7 @@ document.addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
-</script>
+</script> -->
 </body>
 
 </html>

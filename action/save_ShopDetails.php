@@ -5,7 +5,7 @@ session_start();
 $electionName = $_SESSION['SAL_ElectionName'];
 $developmentMode = $_SESSION['SAL_DevelopmentMode'];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get form data
+  
     $shop_cd = isset($_POST['shop_cd']) ? trim($_POST['shop_cd']) : '';
     $shopcategory = isset($_POST['shopcategory']) ? trim($_POST['shopcategory']) : '';
     $businesscategory = isset($_POST['businesscategory']) ? trim($_POST['businesscategory']) : '';
@@ -30,9 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $Parwana = $Db->ExecutveQuerySingleRowSALData($ParwanaQuery, $electionName, $developmentMode);
     $ParwanaDetCd = $Parwana['ParwanaDetCd'];
 
-    // echo "<pre>"; print_r($_POST); exit;
-
-    // exit;
 
     $db = new DbOperation();
 
@@ -69,8 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 WHERE Shop_Cd = '$shop_cd'";
         $messaage = "Shop Details Updated successfully";
     }
-    // echo $sql;exit;
-
+    
     $db = new DBOperation();
     $result = $db->RunQuerySALData($sql, $electionName, $developmentMode);
 
