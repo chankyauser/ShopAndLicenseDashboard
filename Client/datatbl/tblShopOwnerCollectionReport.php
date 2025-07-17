@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+                <div class="col-lg-2 col-md-3 col-sm-6 col-12">
                     <div class="form-group mb-2">
                         <label>Owner Name</label>
                         <input type="text" class="form-control" name="OwnerName" id="OwnerName"
@@ -76,13 +76,26 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3 col-md-3 col-sm-6 col-12">
+                <div class="col-lg-2 col-md-3 col-sm-6 col-12">
                     <div class="form-group mb-2">
                         <label>Owner Mobile No</label>
                         <input type="text" class="form-control" name="OwnerMobile" id="OwnerMobile"
                             placeholder="Search Owner Mobile No..." maxlength="10"
                             onkeypress="return (event.charCode >= 48 && event.charCode <= 57) "
                             style="border: 1px solid #F01954;">
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-3 col-sm-6 col-12">
+                    <div class="form-group mb-2">
+                        <label>Status</label>
+                        <select class="form-control" name="confirmationStatus" id="confirmationStatus"
+                            onchange="setNodeAndWardId(this.value)">
+                            <option value="All">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Confirm">Confirm</option>
+                            <option value="Hold">Hold</option>
+                        </select>
                     </div>
                 </div>
 
@@ -102,8 +115,34 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <div class="row mb-4">
-                <h4 class="ps-2">Collection Report - <span id="GetTotalRecods"></span> </h4>
+            <div class="row mb-4 align-items-center justify-content-between">
+                <div class="col-md-auto">
+                    <h4 class="ps-2 m-0">
+                        Collection Report - <span id="GetTotalRecods"></span>
+                    </h4>
+                </div>
+
+                <div class="col-md-auto status-filter d-flex align-items-end d-none">
+                    <div class="form-group me-2">
+                        <label for="Status" class="mb-1">Status</label>
+                        <select class="form-control" id="Status"
+                            style="height: 45px; min-width: 200px; font-size: 1rem;">
+                            <option value="">Select Status</option>
+                            <option value="Confirm">Confirm</option>
+                            <option value="Hold">Hold</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group hold-reason d-none">
+                        <label class="d-block invisible mb-1">Reason</label>
+                        <input type="text" class="form-control" id="HoldReasonInput" name="HoldReasonInput"
+                            placeholder="Enter Hold Reason" style="height: 45px;">
+                    </div>
+                    <div class="form-group">
+                        <label class="d-block invisible mb-1">Update</label>
+                        <button type="button" class="btn btn-primary btn-sm" id="UpdateStatus">Update</button>
+                    </div>
+                </div>
             </div>
             <div class="row mt-2">
                 <div class="col-12">
@@ -116,7 +155,9 @@
                                     <th class="text-left">Ward Name</th>
                                     <th class="text-left">Shop Owner </th>
                                     <th class="text-left">Shop Details</th>
-                                    <th class="text-right">Bill Count</th>
+                                    <th class="text-right">Lincense Details</th>
+                                    <th class="text-right"> Status </th>
+                                    <th class="text-right">Pending </th>
                                     <th class="text-right">Collection</th>
                                 </tr>
                             </thead>
@@ -158,14 +199,34 @@ $(document).ready(function() {
                 d.nodeName = $('#nodeName').val();
                 d.OwnerMobile = $('#OwnerMobile').val();
                 d.OwnerName = $('#OwnerName').val();
+                d.confirmationStatus = $('#confirmationStatus').val();
             }
         },
         columns: [{
                 data: null,
                 render: function(data, type, row, meta) {
-                    return `
-                        ${meta.row + meta.settings._iDisplayStart + 1} 
-                        `;
+                    const index = meta.row + meta.settings._iDisplayStart + 1;
+                    const bills = JSON.parse(row.BillDetailsArray || '[]');
+                    let status = '';
+                    let transactionCd = '';
+
+                    if (bills.length > 0) {
+                        const latestBill = bills[bills.length - 1];
+                        status = latestBill.ConfirmationStatus || '';
+                        transactionCd = latestBill.Transaction_Cd || '';
+                    }
+
+                    if (status.toLowerCase() !== 'confirm') {
+                        return `<span style="display: inline-flex; align-items: center;">
+                                    ${index}
+                                    <input type="checkbox" 
+                                        class="select-pending" 
+                                        data-transcd="${transactionCd}" 
+                                        style="transform: scale(1.5); margin-left: 16px; vertical-align: middle;">
+                                </span>`;
+                    }
+
+                    return `${index}`;
                 },
                 orderable: false,
                 className: 'text-center'
@@ -197,16 +258,48 @@ $(document).ready(function() {
             {
                 data: null,
                 render: function(data) {
-                    return `Shop Name: <strong>${data.ShopName}</strong><br>Shop No: <small>${data.Shop_UID}</small>`;
+                    const shopName = data.ShopName || '';
+                    const shopUID = data.Shop_UID;
+
+                    let output = `Shop Name: <strong>${shopName}</strong>`;
+
+                    if (shopUID) {
+                        output += `<br>Shop No: <small>${shopUID}</small>`;
+                    }
+
+                    return output;
                 },
                 orderable: false
             },
             {
                 data: null,
+                // render: function(data) {
+                //     return `${data.BillCount}
+                //     &nbsp;&nbsp;
+                //     <i class="fas fa-eye text-primary view-bills-icon text-danger" data-bill='${data.BillDetailsArray || "[]"}' data-shopname='${data.ShopName || ''}'style="cursor: pointer;" title="View Bill Details"> </i>`;
+                // },
                 render: function(data) {
-                    return `${data.BillCount}
-                    &nbsp;&nbsp;
-                    <i class="fas fa-eye text-primary view-bills-icon text-danger" data-bill='${data.BillDetailsArray || "[]"}' data-shopname='${data.ShopName || ''}'style="cursor: pointer;" title="View Bill Details"> </i>`;
+                    const bills = JSON.parse(data.BillDetailsArray || '[]');
+
+                    if (data.BillCount === 1 && bills.length === 1) {
+                        return `Bill Number: <strong>${bills[0].BillNo || ''}</strong><br>
+                                License Period: <strong>${bills[0].LicenseStartDate || ''} to ${bills[0].LicenseEndDate || ''}</strong><br>
+                                Amount: <strong>₹${parseFloat(bills[0].BillAmount || 0).toFixed(2)}</strong><br>`;
+
+                    } else if (data.BillCount > 1 && bills.length > 1) {
+                        const latestBill = bills[bills.length - 1];
+                        const safeBillDataAttr = JSON.stringify(bills).replace(/"/g, '&quot;');
+                        return `Latest License Period: <strong>${latestBill.LicenseStartDate || ''} to ${latestBill.LicenseEndDate || ''}</strong><br>
+                                Latest Bill Number: <strong>${latestBill.BillNo || ''}</strong><br>
+                                Total Bills: <strong>${data.BillCount}</strong><br>
+                                <a class="text-primary view-bills-icon text-danger" 
+                                data-bill="${safeBillDataAttr}" 
+                                data-shopname="${data.ShopName || ''}" 
+                                style="cursor: pointer;" 
+                                title="View Bill Details"> View More </a>`;
+                    }
+
+                    return '';
                 },
                 orderable: false,
                 className: 'text-right'
@@ -214,14 +307,106 @@ $(document).ready(function() {
             {
                 data: null,
                 render: function(data) {
-                    var totalAmount = `₹ ${data.TotalAmount}`;
-                    var renewalAmount = "";
-                    if (data.RenewalAmount > 0) {
-                        var originalamt = data.TotalAmount - data.RenewalAmount;
-                        renewalAmount =
-                            `<br><span class="text-danger"> Renewed : ₹ ${data.RenewalAmount}</span>`;
+                    const bills = JSON.parse(data.BillDetailsArray || '[]');
+
+                    let status = '';
+                    let statusBy = '';
+                    let statusDate = '';
+                    let holdReason = '';
+
+                    if (data.BillCount === 1 && bills.length === 1) {
+                        const bill = bills[0];
+                        status = bill.ConfirmationStatus || '';
+                        statusBy = bill.ConfirmationUpdatedBy || '';
+                        statusDate = bill.ConfirmationUpdatedDate || '';
+                        if (status.toLowerCase() === 'hold') {
+                            holdReason =
+                                `<br>Hold Reason: <strong>${bill.HoldReason || 'Not Provided'}</strong>`;
+                        }
+                    } else if (data.BillCount > 1 && bills.length > 1) {
+                        const latestBill = bills[bills.length - 1];
+                        status = latestBill.ConfirmationStatus || '';
+                        statusBy = latestBill.ConfirmationUpdatedBy || '';
+                        statusDate = latestBill.ConfirmationUpdatedDate || '';
+                        if (status.toLowerCase() === 'hold') {
+                            holdReason =
+                                `<br>Hold Reason: <strong>${latestBill.HoldReason || 'Not Provided'}</strong>`;
+                        }
                     }
-                    return `${totalAmount} ${renewalAmount}`;
+
+                    if (status) {
+                        return `<strong>${status}</strong><br>
+                                Status By: <strong>${statusBy}</strong><br>
+                                Status Updated Date: <strong>${statusDate}</strong>${holdReason}`;
+                    }
+
+                    return 'Pending';
+                },
+                orderable: false,
+                className: 'text-right'
+            },
+            {
+                data: null,
+                render: function(data) {
+                    const bills = JSON.parse(data.BillDetailsArray || '[]');
+
+                    let status = '';
+                    let statusBy = '';
+                    let statusDate = '';
+                    let holdReason = '';
+                    let totalPendingAmount = 0;
+
+                    if (data.BillCount === 1 && bills.length === 1) {
+                        const bill = bills[0];
+                        status = bill.ConfirmationStatus || '';
+
+                    } else if (data.BillCount > 1 && bills.length > 1) {
+                        const latestBill = bills[bills.length - 1];
+                        status = latestBill.ConfirmationStatus || '';
+                    }
+
+                    if (!status || status.toLowerCase() !== 'confirm') {
+                        totalPendingAmount = bills.reduce((sum, bill) => {
+                            return sum + parseFloat(bill.Amount || 0);
+                        }, 0);
+
+                        return `₹${totalPendingAmount.toFixed(2)}`;
+                    }
+
+                    return `₹0.00`;
+                },
+                orderable: false,
+                className: 'text-right'
+            },
+            {
+                data: null,
+                render: function(data) {
+                    const bills = JSON.parse(data.BillDetailsArray || '[]');
+
+                    let status = '';
+                    let statusBy = '';
+                    let statusDate = '';
+                    let holdReason = '';
+                    let totalPendingAmount = 0;
+
+                    if (data.BillCount === 1 && bills.length === 1) {
+                        const bill = bills[0];
+                        status = bill.ConfirmationStatus || '';
+
+                    } else if (data.BillCount > 1 && bills.length > 1) {
+                        const latestBill = bills[bills.length - 1];
+                        status = latestBill.ConfirmationStatus || '';
+                    }
+
+                    if (status.toLowerCase() === 'confirm') {
+                        totalPendingAmount = bills.reduce((sum, bill) => {
+                            return sum + parseFloat(bill.Amount || 0);
+                        }, 0);
+
+                        return `₹${totalPendingAmount.toFixed(2)}`;
+                    }
+
+                    return `₹0.00`;
                 },
                 orderable: false,
                 className: 'text-right'
@@ -274,7 +459,7 @@ $(document).ready(function() {
         `;
 
         $('#billingModalBody').html(billingTable);
-        $('#billingModalLabel').text(`Billing Details for ${shopName}`);
+        $('#billingModalLabel').text(`License Details for ${shopName}`);
 
         const modal = new bootstrap.Modal(document.getElementById('billingModal'));
         modal.show();
@@ -295,10 +480,88 @@ $(document).ready(function() {
         }, 500);
     });
 
+     $('#confirmationStatus').on('change', function() {
+        shopTable.ajax.reload();
+    });
+
     $('#OwnerMobile').on('input', function() {
         setTimeout(() => {
             shopTable.ajax.reload();
         }, 500)
+    });
+
+    $(document).on('change', '.select-pending', function() {
+        const anyChecked = $('.select-pending:checked').length > 0;
+
+        if (anyChecked) {
+            $('.status-filter').removeClass('d-none');
+        } else {
+            $('.status-filter').addClass('d-none');
+        }
+    });
+
+    $('#UpdateStatus').on('click', function() {
+        const selectedTranscds = [];
+        $('.select-pending:checked').each(function() {
+            const transCd = $(this).data('transcd');
+            console.log('Selected transaction ID:', transCd); 
+            if (transCd && !isNaN(transCd)) {
+                selectedTranscds.push(Number(transCd)); 
+            }
+        });
+
+        if (selectedTranscds.length === 0) {
+            alert('Please select at least one record.');
+            return;
+        }
+
+        const selectedStatus = $('#Status').val();
+
+        if (!selectedStatus) {
+            alert('Please select a status.');
+            return;
+        }
+
+        let holdReason = '';
+
+        if (selectedStatus === 'Hold') {
+             holdReason = $('#HoldReasonInput').val().trim();
+            if (!holdReason) {
+                alert('Please provide a reason for holding the status.');
+                return;
+            }
+        }
+
+        $.ajax({
+            url: './action/updateConfirmation.php', 
+            method: 'POST',
+            contentType: 'application/json', 
+            data: JSON.stringify({
+                transactionIds: selectedTranscds,
+                status: selectedStatus,
+                holdReason: holdReason || ''
+            }),
+            success: function(response) {
+                alert('Status updated successfully.');
+                $('#shopTable').DataTable().ajax.reload(null, false);
+                $('#Status').val('');
+                $('#HoldReasonInput').val('')
+                $('.status-filter').addClass('d-none');
+                $('.hold-reason').addClass('d-none');
+            },
+            error: function() {
+                alert('Error updating status.');
+            }
+        });
+    });
+
+    $('#Status').on('change', function() {
+        const selectedStatus = $(this).val();
+        if (selectedStatus === 'Hold') {
+            $('.hold-reason').removeClass('d-none');
+        } else {
+            $('.hold-reason').addClass('d-none');
+        }
     });
 });
 

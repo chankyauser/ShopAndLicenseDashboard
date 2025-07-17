@@ -26,6 +26,8 @@ function fetchData()
     $OwnerName = $_POST['OwnerName'];
     $OwnerMobile = $_POST['OwnerMobile'];
 
+    $confirmationStatus = $_POST['confirmationStatus'];
+
     // Base WHERE clause
     $whereClause = "WHERE sm.IsActive = 1";
 
@@ -58,9 +60,10 @@ function fetchData()
     if (!empty($OwnerMobile)) {
         $whereClause .= " AND sm.ShopOwnerMobile LIKE '%$OwnerMobile%'";
     }
-    // if (!empty($documentStatus)) {
-    //     $whereClause .= " AND sm.Ward_No = " . intval($ward);
-    // }
+    if (!empty($confirmationStatus) && ($confirmationStatus != "All")) {
+        $whereClause .= " AND td.ConfirmationStatus = '$confirmationStatus'";
+    }
+
     $query = "SELECT 
                     sm.Shop_Cd,
                     sm.Shop_UID, 
@@ -92,11 +95,17 @@ function fetchData()
                     (
                         SELECT 
                             sb.BillNo, 
-                            sb.BillingDate, 
+                            sb.BillingDate,
+                            td.Transaction_Cd, 
+                            CONVERT(VARCHAR(20), sb.BillAmount, 1) AS BillAmount,
                             CONVERT(VARCHAR(20), td.Amount, 1) AS Amount,
                             COALESCE(CONVERT(VARCHAR, sb.LicenseStartDate, 105), '') AS LicenseStartDate, 
                             COALESCE(CONVERT(VARCHAR, sb.LicenseEndDate, 105), '') AS LicenseEndDate,
-                            sb.IsLicenseRenewal
+                            sb.IsLicenseRenewal,
+                            ISNULL(td.ConfirmationStatus, '') AS ConfirmationStatus,
+                            ISNULL(td.HoldReason, '') AS HoldReason,
+                            ISNULL(td.ConfirmationUpdatedBy, '') AS ConfirmationUpdatedBy,
+                            ISNULL(CONVERT(VARCHAR, td.ConfirmationUpdatedDate, 105), '') AS ConfirmationUpdatedDate
                         FROM ShopBilling sb
                         INNER JOIN TransactionDetails td 
                             ON td.Billing_Cd = sb.Billing_Cd AND td.paymentStatus = 'SUCCESS'
