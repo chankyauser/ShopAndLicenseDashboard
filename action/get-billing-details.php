@@ -62,6 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         ISNULL(CONVERT(VARCHAR, sb.LicenseStartDate, 23), '') AS LicenseStartDate,
                         ISNULL(CONVERT(VARCHAR, sb.LicenseEndDate, 23), '') AS LicenseEndDate,
                         COALESCE(td.PaymentStatus, '') AS PaymentStatus,
+                        COALESCE(td.ConfirmationStatus, '') AS ConfirmationStatus,
+                        COALESCE(td.HoldReason, '') AS HoldReason,
                         COALESCE(td.paymentMode, '') AS paymentMode,
                         COALESCE(td.TransNumber, '') AS TransNumber,
                         COALESCE(td.Transaction_Cd, '') AS Transaction_Cd,
