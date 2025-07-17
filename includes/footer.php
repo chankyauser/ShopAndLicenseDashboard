@@ -1594,7 +1594,7 @@ $(document).ready(function() {
         $('#verifyOtpBtn').hide();
         // $('#resendOTP').show();
         $('#otpvalue').show();
-        sendOTPToMobileverify(mobileValue, otp);
+        sendOTPToMobileverify(mobileValue, otp, 0);
 
     });
 
@@ -1602,7 +1602,7 @@ $(document).ready(function() {
         var mobileNumber = $('#shopkeeper_mobile').val();
         if (mobileNumber.length === 10) {
             var otp = generateOtp();
-            sendOTPToMobileverify(mobileNumber, otp);
+            sendOTPToMobileverify(mobileNumber, otp, 0);
             $('#otp').val('');
             // $('#otpField').show();
             $('#resendOTP').hide();
@@ -1654,13 +1654,14 @@ function validateOtponpage(mobileNumber, otpEntered) {
 
 }
 
-function sendOTPToMobileverify(mobileNumber, otp) {
+function sendOTPToMobileverify(mobileNumber, otp, sessionFlag) {
     $.ajax({
         type: "POST",
         url: 'action/sendOTP.php',
         data: {
             mobileNumber: mobileNumber,
-            otp: otp
+            otp: otp,
+            sessionFlag: sessionFlag
         },
         success: function(response) {
             response = JSON.parse(response);
