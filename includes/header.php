@@ -149,7 +149,8 @@
     <!-- Favicon -->
     <!-- <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg" /> -->
     <!-- <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.ico" /> -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" />
+    <link rel="shortcut icon" type="image/x-icon"
+        href="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" />
 
     <link rel="stylesheet" type="text/css" href="assets/css/select/select2.min.css">
     <link rel="stylesheet" type="text/css" href="assets/css/tables/datatable/datatables.min.css">
@@ -415,8 +416,9 @@
                         <a href="index.php">
                             <div class="logo d-none d-lg-flex" style="width: max-content">
                                 <!-- <img src="assets/imgs/theme/logo.png" height="50" alt="logo" /> -->
-                                <img src="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50" alt="logo" />
-                                <p class ="mt-3"> <?= trim($_SESSION["SAL_ElectionName"]) ?> <br> Bazaar Trace</p>
+                                <img src="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50"
+                                    alt="logo" />
+                                <p class="mt-3"> <?= trim($_SESSION["SAL_ElectionName"]) ?> <br> Bazaar Trace</p>
                             </div>
                         </a>
                     </div>
@@ -566,7 +568,7 @@
                                             <img src="assets/imgs/theme/icons/icon-user.svg" alt="hotline" />
 
                                             <a href="index.php?p=login"
-                                                        onclick="getLoaderUntilRefresh('index.php?p=login')">
+                                                onclick="getLoaderUntilRefresh('index.php?p=login')">
                                                 <p>Dashboard <br> Login
                                                     <span></span>
                                                 </p>
@@ -608,7 +610,8 @@
                                                             class="fi fi-rs-home mr-10"></i> Client Dashboard</a>
                                                 </li>
                                                 <li>
-                                                    <a href="index.php?p=home-dashboard" onclick="getLoaderUntilRefresh('index.php?p=home-dashboard')"><i
+                                                    <a href="index.php?p=home-dashboard"
+                                                        onclick="getLoaderUntilRefresh('index.php?p=home-dashboard')"><i
                                                             class="fi fi-rs-home mr-10"></i> Ward Officer Dashboard</a>
                                                 </li>
                                                 <?php    
@@ -688,9 +691,10 @@
                     <div class="header-wrap header-space-between position-relative">
                         <div class="logo logo-width-1 d-block d-lg-none">
                             <a href="index.php">
-                                
-                                <img src="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" width="48" alt="logo" /></a>
-                                <!-- <img src="assets/imgs/theme/logo.png" height="48" width="48" alt="logo" /></a> -->
+
+                                <img src="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" width="48"
+                                    alt="logo" /></a>
+                            <!-- <img src="assets/imgs/theme/logo.png" height="48" width="48" alt="logo" /></a> -->
                             <!-- <p>Shop License</p> -->
                         </div>
 
@@ -768,60 +772,60 @@
                                 <nav>
                                     <ul>
                                         <?php if(!isset($_SESSION['SAL_ShopKeeperMobile']) || isset($_SESSION['SAL_ShopKeeperMobile']) && empty($_SESSION['SAL_ShopKeeperMobile'])) { ?>
-                                            <li>
-                                                <a <?php if(!isset($_GET['p'])){ ?> class="active" <?php }  ?>
-                                                    href="index.php" onclick="getLoaderUntilRefresh('index.php')"><i
-                                                        class="fa-solid fa-house"></i> Home</a>
-                                            </li>
+                                        <li>
+                                            <a <?php if(!isset($_GET['p'])){ ?> class="active" <?php }  ?>
+                                                href="index.php" onclick="getLoaderUntilRefresh('index.php')"><i
+                                                    class="fa-solid fa-house"></i> Home</a>
+                                        </li>
                                         <?php } ?>
                                         <?php 
                                             if (isset($_SESSION['SAL_FullName']) && !empty($_SESSION['SAL_FullName'])) {
                                                 if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && $_SESSION['SAL_UserType']== 'Admin' ) {
                                         ?>
-                                            <li>
-                                                <a href="admin/index.php"
-                                                    onclick="getLoaderUntilRefresh('admin/index.php')"><i
-                                                        class="fa-solid fa-chart-line"></i> Dashboard</a>
-                                            </li>
+                                        <li>
+                                            <a href="admin/index.php"
+                                                onclick="getLoaderUntilRefresh('admin/index.php')"><i
+                                                    class="fa-solid fa-chart-line"></i> Dashboard</a>
+                                        </li>
                                         <?php    
                                                 }else if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && $_SESSION['SAL_UserType']== 'QC' ) {
                                         ?>
-                                            <li>
-                                                <a href="qc/index.php" onclick="getLoaderUntilRefresh('qc/index.php')"><i
-                                                        class="fa-solid fa-square-check"></i> Dashboard</a>
-                                            </li>
+                                        <li>
+                                            <a href="qc/index.php" onclick="getLoaderUntilRefresh('qc/index.php')"><i
+                                                    class="fa-solid fa-square-check"></i> Dashboard</a>
+                                        </li>
                                         <?php } ?>
 
                                         <?php if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ) { ?>
-                                            <li>
-                                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-map') ){ ?>
-                                                    class="active" <?php } ?> href="index.php?p=survey-map"
-                                                    onclick="getLoaderUntilRefresh('index.php?p=survey-map')"><i
-                                                        class="fa-solid fa-location-dot"></i> GIS Map </a>
-                                            </li>
+                                        <li>
+                                            <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-map') ){ ?>
+                                                class="active" <?php } ?> href="index.php?p=survey-map"
+                                                onclick="getLoaderUntilRefresh('index.php?p=survey-map')"><i
+                                                    class="fa-solid fa-location-dot"></i> GIS Map </a>
+                                        </li>
                                         <?php  }else if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Client' ) ) { ?>
-                                            <li>
-                                                <a href="client/index.php?p=survey-map"
-                                                    onclick="getLoaderUntilRefresh('client/index.php?p=survey-map')"><i
-                                                        class="fa-solid fa-location-dot"></i> GIS Map </a>
-                                            </li>
+                                        <li>
+                                            <a href="client/index.php?p=survey-map"
+                                                onclick="getLoaderUntilRefresh('client/index.php?p=survey-map')"><i
+                                                    class="fa-solid fa-location-dot"></i> GIS Map </a>
+                                        </li>
                                         <?php  } ?>
 
 
 
                                         <?php if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ) { ?>
-                                            <li>
-                                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-shops') ){ ?>
-                                                    class="active" <?php }  ?> href="index.php?p=survey-shops"
-                                                    onclick="getLoaderUntilRefresh('index.php?p=survey-shops')"><i
-                                                        class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
-                                            </li>
+                                        <li>
+                                            <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-shops') ){ ?>
+                                                class="active" <?php }  ?> href="index.php?p=survey-shops"
+                                                onclick="getLoaderUntilRefresh('index.php?p=survey-shops')"><i
+                                                    class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
+                                        </li>
                                         <?php  }else if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Client' ) ) { ?>
-                                            <li>
-                                                <a href="client/index.php?p=survey-shops"
-                                                    onclick="getLoaderUntilRefresh('client/index.php?p=survey-shops')"><i
-                                                        class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
-                                            </li>
+                                        <li>
+                                            <a href="client/index.php?p=survey-shops"
+                                                onclick="getLoaderUntilRefresh('client/index.php?p=survey-shops')"><i
+                                                    class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
+                                        </li>
                                         <?php  } ?>
 
 
@@ -892,26 +896,25 @@
                                                   <a href="index.php?p=my-shop"><i class="fa-solid fa-sitemap"></i> About Us </a>
                                             </li> -->
                                         <?php if(isset($_SESSION['SAL_ShopKeeperMobile']) && !empty($_SESSION['SAL_ShopKeeperMobile'])) {  ?>
-                                            <li>
-                                                <a href="index.php?p=ShopDetalisListOfOwner"
-                                                    onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
-                                                        class="fa-solid fa-home"></i> Home 
-                                                    <!-- <i class="fi-rs-angle-down"></i> -->
-                                                </a>
-                                            </li>
-                                            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                                            <li>
+                                        <li>
+                                            <a href="index.php?p=ShopDetalisListOfOwner"
+                                                onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
+                                                    class="fa-solid fa-home"></i> Home
+                                                <!-- <i class="fi-rs-angle-down"></i> -->
+                                            </a>
+                                        </li>
+                                        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                        <li>
 
 
-                                                <a href="index.php?p=ShopDetalisListOfOwner"
-                                                    onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
-                                                        class="fa-solid fa-store"></i> Shop List
-                                                    <!-- <i class="fi-rs-angle-down"></i> -->
-                                                </a>
+                                            <a href="index.php?p=ShopDetalisListOfOwner"
+                                                onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
+                                                    class="fa-solid fa-store"></i> Shop List
+                                                <!-- <i class="fi-rs-angle-down"></i> -->
+                                            </a>
 
-                                            </li>
+                                        </li>
 
-                                            
                                         <?php } else { ?>
 
                                         <li>
@@ -951,7 +954,6 @@
                                         <?php
                                         }
                                     ?>
-
                                     </ul>
                                 </nav>
                             </div>
@@ -1021,11 +1023,11 @@
                                                     }else{ 
                                             ?>
 
-                                                <li>
-                                                    <a href="index.php?p=login"
-                                                        onclick="getLoaderUntilRefresh('index.php?p=login')"><i
-                                                            class="fi fi-rs-user mr-10"></i>Dashboard Login</a>
-                                                </li>
+                                            <li>
+                                                <a href="index.php?p=login"
+                                                    onclick="getLoaderUntilRefresh('index.php?p=login')"><i
+                                                        class="fi fi-rs-user mr-10"></i>Dashboard Login</a>
+                                            </li>
                                             <?php
                                                 }
                                             ?>
@@ -1043,6 +1045,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <?php if(isset($_SESSION['SAL_ShopKeeperMobile']) && !empty($_SESSION['SAL_ShopKeeperMobile'])) {  ?>
+                        <div class="ms-auto">
+                            <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                data-bs-target="#chktransactionModal">
+                                Check Transaction Details
+                            </button>
+                        </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -1052,7 +1063,8 @@
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
                     <a href="index.php">
-                        <img src="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50" alt="logo" />
+                        <img src="assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg" height="50"
+                            alt="logo" />
                     </a>
                     <!-- <p>Shop License</p> -->
                 </div>
@@ -1067,89 +1079,88 @@
 
                 <?php if(!isset($_SESSION['SAL_ShopKeeperMobile'])){ ?>
 
-                    <?php if(isset($_GET['p']) && $_GET['p'] == "survey-map"){  ?>
-                        <div class="mobile-search search-style-3 mobile-header-border">
-                            <div style="position: relative; width: 100%;">
-                                <input type="text" name="shopNameMobileView" placeholder="Search by Shop Name"
-                                    onkeydown="if (event.keyCode == 13) document.getElementById('submitSearchShopHeaderMobileViewBtnId').click()"
-                                    style="width: 100%; padding-right: 40px;" class="form-control" />
+                <?php if(isset($_GET['p']) && $_GET['p'] == "survey-map"){  ?>
+                <div class="mobile-search search-style-3 mobile-header-border">
+                    <div style="position: relative; width: 100%;">
+                        <input type="text" name="shopNameMobileView" placeholder="Search by Shop Name"
+                            onkeydown="if (event.keyCode == 13) document.getElementById('submitSearchShopHeaderMobileViewBtnId').click()"
+                            style="width: 100%; padding-right: 40px;" class="form-control" />
 
-                                <button type="button" id="submitSearchShopHeaderMobileViewBtnId" 
-                                    onclick="searchShopNameFilterMobileView(1)" 
-                                    style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: none;">
-                                    <i class="fi-rs-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                     <?php } ?>
+                        <button type="button" id="submitSearchShopHeaderMobileViewBtnId"
+                            onclick="searchShopNameFilterMobileView(1)"
+                            style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: none;">
+                            <i class="fi-rs-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <?php } ?>
 
                 <?php }else{ ?>
-                    <div class="mobile-search search-style-3 mobile-header-border">
-                        <form action="#">
-                            <input type="text" placeholder="Search for items…" />
-                            <button type="submit"><i class="fi-rs-search"></i></button>
-                        </form>
-                    </div>
+                <div class="mobile-search search-style-3 mobile-header-border">
+                    <form action="#">
+                        <input type="text" placeholder="Search for items…" />
+                        <button type="submit"><i class="fi-rs-search"></i></button>
+                    </form>
+                </div>
                 <?php } ?>
                 <div class="mobile-menu-wrap mobile-header-border">
                     <!-- mobile menu start -->
                     <nav>
                         <ul class="mobile-menu font-heading">
-                            
+
                             <?php 
                                 if (isset($_SESSION['SAL_FullName']) && !empty($_SESSION['SAL_FullName'])) {
                                     if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && $_SESSION['SAL_UserType']== 'Admin' ) {
                             ?>
-                                <li class="menu-item-has-children">
-                                    <a href="index.php?p=home-dashboard"
-                                        onclick="getLoaderUntilRefresh('index.php?p=home-dashboard')"><i
-                                            class="fa-solid fa-home"></i>Home</a>
-                                </li>
+                            <li class="menu-item-has-children">
+                                <a href="index.php?p=home-dashboard"
+                                    onclick="getLoaderUntilRefresh('index.php?p=home-dashboard')"><i
+                                        class="fa-solid fa-home"></i>Home</a>
+                            </li>
 
-                                <li class="menu-item-has-children">
-                                    <a href="admin/index.php"
-                                        onclick="getLoaderUntilRefresh('admin/index.php')"><i
-                                            class="fa-solid fa-chart-line"></i> Dashboard</a>
-                                </li>
+                            <li class="menu-item-has-children">
+                                <a href="admin/index.php" onclick="getLoaderUntilRefresh('admin/index.php')"><i
+                                        class="fa-solid fa-chart-line"></i> Dashboard</a>
+                            </li>
                             <?php    
                                     }else if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && $_SESSION['SAL_UserType']== 'QC' ) {
                             ?>
-                                <li class="menu-item-has-children">
-                                    <a href="qc/index.php" onclick="getLoaderUntilRefresh('qc/index.php')"><i
-                                            class="fa-solid fa-square-check"></i> Dashboard</a>
-                                </li>
+                            <li class="menu-item-has-children">
+                                <a href="qc/index.php" onclick="getLoaderUntilRefresh('qc/index.php')"><i
+                                        class="fa-solid fa-square-check"></i> Dashboard</a>
+                            </li>
                             <?php } ?>
 
                             <?php if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ) { ?>
-                                <li class="menu-item-has-children">
-                                    <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-map') ){ ?>
-                                        class="active" <?php } ?> href="index.php?p=survey-map"
-                                        onclick="getLoaderUntilRefresh('index.php?p=survey-map')"><i
-                                            class="fa-solid fa-location-dot"></i> GIS Map </a>
-                                </li>
+                            <li class="menu-item-has-children">
+                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-map') ){ ?> class="active"
+                                    <?php } ?> href="index.php?p=survey-map"
+                                    onclick="getLoaderUntilRefresh('index.php?p=survey-map')"><i
+                                        class="fa-solid fa-location-dot"></i> GIS Map </a>
+                            </li>
                             <?php  }else if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Client' ) ) { ?>
-                                <li class="menu-item-has-children">
-                                    <a href="client/index.php?p=survey-map"
-                                        onclick="getLoaderUntilRefresh('client/index.php?p=survey-map')"><i
-                                            class="fa-solid fa-location-dot"></i> GIS Map </a>
-                                </li>
+                            <li class="menu-item-has-children">
+                                <a href="client/index.php?p=survey-map"
+                                    onclick="getLoaderUntilRefresh('client/index.php?p=survey-map')"><i
+                                        class="fa-solid fa-location-dot"></i> GIS Map </a>
+                            </li>
                             <?php  } ?>
 
 
 
                             <?php if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ) { ?>
-                                <li class="menu-item-has-children">
-                                    <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-shops') ){ ?>
-                                        class="active" <?php }  ?> href="index.php?p=survey-shops"
-                                        onclick="getLoaderUntilRefresh('index.php?p=survey-shops')"><i
-                                            class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
-                                </li>
+                            <li class="menu-item-has-children">
+                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'survey-shops') ){ ?> class="active"
+                                    <?php }  ?> href="index.php?p=survey-shops"
+                                    onclick="getLoaderUntilRefresh('index.php?p=survey-shops')"><i
+                                        class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
+                            </li>
                             <?php  }else if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Client' ) ) { ?>
-                                <li class="menu-item-has-children">
-                                    <a href="client/index.php?p=survey-shops"
-                                        onclick="getLoaderUntilRefresh('client/index.php?p=survey-shops')"><i
-                                            class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
-                                </li>
+                            <li class="menu-item-has-children">
+                                <a href="client/index.php?p=survey-shops"
+                                    onclick="getLoaderUntilRefresh('client/index.php?p=survey-shops')"><i
+                                        class="fa-solid fa-check-to-slot"></i> Shop Survey </a>
+                            </li>
                             <?php  } ?>
 
 
@@ -1157,8 +1168,8 @@
 
                             <?php if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ) { ?>
                             <li class="menu-item-has-children">
-                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license') ){ ?>
-                                    class="active" <?php }  ?> href="index.php?p=shop-license"
+                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-license') ){ ?> class="active"
+                                    <?php }  ?> href="index.php?p=shop-license"
                                     onclick="getLoaderUntilRefresh('index.php?p=shop-license')"><i
                                         class="fa-solid fa-id-card"></i> Shop License </a>
                             </li>
@@ -1174,8 +1185,8 @@
 
                             <?php if (isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) &&  ( $_SESSION['SAL_UserType']== 'Ward Officer' || $_SESSION['SAL_UserType']== 'Admin' ) ) { ?>
                             <li class="menu-item-has-children">
-                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-tracking') ){ ?>
-                                    class="active" <?php }  ?> href="index.php?p=shop-tracking"
+                                <a <?php if(isset($_GET['p']) && ( $_GET['p']== 'shop-tracking') ){ ?> class="active"
+                                    <?php }  ?> href="index.php?p=shop-tracking"
                                     onclick="getLoaderUntilRefresh('index.php?p=shop-tracking')"><i
                                         class="fa-solid fa-clock"></i> Shop Tracking </a>
                             </li>
@@ -1201,7 +1212,7 @@
                                         </a>
                                 </li> -->
 
-                             <li class="menu-item-has-children">
+                            <li class="menu-item-has-children">
                                 <a href="index.php?p=all-report"
                                     onclick="getLoaderUntilRefresh('index.php?p=all-report')"><i
                                         class="fa-solid fa-download"></i> Reports
@@ -1212,34 +1223,34 @@
                                         <li><a href="page-404.html">404 Page</a></li>
                                     </ul> -->
                             </li>
-                        <?php
+                            <?php
                             }else{
                         ?>
                             <?php if(isset($_SESSION['SAL_ShopKeeperMobile']) && !empty($_SESSION['SAL_ShopKeeperMobile'])) {  ?>
-                                    <li class="menu-item-has-children">
-                                        <a href="index.php?p=ShopDetalisListOfOwner"
-                                            onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
-                                                class="fa-solid fa-home"></i> Home 
-                                        </a>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="index.php?p=ShopDetalisListOfOwner"
-                                            onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
-                                                class="fa-solid fa-store"></i> Shop List
-                                            <!-- <i class="fi-rs-angle-down"></i> -->
-                                        </a>
+                            <li class="menu-item-has-children">
+                                <a href="index.php?p=ShopDetalisListOfOwner"
+                                    onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
+                                        class="fa-solid fa-home"></i> Home
+                                </a>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="index.php?p=ShopDetalisListOfOwner"
+                                    onclick="getLoaderUntilRefresh('index.php?p=ShopDetalisListOfOwner')"><i
+                                        class="fa-solid fa-store"></i> Shop List
+                                    <!-- <i class="fi-rs-angle-down"></i> -->
+                                </a>
 
-                                    </li>
+                            </li>
 
-                                    
-                                <?php }else{ ?>
-                                    <li class="menu-item-has-children">
-                                        <a href="index.php">Home</a>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Shops</a>
-                                    </li>
-                                <?php } ?>
+
+                            <?php }else{ ?>
+                            <li class="menu-item-has-children">
+                                <a href="index.php">Home</a>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="#">Shops</a>
+                            </li>
+                            <?php } ?>
                             <li class="menu-item-has-children">
                                 <a href="#">License</a>
                             </li>
@@ -1273,7 +1284,7 @@
                                     <li><a href="#">Hindi</a></li>
                                 </ul>
                             </li>
-                        <?php } ?>
+                            <?php } ?>
                         </ul>
                     </nav>
                     <!-- mobile menu end -->
@@ -1283,14 +1294,14 @@
                         <a href="#"><i class="fi-rs-marker"></i> Our location </a>
                     </div>
                     <?php if (!isset($_SESSION['SAL_FullName'])) { ?>
-                        <div class="single-mobile-header-info">
-                            <a href="index.php?p=login" 
-                                    onclick="getLoaderUntilRefresh('index.php?p=login')"><i class="fi-rs-user"></i>Dashboard LogIn </a>
-                        </div>
+                    <div class="single-mobile-header-info">
+                        <a href="index.php?p=login" onclick="getLoaderUntilRefresh('index.php?p=login')"><i
+                                class="fi-rs-user"></i>Dashboard LogIn </a>
+                    </div>
                     <?php }else{ ?>
-                        <div class="single-mobile-header-info">
-                            <a href="logout.php"><i class="fi-rs-user"></i>Sign Out </a>
-                        </div>
+                    <div class="single-mobile-header-info">
+                        <a href="logout.php"><i class="fi-rs-user"></i>Sign Out </a>
+                    </div>
                     <?php } ?>
                     <div class="single-mobile-header-info">
                         <a href="#"><i class="fi-rs-headphones"></i>+91 022 27833972 </a>
