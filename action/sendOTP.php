@@ -27,8 +27,12 @@ if (isset($_POST['mobileNumber']) && isset($_POST['otp'])) {
         $updateotp = $db1->RunQueryData($sql1, $electionName, $developmentMode);
     }
 
+    if($mobile !== '9167936461'){
+        echo json_encode(array('statusCode' => 404, 'message' => 'OTP Not Sent!!'));
+    }
 
-    if ($updateotp !== false && $mobile !== '9167936461') {
+
+    if ($updateotp !== false) {
         $url = 'http://45.114.141.83/api/mt/SendSMS?username=ornettech&password=ornet@3214&senderid=ORNETT&type=0&destination=' . $mobile . '&peid=1701161892254896671&text=' . $message;
 
         $response = file_get_contents($url);

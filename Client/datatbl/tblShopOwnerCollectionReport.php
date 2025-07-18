@@ -70,18 +70,17 @@
 
                 <div class="col-lg-2 col-md-3 col-sm-6 col-12">
                     <div class="form-group mb-2">
-                        <label>Owner Name</label>
-                        <input type="text" class="form-control" name="OwnerName" id="OwnerName"
-                            placeholder="Search Owner Name..." style="border: 1px solid #F01954;">
+                        <label> Owner Name / Mobile </label>
+                        <input type="text" class="form-control" name="OwnerSearch" id="OwnerSearch"
+                            placeholder="Search Owner Name & Owner Mobile ..." style="border: 1px solid #F01954;">
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-md-3 col-sm-6 col-12">
                     <div class="form-group mb-2">
-                        <label>Owner Mobile No</label>
-                        <input type="text" class="form-control" name="OwnerMobile" id="OwnerMobile"
-                            placeholder="Search Owner Mobile No..." maxlength="10"
-                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57) "
+                        <label>Shop No / Shop Name</label>
+                        <input type="text" class="form-control" name="ShopSearch" id="ShopSearch"
+                            placeholder="Search Shop No & Shop Name..."
                             style="border: 1px solid #F01954;">
                     </div>
                 </div>
@@ -91,7 +90,6 @@
                         <label>Status</label>
                         <select class="form-control" name="confirmationStatus" id="confirmationStatus"
                             onchange="setNodeAndWardId(this.value)">
-                            <option value="All">All</option>
                             <option value="Pending">Pending</option>
                             <option value="Confirm">Confirm</option>
                             <option value="Hold">Hold</option>
@@ -151,8 +149,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">SR NO</th>
-                                    <th class="text-left">Node Name</th>
-                                    <th class="text-left">Ward Name</th>
+                                    <th class="text-left">Node / Ward</th>
                                     <th class="text-left">Shop Owner </th>
                                     <th class="text-left">Shop Details</th>
                                     <th class="text-right">Lincense Details</th>
@@ -197,8 +194,8 @@ $(document).ready(function() {
                 d.documentStatus = $('#documentStatus').val();
                 d.ward = $('#setNodeAndWardDetailId').val();
                 d.nodeName = $('#nodeName').val();
-                d.OwnerMobile = $('#OwnerMobile').val();
-                d.OwnerName = $('#OwnerName').val();
+                d.OwnerSearch = $('#OwnerSearch').val();
+                d.ShopSearch = $('#ShopSearch').val();
                 d.confirmationStatus = $('#confirmationStatus').val();
             }
         },
@@ -234,19 +231,10 @@ $(document).ready(function() {
             {
                 data: null,
                 render: function(data) {
-                    return `${data.NodeName}`;
+                    return `Node : <strong>${data.NodeName}</strong> <br> Ward : <strong>${data.Area}</strong>`;
                 },
                 orderable: false,
                 className: 'text-left'
-            },
-            {
-                data: null,
-                render: function(data) {
-                    return `${data.Area}`;
-                },
-                orderable: false,
-                className: 'text-left'
-
             },
             {
                 data: null,
@@ -260,11 +248,13 @@ $(document).ready(function() {
                 render: function(data) {
                     const shopName = data.ShopName || '';
                     const shopUID = data.Shop_UID;
+                    const Shop_Cd = data.Shop_Cd || '';
 
-                    let output = `Shop Name: <strong>${shopName}</strong>`;
+                    let output =
+                        `Shop No : <strong>${Shop_Cd}</strong> <br> Shop Name: <strong>${shopName}</strong>`;
 
                     if (shopUID) {
-                        output += `<br>Shop No: <small>${shopUID}</small>`;
+                        output += `<br>Shop UID: <strong>${shopUID}</strong>`;
                     }
 
                     return output;
@@ -280,18 +270,21 @@ $(document).ready(function() {
                 // },
                 render: function(data) {
                     const bills = JSON.parse(data.BillDetailsArray || '[]');
+                    const safeBillDataAttr = JSON.stringify(bills).replace(/"/g, '&quot;');
 
                     if (data.BillCount === 1 && bills.length === 1) {
-                        return `Bill Number: <strong>${bills[0].BillNo || ''}</strong><br>
+                        return `Transaction Number: <strong>${bills[0].TransNumber || ''}</strong><br>
+                                Transaction Date: <strong>${bills[0].TranDateTime || ''}</strong><br>
                                 License Period: <strong>${bills[0].LicenseStartDate || ''} to ${bills[0].LicenseEndDate || ''}</strong><br>
-                                Amount: <strong>₹${parseFloat(bills[0].BillAmount || 0).toFixed(2)}</strong><br>`;
+                                Amount: <strong>₹${parseFloat(bills[0].Amount || 0).toFixed(2)}</strong><br>`;
 
                     } else if (data.BillCount > 1 && bills.length > 1) {
                         const latestBill = bills[bills.length - 1];
                         const safeBillDataAttr = JSON.stringify(bills).replace(/"/g, '&quot;');
-                        return `Latest License Period: <strong>${latestBill.LicenseStartDate || ''} to ${latestBill.LicenseEndDate || ''}</strong><br>
-                                Latest Bill Number: <strong>${latestBill.BillNo || ''}</strong><br>
-                                Total Bills: <strong>${data.BillCount}</strong><br>
+                        return `Transaction Number: <strong>${latestBill.TransNumber || ''}</strong><br>
+                                Transaction Date: <strong>${latestBill.TranDateTime || ''}</strong><br>
+                                License Period: <strong>${latestBill.LicenseStartDate || ''} to ${latestBill.LicenseEndDate || ''}</strong><br>
+                                Amount: <strong>₹${parseFloat(latestBill.Amount || 0).toFixed(2)}</strong><br>
                                 <a class="text-primary view-bills-icon text-danger" 
                                 data-bill="${safeBillDataAttr}" 
                                 data-shopname="${data.ShopName || ''}" 
@@ -438,22 +431,31 @@ $(document).ready(function() {
                 <thead>
                     <tr>
                         <th>Sr.No</th>
-                        <th>Bill No</th>
-                        <th>Bill Date</th>
+                        <th>Transaction Number</th>
+                        <th>Transaction Date</th>
                         <th>Amount</th>
                         <th>License Period</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${billDetailsArray.map((bill, index) => `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${bill.BillNo || ''}</td>
-                            <td>${bill.BillingDate || ''}</td>
-                            <td>₹${parseFloat(bill.Amount || 0).toFixed(2)}</td>
-                            <td>${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
-                        </tr>
-                    `).join('')}
+                    ${billDetailsArray.map((bill, index) => {
+                        const isPending = !bill.ConfirmationStatus || bill.ConfirmationStatus === 'Pending';
+                        return `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${bill.TransNumber || ''}</td>
+                                <td>${bill.TranDateTime || ''}</td>
+                                <td>₹${parseFloat(bill.Amount || 0).toFixed(2)}</td>
+                                <td>${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
+                                <td>
+                                    ${bill.ConfirmationStatus || 'Pending'}
+                                    ${!isPending && bill.ConfirmationUpdatedBy ? `<br> By: ${bill.ConfirmationUpdatedBy}` : ''}
+                                    ${!isPending && bill.ConfirmationUpdatedDate ? `<br> Date: ${bill.ConfirmationUpdatedDate}` : ''}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
                 </tbody>
             </table>
         `;
@@ -474,17 +476,17 @@ $(document).ready(function() {
         shopTable.ajax.reload();
     });
 
-    $('#OwnerName').on('input', function() {
+    $('#OwnerSearch').on('input', function() {
         setTimeout(() => {
             shopTable.ajax.reload();
         }, 500);
     });
 
-     $('#confirmationStatus').on('change', function() {
+    $('#confirmationStatus').on('change', function() {
         shopTable.ajax.reload();
     });
 
-    $('#OwnerMobile').on('input', function() {
+    $('#ShopSearch').on('input', function() {
         setTimeout(() => {
             shopTable.ajax.reload();
         }, 500)
@@ -504,9 +506,9 @@ $(document).ready(function() {
         const selectedTranscds = [];
         $('.select-pending:checked').each(function() {
             const transCd = $(this).data('transcd');
-            console.log('Selected transaction ID:', transCd); 
+            console.log('Selected transaction ID:', transCd);
             if (transCd && !isNaN(transCd)) {
-                selectedTranscds.push(Number(transCd)); 
+                selectedTranscds.push(Number(transCd));
             }
         });
 
@@ -525,7 +527,7 @@ $(document).ready(function() {
         let holdReason = '';
 
         if (selectedStatus === 'Hold') {
-             holdReason = $('#HoldReasonInput').val().trim();
+            holdReason = $('#HoldReasonInput').val().trim();
             if (!holdReason) {
                 alert('Please provide a reason for holding the status.');
                 return;
@@ -533,9 +535,9 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: './action/updateConfirmation.php', 
+            url: './action/updateConfirmation.php',
             method: 'POST',
-            contentType: 'application/json', 
+            contentType: 'application/json',
             data: JSON.stringify({
                 transactionIds: selectedTranscds,
                 status: selectedStatus,
@@ -568,8 +570,8 @@ $(document).ready(function() {
 $('#clearFilter').click(function() {
     $('#nodeName').val('All');
     $('#setNodeAndWardDetailId').val('All');
-    $('#OwnerName').val('');
-    $('#OwnerMobile').val('');
+    $('#OwnerSearch').val('');
+    $('#ShopSearch').val('');
     $('#shopTable').DataTable().ajax.reload();
 
 });

@@ -789,7 +789,11 @@ function redirectToEditPage(Shop_Cd) {
                 $('#shopkeeper_address').val(records['ShopOwnerAddress']);
                 $('#shopkeeper_pincode').val(records['ShopOwnerPinCode']);
                 $('#shop_cd').val(Shop_Cd);
-                $('#shopkeeper_mobile').prop('readonly', true);
+                <?php if(isset($_SESSION['EditShopOwnerNumber']) && $_SESSION['EditShopOwnerNumber'] == 1) { ?>
+                    $('#shopkeeper_mobile').prop('readonly', false);
+                <?php } else { ?>
+                    $('#shopkeeper_mobile').prop('readonly', true);
+                <?php }?>
                 $('#verifyOtpBtn').hide();
                 $('#ShopModal').modal('show');
                 setTimeout(function() {
@@ -1688,7 +1692,7 @@ function generateOtp() {
 
 <!-- New Shop Owner Shop Details End -->
 
-<!-- <script>
+<script>
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('copy', event => event.preventDefault());
 document.addEventListener('paste', event => event.preventDefault());
@@ -1734,7 +1738,7 @@ document.addEventListener('keydown', function(e) {
         e.preventDefault();
     }
 });
-</script> -->
+</script>
 </body>
 
 </html>

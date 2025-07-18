@@ -23,8 +23,8 @@ function fetchData()
     $ward = $_POST['ward'] ?? '';
 
     $nodeName = $_POST['nodeName'];
-    $OwnerName = $_POST['OwnerName'];
-    $OwnerMobile = $_POST['OwnerMobile'];
+    $ShopSearch = $_POST['ShopSearch'];
+    $OwnerSearch = $_POST['OwnerSearch'];
 
     $confirmationStatus = $_POST['confirmationStatus'];
 
@@ -53,15 +53,30 @@ function fetchData()
         $whereClause .= " AND nm.NodeName = '$nodeName'";
     }
 
-    if (!empty($OwnerName)) {
-        $whereClause .= " AND sm.ShopOwnerName LIKE '%$OwnerName%'";
+    if (!empty($OwnerSearch)) {
+        $escapedSearch = addslashes($OwnerSearch); 
+        $whereClause .= " AND (
+            sm.ShopOwnerName LIKE '%$escapedSearch%' 
+            OR sm.ShopOwnerMobile LIKE '%$escapedSearch%' 
+            OR sm.ShopKeeperMobile LIKE '%$escapedSearch%' 
+            OR sm.ShopKeeperName LIKE '%$escapedSearch%'
+        )";
     }
 
-    if (!empty($OwnerMobile)) {
-        $whereClause .= " AND sm.ShopOwnerMobile LIKE '%$OwnerMobile%'";
+    if (!empty($ShopSearch)) {
+        if (ctype_digit($ShopSearch)) {
+            $whereClause .= " AND sm.Shop_Cd LIKE '%$ShopSearch%'";
+        } else {
+            $whereClause .= " AND sm.ShopName LIKE '%$ShopSearch%'";
+        }
     }
-    if (!empty($confirmationStatus) && ($confirmationStatus != "All")) {
-        $whereClause .= " AND td.ConfirmationStatus = '$confirmationStatus'";
+    if (!empty($confirmationStatus)) {
+        if($confirmationStatus === "Pending") {
+            $whereClause .= " AND (td.ConfirmationStatus IS NULL OR td.ConfirmationStatus = 'Pending')";
+        } else {
+            $whereClause .= " AND td.ConfirmationStatus = '$confirmationStatus'";
+
+        }
     }
 
     $query = "SELECT 
@@ -97,6 +112,8 @@ function fetchData()
                             sb.BillNo, 
                             sb.BillingDate,
                             td.Transaction_Cd, 
+                            td.TransNumber,
+                            COALESCE(CONVERT(VARCHAR, td.TranDateTime, 105), '') AS TranDateTime,
                             CONVERT(VARCHAR(20), sb.BillAmount, 1) AS BillAmount,
                             CONVERT(VARCHAR(20), td.Amount, 1) AS Amount,
                             COALESCE(CONVERT(VARCHAR, sb.LicenseStartDate, 105), '') AS LicenseStartDate, 
