@@ -28,6 +28,7 @@ if (isset($_POST['mobileNumber']) && isset($_POST['otp'])) {
     }
 
 
+    
     if ($updateotp !== false && $mobile !== '9167936461') {
         $url = 'http://45.114.141.83/api/mt/SendSMS?username=ornettech&password=ornet@3214&senderid=ORNETT&type=0&destination=' . $mobile . '&peid=1701161892254896671&text=' . $message;
 

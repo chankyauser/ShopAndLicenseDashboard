@@ -420,6 +420,7 @@
                                                         class="fa-solid fa-store"></i> &nbsp; Shop Details </a></li>
                                         </ul>
                                     </li>
+                                
 
                                     <!-- <li>
                                         <a < ?php if (isset($_GET['p']) && ( $_GET['p'] == 'shop-revenue-summary' || $_GET['p']== 'shop-license-defaulters' ) ){ ?> class="active" < ?php } ?>
