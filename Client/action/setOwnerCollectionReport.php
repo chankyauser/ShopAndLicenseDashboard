@@ -23,8 +23,10 @@ function fetchData()
     $ward = $_POST['ward'] ?? '';
 
     $nodeName = $_POST['nodeName'];
-    $OwnerName = $_POST['OwnerName'];
-    $OwnerMobile = $_POST['OwnerMobile'];
+    $ShopSearch = $_POST['ShopSearch'];
+    $OwnerSearch = $_POST['OwnerSearch'];
+
+    $confirmationStatus = $_POST['confirmationStatus'];
 
     // Base WHERE clause
     $whereClause = "WHERE sm.IsActive = 1";
@@ -51,16 +53,32 @@ function fetchData()
         $whereClause .= " AND nm.NodeName = '$nodeName'";
     }
 
-    if (!empty($OwnerName)) {
-        $whereClause .= " AND sm.ShopOwnerName LIKE '%$OwnerName%'";
+    if (!empty($OwnerSearch)) {
+        $escapedSearch = addslashes($OwnerSearch); 
+        $whereClause .= " AND (
+            sm.ShopOwnerName LIKE '%$escapedSearch%' 
+            OR sm.ShopOwnerMobile LIKE '%$escapedSearch%' 
+            OR sm.ShopKeeperMobile LIKE '%$escapedSearch%' 
+            OR sm.ShopKeeperName LIKE '%$escapedSearch%'
+        )";
     }
 
-    if (!empty($OwnerMobile)) {
-        $whereClause .= " AND sm.ShopOwnerMobile LIKE '%$OwnerMobile%'";
+    if (!empty($ShopSearch)) {
+        if (ctype_digit($ShopSearch)) {
+            $whereClause .= " AND sm.Shop_Cd LIKE '%$ShopSearch%'";
+        } else {
+            $whereClause .= " AND sm.ShopName LIKE '%$ShopSearch%'";
+        }
     }
-    // if (!empty($documentStatus)) {
-    //     $whereClause .= " AND sm.Ward_No = " . intval($ward);
-    // }
+    if (!empty($confirmationStatus)) {
+        if($confirmationStatus === "Pending") {
+            $whereClause .= " AND (td.ConfirmationStatus IS NULL OR td.ConfirmationStatus = 'Pending')";
+        } else {
+            $whereClause .= " AND td.ConfirmationStatus = '$confirmationStatus'";
+
+        }
+    }
+
     $query = "SELECT 
                     sm.Shop_Cd,
                     sm.Shop_UID, 
@@ -92,11 +110,19 @@ function fetchData()
                     (
                         SELECT 
                             sb.BillNo, 
-                            sb.BillingDate, 
+                            sb.BillingDate,
+                            td.Transaction_Cd, 
+                            td.TransNumber,
+                            COALESCE(CONVERT(VARCHAR, td.TranDateTime, 105), '') AS TranDateTime,
+                            CONVERT(VARCHAR(20), sb.BillAmount, 1) AS BillAmount,
                             CONVERT(VARCHAR(20), td.Amount, 1) AS Amount,
                             COALESCE(CONVERT(VARCHAR, sb.LicenseStartDate, 105), '') AS LicenseStartDate, 
                             COALESCE(CONVERT(VARCHAR, sb.LicenseEndDate, 105), '') AS LicenseEndDate,
-                            sb.IsLicenseRenewal
+                            sb.IsLicenseRenewal,
+                            ISNULL(td.ConfirmationStatus, '') AS ConfirmationStatus,
+                            ISNULL(td.HoldReason, '') AS HoldReason,
+                            ISNULL(td.ConfirmationUpdatedBy, '') AS ConfirmationUpdatedBy,
+                            ISNULL(CONVERT(VARCHAR, td.ConfirmationUpdatedDate, 105), '') AS ConfirmationUpdatedDate
                         FROM ShopBilling sb
                         INNER JOIN TransactionDetails td 
                             ON td.Billing_Cd = sb.Billing_Cd AND td.paymentStatus = 'SUCCESS'
