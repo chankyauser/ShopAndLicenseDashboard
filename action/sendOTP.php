@@ -94,7 +94,6 @@ if (isset($_POST['mobileNumber']) && isset($_POST['otp'])) {
     }
 
 } else {
-
     echo json_encode(array('success' => false, 'message' => 'Invalid parameters!'));
 }
 
