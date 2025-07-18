@@ -2559,7 +2559,101 @@ function setShopSurveyDetailFilter(pageNo){
     var documentStatus = document.getElementsByName('documentStatus')[0].value;
   
     var queryString = "?electionName="+electionName+"&pageNo="+pageNo+"&nodeName="+nodeName+"&nodeCd="+nodeCd+"&documentStatus="+documentStatus;
-    ajaxRequest.open("POST", "setShopSurveyDetailFilter.php" + queryString, true);
+    ajaxRequest.open("POST", "setShopOwnerDetailFilter.php" + queryString, true);
+    ajaxRequest.send(null);
+
+}
+
+
+function setShopOwnerDetailFilter(pageNo){
+ var ajaxRequest; // The variable that makes Ajax possible!
+
+    try {
+        // Opera 8.0+, Firefox, Safari
+        ajaxRequest = new XMLHttpRequest();
+    } catch (e) {
+        // Internet Explorer Browsers
+        try {
+            ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try {
+                ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+                // Something went wrong
+                alert("Your browser broke!");
+                return false;
+            }
+        }
+    }
+
+    ajaxRequest.onreadystatechange = function() {
+        if (ajaxRequest.readyState == 4) {
+            if (ajaxRequest.readyState == 4) {
+                var ajaxDisplay = document.getElementById('showPageDetails');
+                ajaxDisplay.innerHTML = ajaxRequest.responseText;
+
+                if ($(".categories-button-active").hasClass("open")) {
+                    $(".categories-button-active").removeClass("open");
+                    $(".categories-dropdown-active-large").removeClass("open");
+                }
+
+                $('html, body').animate({
+                    scrollTop: $("#showPageDetails").offset().top - 200
+                }, 500);
+
+
+                var tempDivZoomContainer = document.querySelectorAll(".zoomContainer");
+                for (var i = 0; i < tempDivZoomContainer.length; i++) {
+                    tempDivZoomContainer[i].style.height = "0px";
+                    tempDivZoomContainer[i].style.width = "0px";
+                }
+
+                var tempDivZoomWindow = document.querySelectorAll(".zoomWindow");
+                for (var i = 0; i < tempDivZoomWindow.length; i++) {
+                    tempDivZoomWindow[i].style.height = "0px";
+                    tempDivZoomWindow[i].style.width = "0px";
+                }
+
+
+                var dataList10Paging = $('.table-10').DataTable({
+                    responsive: true,
+                    columnDefs: [
+                        {
+                            orderable: false,
+                            targets: 0,
+                        }
+                    ],
+                    oLanguage: {
+                        sLengthMenu: "_MENU_",
+                        sSearch: ""
+                    },
+                    // aLengthMenu: [[1, 4, 10, 15, 20], [1, 4, 10, 15, 20]],
+                    searching: false,
+                    order: [[0, "asc"]],
+                    bInfo: false,
+                    lengthChange: false,
+                    ordering: false,
+                    info: false,
+                    pageLength: 10,
+                    paging:false,
+                    iDisplayLength: 10
+                });
+
+
+            }   
+        }
+    }
+      
+
+    var electionName = document.getElementsByName('electionName')[0].value;
+    var nodeName = document.getElementsByName('nodeName')[0].value;
+    var nodeCd = document.getElementsByName('nodeCd')[0].value;
+    var ShopName = document.getElementsByName('ShopName')[0].value;
+    var OwnerName = document.getElementsByName('OwnerName')[0].value;
+    var OwnerMobile = document.getElementsByName('OwnerMobile')[0].value;
+  
+    var queryString = "?electionName="+electionName+"&pageNo="+pageNo+"&nodeName="+nodeName+"&nodeCd="+nodeCd+"&ShopName="+ShopName+"&OwnerName="+OwnerName+"&OwnerMobile="+OwnerMobile;
+    ajaxRequest.open("POST", "setShopOwnerDetailFilter.php" + queryString, true);
     ajaxRequest.send(null);
 
 }

@@ -13,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if(
         (isset($_POST['electionName']) && !empty($_POST['electionName'])) && 
         (isset($_POST['executiveCd']) && !empty($_POST['executiveCd'])) &&
-         (isset($_POST['assignDate']) && !empty($_POST['assignDate'])) &&
-         (isset($_POST['shopAssignFilterType']) && !empty($_POST['shopAssignFilterType'])) &&
-         (isset($_POST['calling_Type']) && !empty($_POST['calling_Type'])) &&
-         (isset($_POST['shopsAssignCount']) && !empty($_POST['shopsAssignCount'])) &&
-         (isset($_POST['multiplePockets']) && !empty($_POST['multiplePockets'])) 
+        (isset($_POST['assignDate']) && !empty($_POST['assignDate'])) &&
+        (isset($_POST['shopAssignFilterType']) && !empty($_POST['shopAssignFilterType'])) &&
+        (isset($_POST['calling_Type']) && !empty($_POST['calling_Type'])) &&
+        (isset($_POST['shopsAssignCount']) && !empty($_POST['shopsAssignCount'])) &&
+        (isset($_POST['multiplePockets']) && !empty($_POST['multiplePockets'])) 
       )
     {
        
