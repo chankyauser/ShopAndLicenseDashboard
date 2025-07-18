@@ -1,6 +1,9 @@
 <?php
+
+
 $mid = "108"; 
-$paymentId = "19185111";
+// $paymentId = "19185111";
+$paymentId = $_POST['transactionNumber'] ?? '';
 $terminalId = "Getepay.merchant61062@icici";
 $description = "check status";
 $request = array(
@@ -55,7 +58,13 @@ $data = json_decode($original_plaintext);
 // print_r($data);
 // die();
 // Print the decoded JSON in a simple format
-print_r($data);
-print_r($data->txnStatus);
+// print_r($data);
+// print_r($data->txnStatus);
+
+echo json_encode([
+    'statusCode' => 200,
+    'message' => 'Transaction status retrieved successfully',
+    'data' => $data
+]);
 
 ?>
