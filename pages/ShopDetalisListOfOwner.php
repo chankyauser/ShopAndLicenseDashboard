@@ -78,7 +78,17 @@ $shopDetailList = $db2->ExecutveQueryMultipleRowSALData($queryShopOwnerShopList,
     padding: 5px;
 
 }
+.custom-btn {
+    background-color: #3085D6;
+    border: 1px solid transparent; 
+    color: white; 
+}
 
+.custom-btn:hover {
+    background-color: #256bb5;
+    border-color: #256bb5;    
+    color: white;           
+}
 .custom-product-image:focus {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
@@ -217,6 +227,7 @@ a[data-tooltip]:hover::before {
     opacity: 1;
     pointer-events: auto;
 }
+
 </style>
 <div class="container mb-0 mt-0">
     <div class="row">
@@ -298,6 +309,11 @@ a[data-tooltip]:hover::before {
                                             class="btn btn-primary shadow btn-sm sharp edit-btn mr-1 m-2"
                                             onclick="redirectToEditPage(<?php echo $shopData['Shop_Cd']; ?>)">Edit
                                             Info</button>
+                                        <button type="button" id="notice-btn"
+                                            class="btn custom-btn btn-sm  mr-1 m-2"
+                                            onclick="ShopNoticeDetails(<?php echo $shopData['Shop_Cd']; ?>)">
+                                            Shop Notice
+                                        </button>
                                     </div>
                                     <button type="button" id="license-btn"
                                         class="btn btn-primary shadow btn-sm sharp edit-btn mr-1 m-2 <?php echo ($shopData['Billing_Cd'] != 0 && $shopData['Billing_Cd'] != '') ? 'd-none' : ''; ?>"
@@ -316,6 +332,7 @@ a[data-tooltip]:hover::before {
                                         onclick="applyforlicense(<?php echo $shopData['Shop_Cd']; ?>, '<?php echo $shopData['RenewalDate'] ?>')">
                                         Renew License
                                     </button>
+                                    
                                     <?php
                                         }
                                         ?>
@@ -342,6 +359,20 @@ a[data-tooltip]:hover::before {
                 } else { ?>
                 <p>No shops found.</p>
                 <?php } ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Shop Notice Details Modal -->
+<div class="modal fade" id="NoticeDetailModal" tabindex="-1" aria-labelledby="NoticeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header p-2 m-2">
+                <h5 class="modal-title" id="NoticeModalLabel">Notice Details</h5>
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="NoticeModalBody">
             </div>
         </div>
     </div>
@@ -377,6 +408,7 @@ $(document).ready(function() {
             iconUp.show();
         }
     });
+    
 });
 
 
@@ -407,7 +439,7 @@ function getBillDetails() {
                                     <tr>
                                         <th> Sr. No. </th>`; 
                      if (hasSuccessPayment) {                    
-                            tableHtml += ` <th> Download </th> `;
+                            tableHtml += ` <th style="max-width: 300px;"> Download </th> `;
                     } 
                          tableHtml += `  <th> Bill Number </th>
                                         <th> License Period </th>
@@ -428,16 +460,25 @@ function getBillDetails() {
                         const startDate = formatDate(item.LicenseStartDate);
                         const endDate = formatDate(item.LicenseEndDate);
                         const BillingDate = formatDate(item.BillingDate);
-                        if (item.PaymentStatus.toLowerCase() === "success") {
+                        if (item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "pending") {
+                            statusText =
+                                '<span class="badge bg-warning">InProgress</span>';
+                        } else if (item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "confirm") {
                             statusText =
                                 '<span class="badge bg-success">Paid</span>';
+                        } else if (item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "hold") {
+                            statusText =
+                                '<span class="badge bg-secondary">Hold</span>';
                         } else if (item.PaymentStatus.toLowerCase() === "failed") {
                             statusText =
                                 '<span class="badge bg-danger">Failed</span>';
+                        }else if (item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "") {
+                            statusText =
+                                '<span class="badge bg-warning">InProgress</span>';       
                         } else {
                             unpaidAmt = unpaidAmt + parseFloat(item.BillAmount);
                             statusText =
-                                '<span class="badge bg-info">Pending</span>';
+                                '<span class="badge bg-primary">Pending</span>';
                         }
 
                         let actionBtn = '';
@@ -451,7 +492,7 @@ function getBillDetails() {
 
                         tableHtml += `<tr class="bill-row text-center" data-index="${index}">
                                                     <td> ${index + 1} </td>`;
-                        if (item.PaymentStatus.toLowerCase() === "success") {
+                        if (item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "confirm") {
                                 tableHtml += `      <td> 
                                                         <div style="display: flex; align-items: center;">
                                                             <a href="./action/licence_generate.php?billing_id=${item.Billing_Cd}"   data-tooltip="Download the License Invoice" style="margin-right: 12px;" target="_blank">
@@ -461,6 +502,24 @@ function getBillDetails() {
                             tableHtml += ` <a href="./action/reciept.php?Transaction_Cd=${item.Transaction_Cd}" data-bs-toggle="tooltip" data-tooltip="Download the Payment Receipt" style="margin-right: 12px;" target="_blank">
                                                                 <span class ="badge bg-info" style="font-size: 14px;"> Receipt </span>
                                                             </a>`;
+                        }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "hold"){
+                            tableHtml += `      <td> 
+                                                        <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
+                                                            <span style="color:#C90D41";>Your application is currently on hold due to this reason : ${item.HoldReason}</span>`;
+                    
+                        }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === ""){
+                            tableHtml += `      <td> 
+                                                        <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
+                                                            <span style="color:#C90D41";>Your Application is currently being processed. 
+                                                            Once completed, your receipt and license will be generated </span>`;
+
+                        }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "pending"){
+                            tableHtml += `      <td> 
+                                                        <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
+                                                            <span style="color:#C90D41";>Your Application is currently being processed. 
+                                                            Once completed, your receipt and license will be generated </span>`;
+                        }else{
+                             tableHtml += `<td> `;
                         }
                         tableHtml += `              </div>
                                                     </td>
@@ -679,6 +738,24 @@ function paymentGateway(Billing_id, Amount, shopCd) {
         },
         error: function() {
             alert('Error occurred during License Bill Generation.');
+        }
+    });
+}
+
+function ShopNoticeDetails(Shop_Cd){
+    // alert(Shop_Cd);
+     $.ajax({
+        type: "POST",
+        url: 'getShopNoticeDetails.php',
+        data: {
+            shopCd: Shop_Cd
+        },
+        success: function(response) {
+            $('#NoticeModalBody').html(response); 
+            $('#NoticeDetailModal').modal('show'); 
+        },
+        error: function() {
+            alert('Error retrieving shop notice details.');
         }
     });
 }
