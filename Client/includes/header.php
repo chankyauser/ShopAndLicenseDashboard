@@ -402,7 +402,7 @@
                                     </li>
 
                                     <li>
-                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'Billing-reports' || $_GET['p']== 'collection-report' || $_GET['p'] == 'pending-report') ){ ?>
+                                        <a <?php if (isset($_GET['p']) && ( $_GET['p'] == 'Billing-reports' || $_GET['p']== 'collection-report' || $_GET['p'] == 'pending-report' ||  $_GET['p']== 'shop-owner-details') ){ ?>
                                             class="active" <?php } ?> href="index.php?p=Billing-reports"><i
                                                 class="fa-solid fa-indian-rupee-sign"></i> Revenue Dashboard</a>
                                         <ul class="sub-menu">

@@ -184,8 +184,8 @@ $_SESSION['SAL_View_Type'] = 'ListView';
     $(document).ready(function() {
 
         $('#mobile,#otp_id_4').on('keypress', function(e) {
-            if (e.which === 13) { // 13 is the Enter key
-                $('#submitLoginBtnId').click(); // Trigger button click
+            if (e.which === 13) { 
+                $('#submitLoginBtnId').click(); 
             }
         });
 
@@ -265,7 +265,7 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                     $('#otperror').text("Please enter OTP").show();
                 } else {
                     $('#otperror').text('').hide();
-                    validateOtp(mobileNumber, otp);
+                    validateOtp(mobileNumber, otp, 1);
                 }
             } else {
                 shopLogin();
@@ -328,8 +328,8 @@ function checkMobileExistence(mobileNumber) {
                 sendOTPToMobile(mobileNumber, otp);
                 $('#otpField').show();
                 $('#fullNameField').hide();
-                $("#submitmsgsuccess").html('OTP sent to your mobile.')
-                    .hide().fadeIn(800).delay(3000).fadeOut("fast");
+                // $("#submitmsgsuccess").html('OTP sent to your mobile.')
+                //     .hide().fadeIn(800).delay(3000).fadeOut("fast");
             } else {
                 $("#submitmsgfailed").html('Mobile number does not exist. Please check and try again.')
                     .hide().fadeIn(800).delay(3000).fadeOut("fast");
@@ -350,11 +350,9 @@ function sendOTPToMobile(mobileNumber, otp) {
             otp: otp
         },
         success: function(response) {
-            console.log(response);
+            // console.log(response);
             response = JSON.parse(response);
             if (response.statusCode === 200) {
-
-                // alert(response.statusCode);
                   startOtpTimer();
                 $("#submitmsgsuccess").html('OTP has been sent to your mobile number!')
                     .hide().fadeIn(800).delay(3000).fadeOut("fast");
@@ -410,13 +408,14 @@ function generateOtp() {
 
 // }
 
-function validateOtp(mobileNumber, otpEntered) {
+function validateOtp(mobileNumber, otpEntered, sessionFlag) {
     $.ajax({
         type: "POST",
         url: 'action/sendOTP.php',
         data: {
             verifyMobileNumber: mobileNumber,
-            verifyOtp: otpEntered
+            verifyOtp: otpEntered,
+            sessionFlag: sessionFlag
         },
         success: function(response) {
             var responseData = JSON.parse(response);

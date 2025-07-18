@@ -7,8 +7,7 @@ if (isset($_GET['ShopKeeperMobile'])) {
 
   
     $_SESSION['SAL_ShopKeeperMobile'] = $ShopKeeperMobile;
-
-   
+    $_SESSION['EditShopOwnerNumber'] = 1;
 } else {
     // Return a JSON error message if ShopKeeperMobile is not set
     echo json_encode(['success' => false, 'message' => 'ShopKeeperMobile is required']);

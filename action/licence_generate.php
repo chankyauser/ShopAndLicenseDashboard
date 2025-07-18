@@ -47,7 +47,8 @@
             COALESCE(sb.LicenseNumber, '') AS LicenseNumber,
 			COALESCE(sm.Ward_No,0) AS Ward_No,
 			CONCAT(COALESCE(sm.ShopAddress_1,''),' ',COALESCE(sm.ShopAddress_2,'')) AS ShopAddress,
-			COALESCE(nm.NodeName,'') AS ZoneName
+			COALESCE(nm.NodeName,'') AS ZoneName,
+            COALESCE(sb.QRCode_URL, '') AS QRCode_URL
         FROM ShopBilling sb 
         LEFT JOIN ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd
         LEFT JOIN BusinessCategoryMaster bm ON sm.BusinessCat_Cd = bm.BusinessCat_Cd
@@ -86,6 +87,7 @@
     $ZoneName = $BillingData['ZoneName'];
     $Ward_No = $BillingData['Ward_No'];
     $ShopAddress = $BillingData['ShopAddress'];
+    $QRCode_URL = $BillingData['QRCode_URL'];
 
     // $Total =  $Total_Pay  - $past_dues;
     list($startYear, $shortYear) = explode('-', $FinYear);
@@ -151,10 +153,6 @@
     z-index: 1;
 }
 
-.watermarked-container {
-    border: 1px solid #000;
-}
-
 td .info {
     margin: 4px !important;
 }
@@ -184,6 +182,11 @@ td:first-child .info::before {
 }
 
 
+/* .qrImg {
+    width: 10% !important;
+    max-width: unset !important;
+} */
+
 
 @media print {
     .watermarked-container::before {
@@ -210,7 +213,7 @@ td:first-child .info::before {
         print-color-adjust: exact !important;
     }
 
-     .template_bg {
+    .template_bg {
         background-image: url('../assets/imgs/license_bg.jpeg') !important;
         background-repeat: no-repeat !important;
         background-size: 100% 100% !important;
@@ -222,7 +225,6 @@ td:first-child .info::before {
         overflow: hidden !important;
     }
 }
-
 </style>
 
 <div class="col-md-12" id="PrintApplicationID" style="padding-left:20%; padding-right:20%">
@@ -237,7 +239,11 @@ td:first-child .info::before {
                                     <div class="table-responsive">
                                         <br>
                                         <br>
-                                        <div id="PrintApplicationTableID" class="watermarked-container">
+                                        <div id="PrintApplicationTableID" class="watermarked-container" <?php 
+                                                if(trim($_SESSION['SAL_ElectionName']) != 'AMC' && trim($_SESSION['SAL_ElectionName']) != 'CSMC') {
+                                                    echo "style='border: 1px solid #000'";
+                                                }
+                                            ?>>
                                             <div
                                                 class="content_div <?php if(trim($_SESSION['SAL_ElectionName']) === 'AMC' || trim($_SESSION['SAL_ElectionName']) == 'CSMC'){ echo "template_bg"; }?>">
                                                 <?php if($_SESSION['SAL_ElectionName'] !== 'AMC' && $_SESSION['SAL_ElectionName'] !== 'CSMC'){ ?>
@@ -428,12 +434,26 @@ td:first-child .info::before {
                                                             नुतनिकरण
                                                             करणे अपेक्षित आहे. </p>
                                                     </div>
-                                                    <div class="row"
+                                                    <!-- <div class="row"
                                                         style="display: flex; justify-content: flex-end; margin-bottom: 5px; margin-right: 10px;">
+                                                        <img class="qrImg" src=" < ?= $QRCode_URL ?>" id="qrCode" />
                                                         <div
                                                             style="display: flex; flex-direction: column; align-content: center; align-items: center;">
                                                             <p style="font-size: 14px; margin-bottom: 0;">उपायुक्त</p>
-                                                            <p style="font-size: 14px; margin-top: 5px;">छत्रपती संभाजीनगर महानगरपलिका
+                                                            <p style="font-size: 14px; margin-top: 5px;">छत्रपती
+                                                                संभाजीनगर महानगरपलिका
+                                                            </p>
+                                                        </div>
+                                                    </div> -->
+                                                    <div class="row"
+                                                        style="display: flex; justify-content: space-between; margin-bottom: 5px; margin-right: 10px;">
+                                                        <img class="qrImg" src="<?= $QRCode_URL ?>" id="qrCode"
+                                                            style="width: 10vw; height: 10vw;" />
+                                                       <div
+                                                            style="display: flex; flex-direction: column; align-content: center; align-items: center;">
+                                                            <p style="font-size: 14px; margin-bottom: 0;">उपायुक्त</p>
+                                                            <p style="font-size: 14px; margin-top: 5px;">छत्रपती
+                                                                संभाजीनगर महानगरपलिका
                                                             </p>
                                                         </div>
                                                     </div>
@@ -545,6 +565,15 @@ function acknowledgementPrinting() {
                 z-index: 0;
             }
 
+            .template_bg {
+                background-image: url(../assets/imgs/license_bg.jpeg);
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+                background-position: unset;
+                position: relative;
+                border : none !important;
+            }
+
             body {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -555,10 +584,6 @@ function acknowledgementPrinting() {
             content: "• ";
             margin-right: 5px;
             color: black;
-        }
-
-        .watermarked-container {
-            border: 1px solid #000;
         }
     `);
     a.document.write('@media print {');
@@ -574,6 +599,4 @@ function acknowledgementPrinting() {
     a.document.write('</head><body onload="window.print()">' + c + '</body></html>');
     a.document.close();
 }
-
-
 </script>
