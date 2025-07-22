@@ -2647,11 +2647,10 @@ function setShopOwnerDetailFilter(pageNo){
 
     var electionName = document.getElementsByName('electionName')[0].value;
     var nodeName = document.getElementsByName('nodeName')[0].value;
-    var nodeCd = document.getElementsByName('nodeCd')[0].value;
+    var nodeCd = document.getElementById('setNodeAndWardDetailId').value;
     var ShopName = document.getElementsByName('ShopName')[0].value;
     var OwnerName = document.getElementsByName('OwnerName')[0].value;
     var OwnerMobile = document.getElementsByName('OwnerMobile')[0].value;
-  
     var queryString = "?electionName="+electionName+"&pageNo="+pageNo+"&nodeName="+nodeName+"&nodeCd="+nodeCd+"&ShopName="+ShopName+"&OwnerName="+OwnerName+"&OwnerMobile="+OwnerMobile;
     ajaxRequest.open("POST", "setShopOwnerDetailFilter.php" + queryString, true);
     ajaxRequest.send(null);
