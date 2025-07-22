@@ -789,6 +789,7 @@ $(document).ready(function() {
             </div>
         </div>
     </div>
+</div>
 
     <!--  -->
 
@@ -1763,51 +1764,51 @@ $(document).ready(function() {
     <!-- New Shop Owner Shop Details End -->
 
     <!-- <script>
-document.addEventListener('contextmenu', event => event.preventDefault());
-document.addEventListener('copy', event => event.preventDefault());
-document.addEventListener('paste', event => event.preventDefault());
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('copy', event => event.preventDefault());
+        document.addEventListener('paste', event => event.preventDefault());
 
-// // Disable right click
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
+        // // Disable right click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
 
-// Disable F12 and Ctrl+Shift+I
-document.addEventListener('keydown', function(e) {
- if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-     e.preventDefault();
- }
-});
+        // Disable F12 and Ctrl+Shift+I
+        document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+            e.preventDefault();
+        }
+        });
 
-document.addEventListener('keydown', function(e) {
-    // keyCode 44 is for the Print Screen key
-    if (e.keyCode == 44) {
-        e.preventDefault();
-        alert('Print Screen is disabled');
-    }
-});
+        document.addEventListener('keydown', function(e) {
+            // keyCode 44 is for the Print Screen key
+            if (e.keyCode == 44) {
+                e.preventDefault();
+                alert('Print Screen is disabled');
+            }
+        });
 
-document.addEventListener('keydown', function(e) {
-    // Disable F12 (Open DevTools)
-    if (e.key === "F12") {
-        e.preventDefault();
-    }
+        document.addEventListener('keydown', function(e) {
+            // Disable F12 (Open DevTools)
+            if (e.key === "F12") {
+                e.preventDefault();
+            }
 
-    // Disable Ctrl+Shift+I (Open DevTools in some browsers)
-    if (e.ctrlKey && e.shiftKey && e.key === "I") {
-        e.preventDefault();
-    }
+            // Disable Ctrl+Shift+I (Open DevTools in some browsers)
+            if (e.ctrlKey && e.shiftKey && e.key === "I") {
+                e.preventDefault();
+            }
 
-    // Disable Ctrl+Shift+C (Element inspector)
-    if (e.ctrlKey && e.shiftKey && e.key === "C") {
-        e.preventDefault();
-    }
+            // Disable Ctrl+Shift+C (Element inspector)
+            if (e.ctrlKey && e.shiftKey && e.key === "C") {
+                e.preventDefault();
+            }
 
-    // Disable Ctrl+U (View Page Source)
-    if (e.ctrlKey && e.key === "u") {
-        e.preventDefault();
-    }
-});
+            // Disable Ctrl+U (View Page Source)
+            if (e.ctrlKey && e.key === "u") {
+                e.preventDefault();
+            }
+        });
 </script> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -1815,6 +1816,7 @@ document.addEventListener('keydown', function(e) {
     $('#check_status').on('click', function() {
         $('#transactionNumber-error').text('');
         $('.transTable').addClass('d-none');
+        $('#transactionTable tbody').empty();
 
         var transactionNumber = $('#transactionNumber').val().trim();
 
@@ -1910,31 +1912,20 @@ document.addEventListener('keydown', function(e) {
         });
     });
 
-    $('#transactionModal').on('shown.bs.modal', function() {
+    $('#chktransactionModal').on('shown.bs.modal', function() {
         $('#transactionNumber').val('');
         $('#transactionNumber-error').text('');
-
         $('.transTable').addClass('d-none');
-
-        if ($.fn.DataTable.isDataTable('#transactionTable')) {
-            $('#transactionTable').DataTable().clear().draw();
-        }
+        $('#transactionTable tbody').empty();
     });
 
-    $('#transactionModal').on('hidden.bs.modal', function() {
-        alert('hello');
-        // Clear input field
+    $('#chktransactionModal').on('hidden.bs.modal', function () {
         $('#transactionNumber').val('');
         $('#transactionNumber-error').text('');
-
-        // Hide the table
         $('.transTable').addClass('d-none');
-
-        // Destroy and clear DataTable if initialized
-        if ($.fn.DataTable.isDataTable('#transactionTable')) {
-            $('#transactionTable').DataTable().clear().destroy();
-        }
+        $('#transactionTable tbody').empty();
     });
+
     </script>
     </body>
 

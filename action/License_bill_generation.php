@@ -6,11 +6,9 @@ $developmentMode = $_SESSION['SAL_DevelopmentMode'];
 
 if(isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
 
-    // if($electionName === 'CSMC'){
-    //     $Code = 'CSMC';
-    // }else{
-        $Code = $electionName;
-    // }
+    // echo "<pre>"; print_r($_POST);exit;
+
+    $Code = $electionName;
 
     $shopCd = trim($_POST['shopCd']);
 
@@ -46,7 +44,7 @@ if(isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
                          AND sm.IsActive = 1";
     $shopDB = new DbOperation();
     $ShopDetails = $shopDB->ExecutveQueryMultipleRowSALData($ShopDetailsQuery,$electionName, $developmentMode);
-    // echo json_encode($ShopDetails);exit;
+
     if(!empty($ShopDetails)){
         foreach($ShopDetails as $sd){
             $shopCd = $sd['Shop_Cd'];
@@ -62,9 +60,14 @@ if(isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
             $businessMonth = (int)$startDate->format("m");
             $BillingDate = $currentDate->format('Y-m-d');
 
+            $CallCatSrNo = 6;
+            $StageSrNo = 18;
+
             if(isset($_POST['renewFlag']) && !empty($_POST['renewFlag']) && $_POST['renewFlag'] === 1){
                 $RenewalDate = $sd['RenewalDate'];
                 $LicenseRenewalDate = (clone $RenewalDate)->modify('+1 day')->format("Y-m-d");
+                $CallCatSrNo = 12;
+                $StageSrNo = 15;
             }
 
             $RenewalFlag = 0;
@@ -105,6 +108,21 @@ if(isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
                 $InsertDB = new DBOperation();
                 $result = $InsertDB->RunQuerySALData($InsertQuery, $electionName, $developmentMode);
 
+                $MaxBillingQuery = 'SELECT MAX(Billing_Cd) as Max_CD FROM ShopBilling'; 
+                $MaxBillingDB = new DbOperation();
+                $MaxBillingResult = $MaxBillingDB->ExecutveQuerySingleRowSALData($MaxBillingQuery, $electionName, $developmentMode);
+                $MaxBillingCd = 0;
+                if (!empty($MaxBillingResult)) {
+                    $LastInsertId = $MaxBillingResult['Max_CD'];
+                    $Billing_Cd = $LastInsertId;
+                    $BillNo = $Code.'-'.$FinYear.'/'.$shopCd.'-'.$Billing_Cd;
+
+                    $UpdateQuery = "UPDATE ShopBilling SET BillNo = '$BillNo' WHERE Billing_Cd = $Billing_Cd";
+                    $UpdateDB = new DBOperation();
+                    $result = $UpdateDB->RunQuerySALData($UpdateQuery, $electionName, $developmentMode);
+                }
+
+
                  if($result){
                     $ParwanaDetailQuery = "SELECT ISNULL(ParwanaDetCd, 0) as ParwanaDetCd FROM ParwanaDetails WHERE Parwana_Cd = $Parwana_Cd AND IsActive = 1 AND IsRenewal = 1";
                     $ParwanaDetailDB = new DbOperation();
@@ -115,6 +133,65 @@ if(isset($_POST['shopCd']) && !empty($_POST['shopCd'])){
                         $UpdateRenewalFlagQuery = "UPDATE ShopMaster SET ParwanaDetCd = $ParwanaDetCd, RenewalDate = '$LicenseRenewalDate', LicenseNumber = '$LicenseNumber' WHERE Shop_Cd = $shopCd AND IsActive = 1";
                         $UpdateRenewalDB = new DBOperation();
                         $UpdateRenewalDB->RunQuerySALData($UpdateRenewalFlagQuery, $electionName, $developmentMode);
+                    }
+
+                    $CallCategoryQuery = "SELECT Calling_Category_Cd, Calling_Category FROM CallingCategoryMaster WHERE IsActive = 1 AND SrNo = $CallCatSrNo AND Calling_Type = 'Collection'";
+                    $CallCategoryDB = new DbOperation();
+                    $CallCategoryResult = $CallCategoryDB->ExecutveQuerySingleRowSALData($CallCategoryQuery, $electionName, $developmentMode);
+
+                    if($CallCategoryResult){
+                        $ScheduleCall_Cd = 0;
+                        $Calling_Category_Cd = $CallCategoryResult['Calling_Category_Cd'];
+                        $Calling_Category = $CallCategoryResult['Calling_Category'];
+
+                        $ExistScheduleQuery = "SELECT ScheduleCall_Cd FROM ScheduleDetails WHERE Shop_Cd = $shopCd AND Calling_Category_Cd = $Calling_Category_Cd";
+                        $ExistScheduleDB = new DbOperation();
+                        $ExistScheduleResult = $ExistScheduleDB->ExecutveQuerySingleRowSALData($ExistScheduleQuery, $electionName, $developmentMode);
+
+                        
+                        if($ExistScheduleResult){
+                            $ScheduleCall_Cd = $ExistScheduleResult['ScheduleCall_Cd'];
+
+                            $UpdateScheduleQuery = "UPDATE ScheduleDetails SET Shop_Cd = $shopCd, Calling_Category_Cd = $Calling_Category_Cd, IsActive = 1, CallReason = '$Calling_Category', UpdatedDate = GETDATE() WHERE ScheduleCall_Cd = $ScheduleCall_Cd";
+                            $UpdateScheduleDB = new DBOperation();
+                            $schedule = $UpdateScheduleDB->RunQuerySALData($UpdateScheduleQuery, $electionName,$developmentMode);
+                            
+                        }else{
+                            $InsertScheduleQuery = "INSERT INTO ScheduleDetails (Shop_Cd, Calling_Category_Cd, CallReason, IsActive, UpdatedDate) VALUES($shopCd, $Calling_Category_Cd, '$Calling_Category', 1, GETDATE())";
+                            $InsertScheduleDB = new DBOperation();
+                            $schedule = $InsertScheduleDB->RunQuerySALData($InsertScheduleQuery, $electionName, $developmentMode);
+
+                            $MaxScheduleIdQuery = "SELECT MAX(ScheduleCall_Cd) as ScheduleCall_Cd FROM ScheduleDetails";
+                            $MaxScheduleIdDB = new DbOperation();
+                            $MaxScheduleIdResult = $MaxScheduleIdDB->ExecutveQuerySingleRowSALData($MaxScheduleIdQuery, $electionName, $developmentMode);
+                            $ScheduleCall_Cd = $MaxScheduleIdResult['ScheduleCall_Cd'];
+                        }
+
+                        if($ScheduleCall_Cd !== 0){
+                             $StageQuery = "SELECT DropDown_Cd, DValue, DTitle FROM DropDownMaster WHERE DTitle = 'StageName' AND IsActive = 1 AND  SerialNo = $StageSrNo";
+                            $StageDB = new DbOperation();
+                            $StageResult = $StageDB->ExecutveQuerySingleRowSALData($StageQuery, $electionName, $developmentMode);
+                            
+                            if($StageResult){
+                                $StageCd = $StageResult['DropDown_Cd'];
+                                $StageName = $StageResult['DValue'];
+
+                                $ExistTrackQuery = "SELECT ST_Cd FROM ShopTracking WHERE ScheduleCall_Cd = $ScheduleCall_Cd AND Shop_Cd = $shopCd AND Calling_Category_Cd = $Calling_Category_Cd AND ST_StageName = '$StageName'";
+                                $ExistTrackDB = new DbOperation();
+                                $ExistTrackResult = $ExistTrackDB->ExecutveQuerySingleRowSALData($ExistTrackQuery, $electionName, $developmentMode);
+
+                                if($ExistTrackResult){
+                                    $ST_Cd  = $ExistTrackResult['ST_Cd'];
+                                    $TrackQuery = "UPDATE ShopTracking SET ST_StageName = '$StageName', ScheduleCall_Cd = $ScheduleCall_Cd, Shop_Cd = $shopCd, Calling_Category_Cd = $Calling_Category_Cd, UpdatedDate = GETDATE(), ST_Status = 1, ST_DateTime = GETDATE() WHERE ST_Cd = $ST_Cd";
+                                    $TrackDB = new DbOperation();
+                                    $TrackDB->RunQuerySALData($TrackQuery, $electionName, $developmentMode);
+                                }else{
+                                    $InsertTrackQuery = "INSERT INTO ShopTracking (ST_StageName, ScheduleCall_Cd, Shop_Cd, Calling_Category_Cd, ST_DateTime, UpdatedDate, ST_Status) VALUES('$StageName', $ScheduleCall_Cd, $shopCd, $Calling_Category_Cd, GETDATE(), GETDATE(), 1)";
+                                    $InsertTrackDB = new DbOperation();
+                                    $InsertTrackDB->RunQuerySALData($InsertTrackQuery, $electionName, $developmentMode);
+                                }
+                            }
+                        }
                     }
 
                     echo json_encode([

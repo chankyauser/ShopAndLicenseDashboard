@@ -22,8 +22,8 @@
         $nodeName = $_SESSION['SAL_Node_Name'];
     }
 
-    if(!isset($_SESSION['SAL_Shop_Name'])){
-        $_SESSION['SAL_Shop_Name'] = "All";
+    if(!isset($_SESSION['SAL_Shop_Name']) || $_SESSION['SAL_Shop_Name'] == 'All' || $_SESSION['SAL_Shop_Name'] == 'undefined'){
+        $_SESSION['SAL_Shop_Name'] = "";
         $shopName = $_SESSION['SAL_Shop_Name'];
     }else{
         $shopName = $_SESSION['SAL_Shop_Name'];
@@ -68,7 +68,7 @@
         $mobCondition = " ";
     }
 
-    if($searchOwner != ''){
+    if($searchOwner != '' && $searchOwner != 'All' && $searchOwner != 'undefined'){
         $ownerCondition = " AND (ShopMaster.ShopOwnerName LIKE '%$searchOwner%' OR ShopMaster.ShopKeeperName LIKE '%$searchOwner%') ";
     }else{
         $ownerCondition = " ";
@@ -221,6 +221,7 @@
                         FETCH NEXT $recordPerPage ROWS ONLY;";
 
     $shopListDetail = $db2->ExecutveQueryMultipleRowSALData($query1, $electionName, $developmentMode);
+
 
 ?>
 
