@@ -492,34 +492,36 @@ function getBillDetails() {
 
                         tableHtml += `<tr class="bill-row text-center" data-index="${index}">
                                                     <td> ${index + 1} </td>`;
-                        if (item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "confirm") {
+                        if(hasSuccessPayment) {
+                            if (item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "confirm") {
+                                    tableHtml += `      <td> 
+                                                            <div style="display: flex; align-items: center;">
+                                                                <a href="./action/licence_generate.php?billing_id=${item.Billing_Cd}"   data-tooltip="Download the License Invoice" style="margin-right: 12px;" target="_blank">
+                                                                <span class ="badge bg-warning" style="font-size: 14px;"> License </span>
+                                                                </a>`;
+                        
+                                tableHtml += ` <a href="./action/reciept.php?Transaction_Cd=${item.Transaction_Cd}" data-bs-toggle="tooltip" data-tooltip="Download the Payment Receipt" style="margin-right: 12px;" target="_blank">
+                                                                    <span class ="badge bg-info" style="font-size: 14px;"> Receipt </span>
+                                                                </a>`;
+                            }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "hold"){
                                 tableHtml += `      <td> 
-                                                        <div style="display: flex; align-items: center;">
-                                                            <a href="./action/licence_generate.php?billing_id=${item.Billing_Cd}"   data-tooltip="Download the License Invoice" style="margin-right: 12px;" target="_blank">
-                                                               <span class ="badge bg-warning" style="font-size: 14px;"> License </span>
-                                                            </a>`;
-                       
-                            tableHtml += ` <a href="./action/reciept.php?Transaction_Cd=${item.Transaction_Cd}" data-bs-toggle="tooltip" data-tooltip="Download the Payment Receipt" style="margin-right: 12px;" target="_blank">
-                                                                <span class ="badge bg-info" style="font-size: 14px;"> Receipt </span>
-                                                            </a>`;
-                        }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "hold"){
-                            tableHtml += `      <td> 
-                                                        <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
-                                                            <span style="color:#C90D41";>Your application is currently on hold due to this reason : ${item.HoldReason}</span>`;
-                    
-                        }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === ""){
-                            tableHtml += `      <td> 
-                                                        <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
-                                                            <span style="color:#C90D41";>Your Application is currently being processed. 
-                                                            Once completed, your receipt and license will be generated </span>`;
+                                                            <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
+                                                                <span style="color:#C90D41";>Your application is currently on hold due to this reason : ${item.HoldReason}</span>`;
+                        
+                            }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === ""){
+                                tableHtml += `      <td> 
+                                                            <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
+                                                                <span style="color:#C90D41";>Your Application is currently being processed. 
+                                                                Once completed, your receipt and license will be generated </span>`;
 
-                        }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "pending"){
-                            tableHtml += `      <td> 
-                                                        <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
-                                                            <span style="color:#C90D41";>Your Application is currently being processed. 
-                                                            Once completed, your receipt and license will be generated </span>`;
-                        }else{
-                             tableHtml += `<td> `;
+                            }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "pending"){
+                                tableHtml += `      <td> 
+                                                            <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
+                                                                <span style="color:#C90D41";>Your Application is currently being processed. 
+                                                                Once completed, your receipt and license will be generated </span>`;
+                            }else{
+                                tableHtml += `<td> `;
+                            }
                         }
                         tableHtml += `              </div>
                                                     </td>
