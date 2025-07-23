@@ -791,979 +791,982 @@ $(document).ready(function() {
     </div>
 </div>
 
-    <!--  -->
+<!--  -->
 
-    <!-- shop Modal Script -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- shop Modal Script -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- New Shop Owner Shop Details Start -->
+<!-- New Shop Owner Shop Details Start -->
 
 
-    <script>
-    let globBusinessDetailCd = 0;
-    let globalWardNo = 0;
-    let globalSpaceType = 0;
-    let otpExpiryTime = 300;
-    let otpTimeInterval;
+<script>
+let globBusinessDetailCd = 0;
+let globalWardNo = 0;
+let globalSpaceType = 0;
+let otpExpiryTime = 300;
+let otpTimeInterval;
+let updateShop = 0;
 
-    function redirectToEditPage(Shop_Cd) {
-        // alert('hello');
-        $.ajax({
-            url: './action/getShopAddressDetails.php',
-            type: 'POST',
-            data: {
-                Shop_Cd: Shop_Cd
-            },
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.status == 200) {
-                    var records = data.data[0];
-                    var ShopKeeperName = records['ShopKeeperName'];
-                    var nameParts = ShopKeeperName.split(' ');
-                    var firstName = '';
-                    var middleName = '';
-                    var lastName = '';
-                    if (records['FirstName'] != '' && records['LastName'] != '') {
-                        firstName = records['FirstName'];
-                        lastName = records['LastName'];
-                        if (records['MiddleName'] != '') {
-                            middleName = records['MiddleName'];
-                        }
-                    } else if (nameParts.length == 3) {
-                        firstName = nameParts[0];
-                        middleName = nameParts[1];
-                        lastName = nameParts[2];
-                    } else if (nameParts.length > 3) {
-                        firstName = nameParts[0];
-                        lastName = nameParts[nameParts.length - 1];
-                        middleName = nameParts.slice(1, nameParts.length - 1).join(' ');
-
-                    } else {
-                        firstName = nameParts[0];
-                        lastName = nameParts[1];
+function redirectToEditPage(Shop_Cd) {
+    // alert('hello');
+    updateShop = 1;
+    $.ajax({
+        url: './action/getShopAddressDetails.php',
+        type: 'POST',
+        data: {
+            Shop_Cd: Shop_Cd
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            if (data.status == 200) {
+                var records = data.data[0];
+                var ShopKeeperName = records['ShopKeeperName'];
+                var nameParts = ShopKeeperName.split(' ');
+                var firstName = '';
+                var middleName = '';
+                var lastName = '';
+                if (records['FirstName'] != '' && records['LastName'] != '') {
+                    firstName = records['FirstName'];
+                    lastName = records['LastName'];
+                    if (records['MiddleName'] != '') {
+                        middleName = records['MiddleName'];
                     }
+                } else if (nameParts.length == 3) {
+                    firstName = nameParts[0];
+                    middleName = nameParts[1];
+                    lastName = nameParts[2];
+                } else if (nameParts.length > 3) {
+                    firstName = nameParts[0];
+                    lastName = nameParts[nameParts.length - 1];
+                    middleName = nameParts.slice(1, nameParts.length - 1).join(' ');
 
-                    $('#shopkeeper_title').val(records['Title'].trim()).trigger('change');
-                    $('#shopkeeper_fullname').val(records['ShopKeeperName']);
-                    $('#shopkeeper_firstname').val(firstName);
-                    $('#shopkeeper_parentname').val(middleName);
-                    $('#shopkeeper_surname').val(lastName);
-                    $('#shopkeeper_mobile').val(records['ShopKeeperMobile']);
-                    $('#shopkeeper_email').val(records['ShopEmailAddress']);
-                    $('#shopkeeper_aadharno').val(records['ShopOwnerAadharNo']);
-                    $('#shopkeeper_address').val(records['ShopOwnerAddress']);
-                    $('#shopkeeper_pincode').val(records['ShopOwnerPinCode']);
-                    $('#shop_cd').val(Shop_Cd);
-                    <?php if(isset($_SESSION['EditShopOwnerNumber']) && $_SESSION['EditShopOwnerNumber'] == 1) { ?>
-                    $('#shopkeeper_mobile').prop('readonly', false);
-                    <?php } else { ?>
-                    $('#shopkeeper_mobile').prop('readonly', true);
-                    <?php }?>
-                    $('#verifyOtpBtn').hide();
-                    $('#ShopModal').modal('show');
-                    setTimeout(function() {
-                        if ($('.nav-item').has('active')) {
-                            $('.nav-item').removeClass('active');
-                        }
-                        $('#application-details-tab').addClass('active');
-                        $('#application-details-tab-link').tab('show');
-                        updateNavLinks();
-                    }, 200);
                 } else {
-                    alert(data.message);
+                    firstName = nameParts[0];
+                    lastName = nameParts[1];
                 }
+
+                $('#shopkeeper_title').val(records['Title'].trim()).trigger('change');
+                $('#shopkeeper_fullname').val(records['ShopKeeperName']);
+                $('#shopkeeper_firstname').val(firstName);
+                $('#shopkeeper_parentname').val(middleName);
+                $('#shopkeeper_surname').val(lastName);
+                $('#shopkeeper_mobile').val(records['ShopKeeperMobile']);
+                $('#shopkeeper_email').val(records['ShopEmailAddress']);
+                $('#shopkeeper_aadharno').val(records['ShopOwnerAadharNo']);
+                $('#shopkeeper_address').val(records['ShopOwnerAddress']);
+                $('#shopkeeper_pincode').val(records['ShopOwnerPinCode']);
+                $('#shop_cd').val(Shop_Cd);
+                <?php if(isset($_SESSION['EditShopOwnerNumber']) && $_SESSION['EditShopOwnerNumber'] == 1) { ?>
+                $('#shopkeeper_mobile').prop('readonly', false);
+                <?php } else { ?>
+                $('#shopkeeper_mobile').prop('readonly', true);
+                <?php }?>
+                $('#verifyOtpBtn').hide();
+                $('#ShopModal').modal('show');
+                setTimeout(function() {
+                    if ($('.nav-item').has('active')) {
+                        $('.nav-item').removeClass('active');
+                    }
+                    $('#application-details-tab').addClass('active');
+                    $('#application-details-tab-link').tab('show');
+                    updateNavLinks();
+                }, 200);
+            } else {
+                alert(data.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error: " + error);
+        }
+    });
+}
+
+function getFullName() {
+    var firstname = $('#shopkeeper_firstname').val();
+    var middlename = $('#shopkeeper_parentname').val();
+    var surname = $('#shopkeeper_surname').val();
+
+    let fullName = firstname;
+    if (middlename) {
+        fullName += ' ' + middlename;
+    }
+
+    if (surname) {
+        fullName += ' ' + surname;
+    }
+
+    $('#shopkeeper_fullname').val(fullName);
+}
+
+function submitForm(form_id) {
+    if (form_id == 'application-form') {
+        let hasError = false;
+
+        const fields = [{
+                id: 'shopkeeper_title',
+                errorId: 'shopkeeper_title-error',
+                message: 'Title is required'
             },
-            error: function(xhr, status, error) {
-                console.error("Error: " + error);
+            {
+                id: 'shopkeeper_firstname',
+                errorId: 'shopkeeper_firstname-error',
+                message: 'First Name is required'
+            },
+            {
+                id: 'shopkeeper_surname',
+                errorId: 'shopkeeper_surname-error',
+                message: 'Surname is required'
+            },
+            {
+                id: 'shopkeeper_mobile',
+                errorId: 'shopkeeper_mobile-error',
+                message: 'Mobile Number is required'
+            },
+            {
+                id: 'shopkeeper_email',
+                errorId: 'shopkeeper_email-error',
+                message: 'Email is required'
+            },
+            {
+                id: 'shopkeeper_pincode',
+                errorId: 'shopkeeper_pincode-error',
+                message: 'Pincode is required'
+            },
+            {
+                id: 'shopkeeper_address',
+                errorId: 'shopkeeper_address-error',
+                message: 'Address is required'
+            },
+        ];
+
+        fields.forEach(field => {
+            const value = $('#' + field.id).val();
+            if (value == '' || value == null) {
+                $('#' + field.errorId).text(field.message);
+                hasError = true;
+            } else {
+                if (field.id == 'shopkeeper_mobile') {
+                    const mobileRegex = /^[0-9]{10}$/;
+                    if (!mobileRegex.test(value)) {
+                        $('#' + field.errorId).text('Mobile Number must be 10 digits');
+                        hasError = true;
+                        return;
+                    }
+                }
+                if (field.id == 'shopkeeper_pincode') {
+                    const pincodeRegex = /^[0-9]{6}$/;
+                    if (!pincodeRegex.test(value)) {
+                        $('#' + field.errorId).text('Pincode must be 6 digits');
+                        hasError = true;
+                        return;
+                    }
+                }
+                $('#' + field.errorId).text('');
             }
         });
-    }
 
-    function getFullName() {
-        var firstname = $('#shopkeeper_firstname').val();
-        var middlename = $('#shopkeeper_parentname').val();
-        var surname = $('#shopkeeper_surname').val();
+        var aadhar_no = $('#shopkeeper_aadhar_no').val();
 
-        let fullName = firstname;
-        if (middlename) {
-            fullName += ' ' + middlename;
+        if (aadhar_no && aadhar_no.length != 12) {
+            $('#shopkeeper_aadharno-error').text('Aadhar Number must be 12 digits');
+            hasError = true;
+            return;
         }
 
-        if (surname) {
-            fullName += ' ' + surname;
+        if ($('#verifyOtpBtn').is(':visible')) {
+            $('#shopkeeper_mobile-error').text('Please Verify Mobile No');
+            hasError = true;
+            return;
         }
 
-        $('#shopkeeper_fullname').val(fullName);
-    }
-
-    function submitForm(form_id) {
-        if (form_id == 'application-form') {
-            let hasError = false;
-
-            const fields = [{
-                    id: 'shopkeeper_title',
-                    errorId: 'shopkeeper_title-error',
-                    message: 'Title is required'
-                },
-                {
-                    id: 'shopkeeper_firstname',
-                    errorId: 'shopkeeper_firstname-error',
-                    message: 'First Name is required'
-                },
-                {
-                    id: 'shopkeeper_surname',
-                    errorId: 'shopkeeper_surname-error',
-                    message: 'Surname is required'
-                },
-                {
-                    id: 'shopkeeper_mobile',
-                    errorId: 'shopkeeper_mobile-error',
-                    message: 'Mobile Number is required'
-                },
-                {
-                    id: 'shopkeeper_email',
-                    errorId: 'shopkeeper_email-error',
-                    message: 'Email is required'
-                },
-                {
-                    id: 'shopkeeper_pincode',
-                    errorId: 'shopkeeper_pincode-error',
-                    message: 'Pincode is required'
-                },
-                {
-                    id: 'shopkeeper_address',
-                    errorId: 'shopkeeper_address-error',
-                    message: 'Address is required'
-                },
-            ];
-
-            fields.forEach(field => {
-                const value = $('#' + field.id).val();
-                if (value == '' || value == null) {
-                    $('#' + field.errorId).text(field.message);
-                    hasError = true;
-                } else {
-                    if (field.id == 'shopkeeper_mobile') {
-                        const mobileRegex = /^[0-9]{10}$/;
-                        if (!mobileRegex.test(value)) {
-                            $('#' + field.errorId).text('Mobile Number must be 10 digits');
-                            hasError = true;
-                            return;
-                        }
-                    }
-                    if (field.id == 'shopkeeper_pincode') {
-                        const pincodeRegex = /^[0-9]{6}$/;
-                        if (!pincodeRegex.test(value)) {
-                            $('#' + field.errorId).text('Pincode must be 6 digits');
-                            hasError = true;
-                            return;
-                        }
-                    }
-                    $('#' + field.errorId).text('');
-                }
-            });
-
-            var aadhar_no = $('#shopkeeper_aadhar_no').val();
-
-            if (aadhar_no && aadhar_no.length != 12) {
-                $('#shopkeeper_aadharno-error').text('Aadhar Number must be 12 digits');
-                hasError = true;
-                return;
-            }
-
-            if ($('#verifyOtpBtn').is(':visible')) {
-                $('#shopkeeper_mobile-error').text('Please Verify Mobile No');
-                hasError = true;
-                return;
-            }
-
-            if (!hasError) {
-                submitApplicationForm(form_id);
-            }
-        } else if (form_id == 'shop-details-form') {
-            let hasError = false;
-            const fields = [{
-                    id: 'shopcategory',
-                    errorId: 'shopcategory-error',
-                    message: 'Shop Category is required'
-                },
-                {
-                    id: 'businesscategory',
-                    errorId: 'businesscategory-error',
-                    message: 'Business Category is required'
-                },
-                {
-                    id: 'businessdetails',
-                    errorId: 'businessdetails-error',
-                    message: 'Business Details is required'
-                },
-                {
-                    id: 'nameofbusiness',
-                    errorId: 'nameofbusiness-error',
-                    message: 'Business Name is required'
-                },
-                {
-                    id: 'estimatedate',
-                    errorId: 'estimatedate-error',
-                    message: 'Estimate Date is required'
-                },
-                {
-                    id: 'spacetype',
-                    errorId: 'spacetype-error',
-                    message: 'Space Type is required'
-                },
-                {
-                    id: 'shopownstatus',
-                    errorId: 'shopownstatus-error',
-                    message: 'Shop Own Status is required'
-                },
-                {
-                    id: 'shoplength',
-                    errorId: 'shoplength-error',
-                    message: 'Shop Length is required'
-                },
-                {
-                    id: 'shopheight',
-                    errorId: 'shopheight-error',
-                    message: 'Shop Height is required'
-                },
-                {
-                    id: 'shopwidth',
-                    errorId: 'shopwidth-error',
-                    message: 'Shop Width is required'
-                },
-                {
-                    id: 'shopaddress',
-                    errorId: 'shopaddress-error',
-                    message: 'Shop Address is required'
-                },
-                {
-                    id: 'shoparea',
-                    errorId: 'shoparea-error',
-                    message: 'Shop Area is required'
-                }
-            ];
-
-            fields.forEach(field => {
-                const value = $('#' + field.id).val();
-                if (value == '' || value == null) {
-                    $('#' + field.errorId).text(field.message);
-                    hasError = true;
-                } else {
-                    if (field.id == 'shoplength') {
-                        if (value == 0) {
-                            $('#' + field.errorId).text('Shop Length should be greater than 0');
-                            hasError = true;
-                            return;
-                        }
-                    }
-
-                    if (field.id == 'shopheight') {
-                        if (value == 0) {
-                            $('#' + field.errorId).text('Shop Height should be greater than 0');
-                            hasError = true;
-                            return;
-                        }
-                    }
-
-                    if (field.id == 'shopwidth') {
-                        if (value == 0) {
-                            $('#' + field.errorId).text('Shop Width should be greater than 0');
-                            hasError = true;
-                            return;
-                        }
-                    }
-                    $('#' + field.errorId).text('');
-                }
-            });
-
-            var zoneno = $('#zoneno').val();
-            var wardno = $('#wardno').val();
-
-            if (zoneno && zoneno !== '0') {
-                if (!wardno) {
-                    $('#wardno-error').text('Ward No is required');
-                    hasError = true;
-                }
-            }
-
-            if (!hasError) {
-                submitShopDetails(form_id);
-            }
-
-
-
-        } else if (form_id == 'shopDocForm') {
-            SubmitDocumentForm(form_id);
+        if (!hasError) {
+            submitApplicationForm(form_id);
         }
-    }
-
-
-    function submitApplicationForm(form_id) {
-        var formData = $('#' + form_id).serialize();
-
-        $.ajax({
-            url: 'action/save_ApplicationForm.php',
-            type: 'POST',
-            data: formData,
-            beforeSend: function() {},
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    $("#submitmsgsuccess").html(data.message)
-                        .hide().fadeIn(800, function() {
-                            $("submitmsgsuccess").append("");
-
-                        }).delay(3000).fadeOut("fast");
-                    if (data.Shop_Cd) {
-                        $('#shop_cd').val(data.Shop_Cd);
-                    }
-                    get_ShopDetails();
-                    setTimeout(function() {
-                        if ($('.nav-item').has('active')) {
-                            $('.nav-item').removeClass('active');
-                        }
-                        $('#shop-details-tab').addClass('active');
-                        $('#shop-details-tab-link').tab('show');
-                        updateNavLinks();
-                    }, 2500);
-                } else {
-                    $("#submitmsgfailed").html(data.message)
-                        .hide().fadeIn(800, function() {
-                            $("submitmsgfailed").append("");
-                        }).delay(3000).fadeOut("fast");
-                }
+    } else if (form_id == 'shop-details-form') {
+        let hasError = false;
+        const fields = [{
+                id: 'shopcategory',
+                errorId: 'shopcategory-error',
+                message: 'Shop Category is required'
             },
-            error: function(xhr, status, error) {
-                $('#submitmsgfailed').text('An error occurred. Please try again.').show();
+            {
+                id: 'businesscategory',
+                errorId: 'businesscategory-error',
+                message: 'Business Category is required'
+            },
+            {
+                id: 'businessdetails',
+                errorId: 'businessdetails-error',
+                message: 'Business Details is required'
+            },
+            {
+                id: 'nameofbusiness',
+                errorId: 'nameofbusiness-error',
+                message: 'Business Name is required'
+            },
+            {
+                id: 'estimatedate',
+                errorId: 'estimatedate-error',
+                message: 'Estimate Date is required'
+            },
+            {
+                id: 'spacetype',
+                errorId: 'spacetype-error',
+                message: 'Space Type is required'
+            },
+            {
+                id: 'shopownstatus',
+                errorId: 'shopownstatus-error',
+                message: 'Shop Own Status is required'
+            },
+            {
+                id: 'shoplength',
+                errorId: 'shoplength-error',
+                message: 'Shop Length is required'
+            },
+            {
+                id: 'shopheight',
+                errorId: 'shopheight-error',
+                message: 'Shop Height is required'
+            },
+            {
+                id: 'shopwidth',
+                errorId: 'shopwidth-error',
+                message: 'Shop Width is required'
+            },
+            {
+                id: 'shopaddress',
+                errorId: 'shopaddress-error',
+                message: 'Shop Address is required'
+            },
+            {
+                id: 'shoparea',
+                errorId: 'shoparea-error',
+                message: 'Shop Area is required'
+            }
+        ];
+
+        fields.forEach(field => {
+            const value = $('#' + field.id).val();
+            if (value == '' || value == null) {
+                $('#' + field.errorId).text(field.message);
+                hasError = true;
+            } else {
+                if (field.id == 'shoplength') {
+                    if (value == 0) {
+                        $('#' + field.errorId).text('Shop Length should be greater than 0');
+                        hasError = true;
+                        return;
+                    }
+                }
+
+                if (field.id == 'shopheight') {
+                    if (value == 0) {
+                        $('#' + field.errorId).text('Shop Height should be greater than 0');
+                        hasError = true;
+                        return;
+                    }
+                }
+
+                if (field.id == 'shopwidth') {
+                    if (value == 0) {
+                        $('#' + field.errorId).text('Shop Width should be greater than 0');
+                        hasError = true;
+                        return;
+                    }
+                }
+                $('#' + field.errorId).text('');
             }
         });
+
+        var zoneno = $('#zoneno').val();
+        var wardno = $('#wardno').val();
+
+        if (zoneno && zoneno !== '0') {
+            if (!wardno) {
+                $('#wardno-error').text('Ward No is required');
+                hasError = true;
+            }
+        }
+
+        if (!hasError) {
+            submitShopDetails(form_id);
+        }
+
+
+
+    } else if (form_id == 'shopDocForm') {
+        SubmitDocumentForm(form_id);
     }
+}
 
 
-    function get_ShopDetails() {
-        getShopCategory();
-        getBusinessCategory();
-        getSpaceType();
-        var Shop_Cd = $('#shop_cd').val();
+function submitApplicationForm(form_id) {
+    var formData = $('#' + form_id).serialize();
+
+    $.ajax({
+        url: 'action/save_ApplicationForm.php',
+        type: 'POST',
+        data: formData,
+        beforeSend: function() {},
+        success: function(response) {
+            var data = JSON.parse(response);
+            if (data.status === 'success') {
+                $("#submitmsgsuccess").html(data.message)
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgsuccess").append("");
+
+                    }).delay(3000).fadeOut("fast");
+                if (data.Shop_Cd) {
+                    $('#shop_cd').val(data.Shop_Cd);
+                }
+                get_ShopDetails();
+                setTimeout(function() {
+                    if ($('.nav-item').has('active')) {
+                        $('.nav-item').removeClass('active');
+                    }
+                    $('#shop-details-tab').addClass('active');
+                    $('#shop-details-tab-link').tab('show');
+                    updateNavLinks();
+                }, 2500);
+            } else {
+                $("#submitmsgfailed").html(data.message)
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgfailed").append("");
+                    }).delay(3000).fadeOut("fast");
+            }
+        },
+        error: function(xhr, status, error) {
+            $('#submitmsgfailed').text('An error occurred. Please try again.').show();
+        }
+    });
+}
+
+
+function get_ShopDetails() {
+    getShopCategory();
+    getBusinessCategory();
+    getSpaceType();
+    var Shop_Cd = $('#shop_cd').val();
+    $.ajax({
+        url: 'action/getShopDetails.php',
+        type: 'POST',
+        data: {
+            shop_cd: Shop_Cd
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            console.log(data);
+            globBusinessDetailCd = data.Parwana_Cd;
+            globalWardNo = data.Ward_No;
+            globalSpaceType = data.ShopArea_Cd;
+            // console.log(globalWardNo);
+            $('#ShopOwnPeriod').val("");
+
+            $('#nameofbusiness').val(data.ShopName);
+            $('#shopcategory').val(data.ShopCategory).trigger('change');
+            $('#businesscategory').val(data.BusinessCat_Cd).trigger('change');
+            $('#nameofbusiness').val(data.ShopName);
+            $('#businessdetails').val(globBusinessDetailCd).trigger('change');
+            $('#shopownstatus').val(data.ShopOwnStatus);
+            $('#spacetype').val(globalSpaceType).trigger('change');
+
+            if (data.BusinessStartDate != null && data.BusinessStartDate != '') {
+                $('#estimatedate').val(data.BusinessStartDate);
+            }
+            if (data.ShopOwnPeriod != null && data.ShopOwnPeriod != '') {
+                $('#ShopOwnPeriod').val(data.ShopOwnPeriod);
+            } else {
+                calculate_ShopOwnsPeriod(data.BusinessStartDate);
+            }
+
+            $('#shoplength').val(data.ShopLength);
+            $('#shopheight').val(data.ShopHeight);
+            $('#shopwidth').val(data.ShopWidth);
+            $('#shoparea').val(data.ShopArea_Name);
+            $('#shopaddress').val(data.ShopAddress_1);
+            $('#shopfees').val(data.Amount);
+            $('#zoneno').val(data.NodeName).trigger('change');
+            $('#wardno').val(globalWardNo).trigger('change');
+
+        },
+        error: function(xhr, status, error) {
+
+            $('#submitmsg').hide();
+            $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+        }
+    });
+}
+
+
+function submitShopDetails(form_id) {
+    var formData = $('#' + form_id).serialize();
+    let Shop_Cd = $('#shop_cd').val();
+    formData += '&shop_cd=' + encodeURIComponent(Shop_Cd);
+    $.ajax({
+        url: 'action/save_ShopDetails.php',
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            var data = JSON.parse(response);
+            if (data.status === 'success') {
+                $("#shop-details-form #submitmsgsuccess").html(data.message)
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgsuccess").append("");
+                    }).delay(3000).fadeOut("fast");
+                if (data.Shop_Cd) {
+                    $('#shop_cd').val(data.Shop_Cd);
+                }
+                get_DocDetails();
+                setTimeout(function() {
+                    if ($('.nav-item').has('active')) {
+                        $('.nav-item').removeClass('active');
+                    }
+                    $('#shop-documents-tab').addClass('active');
+                    $('#shop-documents-tab-link').tab('show');
+                    updateNavLinks();
+                }, 200);
+            } else {
+                $("#submitmsgfailed").html(data.message)
+                    .hide().fadeIn(800, function() {
+                        $("submitmsgfailed").append("");
+                    }).delay(3000).fadeOut("fast");
+            }
+        },
+        error: function(xhr, status, error) {
+
+            alert('An error occurred while saving the details.');
+            console.log(error);
+        }
+    });
+}
+
+$('#businesscategory').change(function() {
+    // alert($(this).val());
+    console.log($(this).val());
+    var categoryCd = $(this).val();
+    if (categoryCd) {
+
         $.ajax({
-            url: 'action/getShopDetails.php',
+            url: 'action/get_business_details.php',
             type: 'POST',
             data: {
-                shop_cd: Shop_Cd
+                businessCatCd: categoryCd
             },
             success: function(response) {
-                var data = JSON.parse(response);
-                console.log(data);
-                globBusinessDetailCd = data.Parwana_Cd;
-                globalWardNo = data.Ward_No;
-                globalSpaceType = data.ShopArea_Cd;
-                // console.log(globalWardNo);
-                $('#ShopOwnPeriod').val("");
-
-                $('#nameofbusiness').val(data.ShopName);
-                $('#shopcategory').val(data.ShopCategory).trigger('change');
-                $('#businesscategory').val(data.BusinessCat_Cd).trigger('change');
-                $('#nameofbusiness').val(data.ShopName);
+                $('#businessdetails').html('<option value="">--Select--</option>');
+                if (response) {
+                    var details = JSON.parse(
+                        response);
+                    $.each(details, function(index, detail) {
+                        $('#businessdetails').append('<option value="' + detail
+                            .Parwana_Cd + '">' + detail.Parwana_Name_Eng +
+                            '</option>');
+                    });
+                } else {
+                    $('#businessdetails').append(
+                        '<option value="">No details available</option>');
+                }
                 $('#businessdetails').val(globBusinessDetailCd).trigger('change');
-                $('#shopownstatus').val(data.ShopOwnStatus);
-                $('#spacetype').val(globalSpaceType).trigger('change');
-
-                if (data.BusinessStartDate != null && data.BusinessStartDate != '') {
-                    $('#estimatedate').val(data.BusinessStartDate);
-                }
-                if (data.ShopOwnPeriod != null && data.ShopOwnPeriod != '') {
-                    $('#ShopOwnPeriod').val(data.ShopOwnPeriod);
-                } else {
-                    calculate_ShopOwnsPeriod(data.BusinessStartDate);
-                }
-
-                $('#shoplength').val(data.ShopLength);
-                $('#shopheight').val(data.ShopHeight);
-                $('#shopwidth').val(data.ShopWidth);
-                $('#shoparea').val(data.ShopArea_Name);
-                $('#shopaddress').val(data.ShopAddress_1);
-                $('#shopfees').val(data.Amount);
-                $('#zoneno').val(data.NodeName).trigger('change');
-                $('#wardno').val(globalWardNo).trigger('change');
-
-            },
-            error: function(xhr, status, error) {
-
-                $('#submitmsg').hide();
-                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
-            }
-        });
-    }
-
-
-    function submitShopDetails(form_id) {
-        var formData = $('#' + form_id).serialize();
-        let Shop_Cd = $('#shop_cd').val();
-        formData += '&shop_cd=' + encodeURIComponent(Shop_Cd);
-        $.ajax({
-            url: 'action/save_ShopDetails.php',
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.status === 'success') {
-                    $("#shop-details-form #submitmsgsuccess").html(data.message)
-                        .hide().fadeIn(800, function() {
-                            $("submitmsgsuccess").append("");
-                        }).delay(3000).fadeOut("fast");
-                    if (data.Shop_Cd) {
-                        $('#shop_cd').val(data.Shop_Cd);
-                    }
-                    get_DocDetails();
-                    setTimeout(function() {
-                        if ($('.nav-item').has('active')) {
-                            $('.nav-item').removeClass('active');
-                        }
-                        $('#shop-documents-tab').addClass('active');
-                        $('#shop-documents-tab-link').tab('show');
-                        updateNavLinks();
-                    }, 200);
-                } else {
-                    $("#submitmsgfailed").html(data.message)
-                        .hide().fadeIn(800, function() {
-                            $("submitmsgfailed").append("");
-                        }).delay(3000).fadeOut("fast");
-                }
-            },
-            error: function(xhr, status, error) {
-
-                alert('An error occurred while saving the details.');
-                console.log(error);
-            }
-        });
-    }
-
-    $('#businesscategory').change(function() {
-        // alert($(this).val());
-        console.log($(this).val());
-        var categoryCd = $(this).val();
-        if (categoryCd) {
-
-            $.ajax({
-                url: 'action/get_business_details.php',
-                type: 'POST',
-                data: {
-                    businessCatCd: categoryCd
-                },
-                success: function(response) {
-                    $('#businessdetails').html('<option value="">--Select--</option>');
-                    if (response) {
-                        var details = JSON.parse(
-                            response);
-                        $.each(details, function(index, detail) {
-                            $('#businessdetails').append('<option value="' + detail
-                                .Parwana_Cd + '">' + detail.Parwana_Name_Eng +
-                                '</option>');
-                        });
-                    } else {
-                        $('#businessdetails').append(
-                            '<option value="">No details available</option>');
-                    }
-                    $('#businessdetails').val(globBusinessDetailCd).trigger('change');
-                },
-                error: function() {
-                    alert('Error fetching business details.');
-                }
-            });
-        } else {
-            $('#businessdetails').html('<option value="">--Select--</option>');
-        }
-    });
-
-    $('#zoneno').on('change', function() {
-        var zoneno = $(this).val();
-        var nodeName = $('#zoneno option:selected').text();
-        // alert(nodeName);
-        $('#wardno').html('<option value="">--Select--</option>');
-
-        if (zoneno) {
-            $.ajax({
-                url: 'action/get_wards.php',
-                type: 'POST',
-                data: {
-                    nodeName: nodeName
-                },
-                success: function(response) {
-                    var wards = JSON.parse(response);
-                    $.each(wards, function(index, ward) {
-                        $('#wardno').append('<option value="' + ward.Ward_No +
-                            '">' + ward.Ward_No + '</option>');
-                    });
-                    $('#wardno').val(globalWardNo).trigger('change');
-                },
-                error: function() {
-                    alert('Error fetching ward data.');
-                }
-
-
-            });
-        }
-    });
-
-
-    function get_DocDetails() {
-        var Shop_Cd = $('#shop_cd').val();
-        $.ajax({
-            url: 'action/getShopDocDetails.php',
-            type: 'POST',
-            data: {
-                Shop_Cd: Shop_Cd
-            },
-            success: function(response) {
-                var docDetails = JSON.parse(response);
-                docDetails = docDetails[0];
-                docDetails.forEach(doc => {
-                    $(`#ShopDocDet_Cd${doc.Document_Cd}`).val(doc.ShopDocDet_Cd);
-                    $(`#FileTag_${doc.Document_Cd}`).removeClass('d-none');
-                    $(`#FileTag_${doc.Document_Cd}`).attr('href', doc.FileURL);
-                    $(`#file_url_${doc.Document_Cd}`).val(doc.FileURL);
-                });
-                // $('.shopdocRow').append(newRow);
-            },
-            error: function() {
-                alert('Error fetching ward data.');
-            }
-        });
-    }
-
-
-    function getShopCategory() {
-        $.ajax({
-            url: 'action/getshopcategory.php',
-            type: 'POST',
-            success: function(response) {
-                const categories = JSON.parse(response);
-                const dropdown = $('#shopcategory');
-                dropdown.empty(); // Clear existing options
-                dropdown.append('<option value="">--Select--</option>'); // Default option
-
-                categories.forEach(category => {
-                    // Corrected string interpolation
-                    dropdown.append(
-                        `<option value="${category.DValue}">${category.DValue}</option>`);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching data:', error);
-                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
-            }
-        });
-    }
-
-    function getBusinessCategory() {
-        $.ajax({
-            url: 'action/getbusinesscategory.php',
-            type: 'POST',
-            success: function(response) {
-                const categories = JSON.parse(response);
-                const dropdown = $('#businesscategory');
-                dropdown.empty();
-                dropdown.append('<option value="">--Select--</option>');
-
-                if (categories.length > 1) {
-                    categories.forEach(category => {
-                        dropdown.append(
-                            `<option value="${category.BusinessCat_Cd}"> ${category.BusinessCatName} </option>`
-                        );
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching data:', error);
-                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
-            }
-        });
-    }
-
-    function getSpaceType() {
-
-        $.ajax({
-            url: 'action/getSpaceType.php',
-            type: 'POST',
-            success: function(response) {
-                const types = JSON.parse(response);
-                const dropdown = $('#spacetype');
-                dropdown.empty();
-                dropdown.append('<option value="">--Select--</option>');
-
-                types.forEach(type => {
-                    dropdown.append(
-                        `<option value="${type.ShopArea_Cd}">${type.ShopAreaName}</option>`);
-                });
-                $('#spacetype').val(globalSpaceType).trigger('change');
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching data:', error);
-                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
-            }
-        });
-    }
-
-
-    function SubmitDocumentForm(form_id) {
-        let allValid = true;
-        $(`#${form_id} input[type="file"]`).each(function(index, fileInput) {
-            let file = $(fileInput)[0].files[0];
-            let doc_id = $('#document_cd_' + index).val();
-            let file_url = $('#file_url_' + doc_id).val();
-            let isCompulsory = $('#is_compulsory_' + index).val() == 1;
-            let errorSpan = $('#file_' + doc_id + '-error');
-            let reqFileType = $('#document_type_' + index).val();
-            let allowedFileTypes = [];
-
-            if (reqFileType == 'image') {
-                allowedFileTypes = ['image/jpg', 'image/jpeg', 'image/png'];
-            } else {
-                allowedFileTypes = ['application/pdf'];
-            }
-            if (file && !allowedFileTypes.includes(file.type)) {
-                errorSpan.text("Invalid file type: Only " + allowedFileTypes.join(', ') +
-                    " files are allowed.");
-                allValid = false;
-            } else if (isCompulsory && !file && !file_url) {
-                errorSpan.text('This document is required.');
-                allValid = false;
-            } else if (file) {
-                let fileSizeMB = file.size / (1024 * 1024);
-                let maxSizeMB = 2;
-                if (fileSizeMB > maxSizeMB) {
-                    errorSpan.text('File size must be less than ' + maxSizeMB + ' MB');
-                    allValid = false;
-                } else {
-                    errorSpan.text('');
-                }
-            }
-        });
-
-        if (allValid) {
-            $('#upload_btn').css('disabled', true);
-            let formElement = $('#shopDocForm')[0];
-            let formData = new FormData(formElement);
-            let Shop_Cd = $('#shop_cd').val();
-            formData.append('Shop_Cd', Shop_Cd);
-            $.ajax({
-                type: "POST",
-                url: "./action/saveShopDocDetails.php",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    var data = JSON.parse(response);
-                    if (data.status == 200) {
-                        // alert(data.message);
-                        $(`#${form_id} #submitmsgsuccess`).html(data.message)
-                            .hide().fadeIn(800, function() {
-                                $("submitmsgsuccess").append("");
-                            }).delay(3000).fadeOut("fast");
-
-                        $('input[name="file[]"]').val('');
-                        window.location.href = 'index.php?p=ShopDetalisListOfOwner';
-                    } else {
-                        $(`#${form_id} #submitmsgfailed`).html(data.message)
-                            .hide().fadeIn(800, function() {
-                                $("submitmsgsuccess").append("");
-                            }).delay(3000).fadeOut("fast");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseText);
-                }
-            });
-        }
-    }
-
-    function validateEmailInput(input) {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (input && input.value && !emailRegex.test(input.value)) {
-            input.value = '';
-            $('#shopkeeper_email-error').text("Please enter a valid email.");
-        }
-    }
-
-    function updateNavLinks() {
-        $('.nav-item').each(function() {
-            var tabLink = $(this).find('.nav-link');
-            if ($(this).hasClass('active')) {
-                tabLink.removeClass('disabled');
-                tabLink.attr('aria-disabled', 'false');
-                tabLink.css('pointer-events', '');
-            } else {
-                tabLink.addClass('disabled');
-                tabLink.attr('aria-disabled', 'true');
-                tabLink.css('pointer-events', 'none');
-            }
-        });
-    }
-
-
-    function getAmount() {
-        var businessdetails = $('#businessdetails').val();
-        $.ajax({
-            url: 'action/get_FeesApplicableAmount.php',
-            type: 'POST',
-            data: {
-                ParwanaCd: businessdetails
-            },
-            success: function(response) {
-                var data = JSON.parse(response);
-                var amount = data.Amount;
-                $('#shopfees').val(amount);
-
             },
             error: function() {
                 alert('Error fetching business details.');
             }
         });
-
+    } else {
+        $('#businessdetails').html('<option value="">--Select--</option>');
     }
+});
 
-    $('#estimatedate').on('change', function() {
-        calculate_ShopOwnsPeriod(this.value);
-    });
+$('#zoneno').on('change', function() {
+    var zoneno = $(this).val();
+    var nodeName = $('#zoneno option:selected').text();
+    // alert(nodeName);
+    $('#wardno').html('<option value="">--Select--</option>');
 
-    function calculate_ShopOwnsPeriod(startDate) {
-        if (startDate == null || startDate == '') {
-            $('#ShopOwnPeriod').val("");
-        } else {
-            var endDate = new Date();
-            var start = new Date(startDate);
-            var yearsDiff = endDate.getFullYear() - start.getFullYear();
-            var monthsDiff = endDate.getMonth() - start.getMonth();
-
-            if (endDate.getDate() < start.getDate()) {
-                monthsDiff--;
-            }
-            var totalMonths = yearsDiff * 12 + monthsDiff;
-
-            $('#ShopOwnPeriod').val(totalMonths);
-        }
-
-    }
-
-
-    function StartOtpTimers() {
-        clearInterval(otpTimeInterval);
-        otpExpiryTime = 300;
-
-        otpTimeInterval = setInterval(() => {
-            let minutes = Math.floor(otpExpiryTime / 60);
-            let seconds = otpExpiryTime % 60;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-
-            console.log(`${minutes}:${seconds}`);
-            document.getElementById('countdown_text').textContent = `${minutes}:${seconds}`;
-
-            if (otpExpiryTime <= 0) {
-                clearInterval(otpTimeInterval);
-                document.getElementById('countdown_text').textContent = '00:00';
-                $('#resendOTP').show();
-                $('.otp-input').prop('disabled', true);
+    if (zoneno) {
+        $.ajax({
+            url: 'action/get_wards.php',
+            type: 'POST',
+            data: {
+                nodeName: nodeName
+            },
+            success: function(response) {
+                var wards = JSON.parse(response);
+                $.each(wards, function(index, ward) {
+                    $('#wardno').append('<option value="' + ward.Ward_No +
+                        '">' + ward.Ward_No + '</option>');
+                });
+                $('#wardno').val(globalWardNo).trigger('change');
+            },
+            error: function() {
+                alert('Error fetching ward data.');
             }
 
-            otpExpiryTime--;
-        }, 1000);
+
+        });
     }
+});
 
 
-    $(document).ready(function() {
-
-        $('#ShopModal').on('hidden.bs.modal', function() {
-            clearInterval(otpTimerInterval);
-            $('#otpTimerCount').hide();
-            $('#countdown_text').text('05:00');
-            $('#otpvalue').hide();
-        });
-
-        $('#ShopModal').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-
-        $('#shopkeeper_mobile').removeAttr('readonly');
-        $('#shopkeeper_mobile').on('input', function() {
-            var mobileValue = $(this).val().replace(/[^\d]/g, '').slice(0, 10);
-            setTimeout(() => {
-                if (mobileValue.length == 10 && mobileValue.length != 0) {
-                    $('#verifyOtpBtn').show();
-                    $('#shopkeeper_mobile-error').text('');
-                } else if (mobileValue.length != 10) {
-                    $('#shopkeeper_mobile-error').text('Mobile Number must be 10 digits');
-                } else {
-                    $('#verifyOtpBtn').hide();
-                }
-            }, 800);
-
-        });
-
-        $('#shopkeeper_aadharno').on('keyup', function() {
-            var aadharValue = $(this).val().replace(/[^\d]/g, '').slice(0, 12);
-            setTimeout(() => {
-                if (aadharValue.length != 12 && aadharValue.length != 0) {
-                    $('#shopkeeper_aadharno-error').text('Aadhar Number must be 12 digits');
-                } else {
-                    $('#shopkeeper_aadharno-error').text('');
-                }
-            }, 800);
-        });
-
-        $('#shopkeeper_pincode').on('keyup', function() {
-            var pincodeValue = $(this).val().replace(/[^\d]/g, '').slice(0, 6);
-            setTimeout(() => {
-                if (pincodeValue.length != 6 && pincodeValue.length != 0) {
-                    $('#shopkeeper_pincode-error').text('Pincode must be 6 digits');
-                } else {
-                    $('#shopkeeper_pincode-error').text('');
-                }
-            }, 800);
-        });
-
-        $('#shoplength').on('keyup', function() {
-            var lengthValue = $(this).val();
-            setTimeout(() => {
-                if (lengthValue == 0 && lengthValue == '') {
-                    $('#shoplength-error').text('Shop Length should be greater than 0');
-                } else {
-                    $('#shoplength-error').text('');
-                }
-            }, 800);
-        });
-
-        $('#shopwidth').on('keyup', function() {
-            var widthValue = $(this).val();
-            setTimeout(() => {
-                if (widthValue == 0 && widthValue == '') {
-                    $('#shopwidth-error').text('Shop width should be greater than 0');
-                } else {
-                    $('#shopwidth-error').text('');
-                }
-            }, 800);
-        });
-
-        $('#shopheight').on('keyup', function() {
-            var heightValue = $(this).val();
-            setTimeout(() => {
-                if (heightValue == 0 && heightValue == '') {
-                    $('#shopheight-error').text('Shop Height should be greater than 0');
-                } else {
-                    $('#shopheight-error').text('');
-                }
-            }, 800);
-        });
-
-
-        $('#verifyOtpBtn').on('click', function() {
-            var mobileValue = $('#shopkeeper_mobile').val();
-            var otp = generateOtp();
-            $('#verifyOtpBtn').hide();
-            // $('#resendOTP').show();
-            $('#otpvalue').show();
-            sendOTPToMobileverify(mobileValue, otp, 0);
-
-        });
-
-        $('#resendOTP').on('click', function() {
-            var mobileNumber = $('#shopkeeper_mobile').val();
-            if (mobileNumber.length === 10) {
-                var otp = generateOtp();
-                sendOTPToMobileverify(mobileNumber, otp, 0);
-                $('#otp').val('');
-                // $('#otpField').show();
-                $('#resendOTP').hide();
-                // $('#otpTimerCount').show();
-            } else {
-                $('#mobileerror').text('Please enter a valid mobile number.');
-            }
-        });
-        $('#resendOTP').hide();
-    });
-
-    function validateMobileNo() {
-        var mobileNumber = $('#shopkeeper_mobile').val();
-        var otp = $('#otpvalue').val();
-        validateOtponpage(mobileNumber, otp)
-    }
-
-    function validateOtponpage(mobileNumber, otpEntered) {
-
-        if (otpEntered.length == 4) {
-            $.ajax({
-                type: "POST",
-                url: 'action/sendOTP.php',
-                data: {
-                    verifyMobileNumber: mobileNumber,
-                    verifyOtp: otpEntered
-                },
-                success: function(response) {
-                    var responseData = JSON.parse(response);
-                    if (responseData.statusCode === 200) {
-                        $('#resendOTP').hide();
-                        otpExpiryTime = 5 * 60;
-                        $('#otpTimerCount').hide();
-                        alert("Mobile Verified successfully!!!")
-                        $('#shopkeeper_mobile').attr('readonly', true);
-                        $('#otpvalue').hide();
-                    } else {
-                        $('#otpvalue').val('');
-                        $('#resendOTP').show();
-                        $('#otpTimerCount').hide();
-                        alert(responseData.msg || 'OTP verification failed.');
-                    }
-                },
-                error: function() {
-                    alert('Error occurred during OTP verification.');
-                }
+function get_DocDetails() {
+    var Shop_Cd = $('#shop_cd').val();
+    $.ajax({
+        url: 'action/getShopDocDetails.php',
+        type: 'POST',
+        data: {
+            Shop_Cd: Shop_Cd
+        },
+        success: function(response) {
+            var docDetails = JSON.parse(response);
+            docDetails = docDetails[0];
+            docDetails.forEach(doc => {
+                $(`#ShopDocDet_Cd${doc.Document_Cd}`).val(doc.ShopDocDet_Cd);
+                $(`#FileTag_${doc.Document_Cd}`).removeClass('d-none');
+                $(`#FileTag_${doc.Document_Cd}`).attr('href', doc.FileURL);
+                $(`#file_url_${doc.Document_Cd}`).val(doc.FileURL);
             });
+            // $('.shopdocRow').append(newRow);
+        },
+        error: function() {
+            alert('Error fetching ward data.');
         }
+    });
+}
 
+
+function getShopCategory() {
+    $.ajax({
+        url: 'action/getshopcategory.php',
+        type: 'POST',
+        success: function(response) {
+            const categories = JSON.parse(response);
+            const dropdown = $('#shopcategory');
+            dropdown.empty(); // Clear existing options
+            dropdown.append('<option value="">--Select--</option>'); // Default option
+
+            categories.forEach(category => {
+                // Corrected string interpolation
+                dropdown.append(
+                    `<option value="${category.DValue}">${category.DValue}</option>`);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data:', error);
+            $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+        }
+    });
+}
+
+function getBusinessCategory() {
+    $.ajax({
+        url: 'action/getbusinesscategory.php',
+        type: 'POST',
+        success: function(response) {
+            const categories = JSON.parse(response);
+            const dropdown = $('#businesscategory');
+            dropdown.empty();
+            dropdown.append('<option value="">--Select--</option>');
+
+            if (categories.length > 1) {
+                categories.forEach(category => {
+                    dropdown.append(
+                        `<option value="${category.BusinessCat_Cd}"> ${category.BusinessCatName} </option>`
+                    );
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data:', error);
+            $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+        }
+    });
+}
+
+function getSpaceType() {
+
+    $.ajax({
+        url: 'action/getSpaceType.php',
+        type: 'POST',
+        success: function(response) {
+            const types = JSON.parse(response);
+            const dropdown = $('#spacetype');
+            dropdown.empty();
+            dropdown.append('<option value="">--Select--</option>');
+
+            types.forEach(type => {
+                dropdown.append(
+                    `<option value="${type.ShopArea_Cd}">${type.ShopAreaName}</option>`);
+            });
+            $('#spacetype').val(globalSpaceType).trigger('change');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data:', error);
+            $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+        }
+    });
+}
+
+
+function SubmitDocumentForm(form_id) {
+    let allValid = true;
+    $(`#${form_id} input[type="file"]`).each(function(index, fileInput) {
+        let file = $(fileInput)[0].files[0];
+        let doc_id = $('#document_cd_' + index).val();
+        let file_url = $('#file_url_' + doc_id).val();
+        let isCompulsory = $('#is_compulsory_' + index).val() == 1;
+        let errorSpan = $('#file_' + doc_id + '-error');
+        let reqFileType = $('#document_type_' + index).val();
+        let allowedFileTypes = [];
+
+        if (reqFileType == 'image') {
+            allowedFileTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+        } else {
+            allowedFileTypes = ['application/pdf'];
+        }
+        if (file && !allowedFileTypes.includes(file.type)) {
+            errorSpan.text("Invalid file type: Only " + allowedFileTypes.join(', ') +
+                " files are allowed.");
+            allValid = false;
+        } else if (isCompulsory && !file && !file_url) {
+            errorSpan.text('This document is required.');
+            allValid = false;
+        } else if (file) {
+            let fileSizeMB = file.size / (1024 * 1024);
+            let maxSizeMB = 2;
+            if (fileSizeMB > maxSizeMB) {
+                errorSpan.text('File size must be less than ' + maxSizeMB + ' MB');
+                allValid = false;
+            } else {
+                errorSpan.text('');
+            }
+        }
+    });
+
+    if (allValid) {
+        $('#upload_btn').css('disabled', true);
+        let formElement = $('#shopDocForm')[0];
+        let formData = new FormData(formElement);
+        let Shop_Cd = $('#shop_cd').val();
+        formData.append('Shop_Cd', Shop_Cd);
+        $.ajax({
+            type: "POST",
+            url: "./action/saveShopDocDetails.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.status == 200) {
+                    if(updateShop !== 1){
+                        sendApplicationMail(Shop_Cd);
+                    }
+                    $(`#${form_id} #submitmsgsuccess`).html(data.message)
+                        .hide().fadeIn(800, function() {
+                            $("submitmsgsuccess").append("");
+                        }).delay(3000).fadeOut("fast");
+                    $('input[name="file[]"]').val('');
+                    window.location.href = 'index.php?p=ShopDetalisListOfOwner';
+                } else {
+                    $(`#${form_id} #submitmsgfailed`).html(data.message)
+                        .hide().fadeIn(800, function() {
+                            $("submitmsgsuccess").append("");
+                        }).delay(3000).fadeOut("fast");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+}
+
+function validateEmailInput(input) {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (input && input.value && !emailRegex.test(input.value)) {
+        input.value = '';
+        $('#shopkeeper_email-error').text("Please enter a valid email.");
+    }
+}
+
+function updateNavLinks() {
+    $('.nav-item').each(function() {
+        var tabLink = $(this).find('.nav-link');
+        if ($(this).hasClass('active')) {
+            tabLink.removeClass('disabled');
+            tabLink.attr('aria-disabled', 'false');
+            tabLink.css('pointer-events', '');
+        } else {
+            tabLink.addClass('disabled');
+            tabLink.attr('aria-disabled', 'true');
+            tabLink.css('pointer-events', 'none');
+        }
+    });
+}
+
+
+function getAmount() {
+    var businessdetails = $('#businessdetails').val();
+    $.ajax({
+        url: 'action/get_FeesApplicableAmount.php',
+        type: 'POST',
+        data: {
+            ParwanaCd: businessdetails
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            var amount = data.Amount;
+            $('#shopfees').val(amount);
+
+        },
+        error: function() {
+            alert('Error fetching business details.');
+        }
+    });
+
+}
+
+$('#estimatedate').on('change', function() {
+    calculate_ShopOwnsPeriod(this.value);
+});
+
+function calculate_ShopOwnsPeriod(startDate) {
+    if (startDate == null || startDate == '') {
+        $('#ShopOwnPeriod').val("");
+    } else {
+        var endDate = new Date();
+        var start = new Date(startDate);
+        var yearsDiff = endDate.getFullYear() - start.getFullYear();
+        var monthsDiff = endDate.getMonth() - start.getMonth();
+
+        if (endDate.getDate() < start.getDate()) {
+            monthsDiff--;
+        }
+        var totalMonths = yearsDiff * 12 + monthsDiff;
+
+        $('#ShopOwnPeriod').val(totalMonths);
     }
 
-    function sendOTPToMobileverify(mobileNumber, otp, sessionFlag) {
+}
+
+
+function StartOtpTimers() {
+    clearInterval(otpTimeInterval);
+    otpExpiryTime = 300;
+
+    otpTimeInterval = setInterval(() => {
+        let minutes = Math.floor(otpExpiryTime / 60);
+        let seconds = otpExpiryTime % 60;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+
+        console.log(`${minutes}:${seconds}`);
+        document.getElementById('countdown_text').textContent = `${minutes}:${seconds}`;
+
+        if (otpExpiryTime <= 0) {
+            clearInterval(otpTimeInterval);
+            document.getElementById('countdown_text').textContent = '00:00';
+            $('#resendOTP').show();
+            $('.otp-input').prop('disabled', true);
+        }
+
+        otpExpiryTime--;
+    }, 1000);
+}
+
+
+$(document).ready(function() {
+
+    $('#ShopModal').on('hidden.bs.modal', function() {
+        clearInterval(otpTimerInterval);
+        $('#otpTimerCount').hide();
+        $('#countdown_text').text('05:00');
+        $('#otpvalue').hide();
+    });
+
+    $('#ShopModal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+
+    $('#shopkeeper_mobile').removeAttr('readonly');
+    $('#shopkeeper_mobile').on('input', function() {
+        var mobileValue = $(this).val().replace(/[^\d]/g, '').slice(0, 10);
+        setTimeout(() => {
+            if (mobileValue.length == 10 && mobileValue.length != 0) {
+                $('#verifyOtpBtn').show();
+                $('#shopkeeper_mobile-error').text('');
+            } else if (mobileValue.length != 10) {
+                $('#shopkeeper_mobile-error').text('Mobile Number must be 10 digits');
+            } else {
+                $('#verifyOtpBtn').hide();
+            }
+        }, 800);
+
+    });
+
+    $('#shopkeeper_aadharno').on('keyup', function() {
+        var aadharValue = $(this).val().replace(/[^\d]/g, '').slice(0, 12);
+        setTimeout(() => {
+            if (aadharValue.length != 12 && aadharValue.length != 0) {
+                $('#shopkeeper_aadharno-error').text('Aadhar Number must be 12 digits');
+            } else {
+                $('#shopkeeper_aadharno-error').text('');
+            }
+        }, 800);
+    });
+
+    $('#shopkeeper_pincode').on('keyup', function() {
+        var pincodeValue = $(this).val().replace(/[^\d]/g, '').slice(0, 6);
+        setTimeout(() => {
+            if (pincodeValue.length != 6 && pincodeValue.length != 0) {
+                $('#shopkeeper_pincode-error').text('Pincode must be 6 digits');
+            } else {
+                $('#shopkeeper_pincode-error').text('');
+            }
+        }, 800);
+    });
+
+    $('#shoplength').on('keyup', function() {
+        var lengthValue = $(this).val();
+        setTimeout(() => {
+            if (lengthValue == 0 && lengthValue == '') {
+                $('#shoplength-error').text('Shop Length should be greater than 0');
+            } else {
+                $('#shoplength-error').text('');
+            }
+        }, 800);
+    });
+
+    $('#shopwidth').on('keyup', function() {
+        var widthValue = $(this).val();
+        setTimeout(() => {
+            if (widthValue == 0 && widthValue == '') {
+                $('#shopwidth-error').text('Shop width should be greater than 0');
+            } else {
+                $('#shopwidth-error').text('');
+            }
+        }, 800);
+    });
+
+    $('#shopheight').on('keyup', function() {
+        var heightValue = $(this).val();
+        setTimeout(() => {
+            if (heightValue == 0 && heightValue == '') {
+                $('#shopheight-error').text('Shop Height should be greater than 0');
+            } else {
+                $('#shopheight-error').text('');
+            }
+        }, 800);
+    });
+
+
+    $('#verifyOtpBtn').on('click', function() {
+        var mobileValue = $('#shopkeeper_mobile').val();
+        var otp = generateOtp();
+        $('#verifyOtpBtn').hide();
+        // $('#resendOTP').show();
+        $('#otpvalue').show();
+        sendOTPToMobileverify(mobileValue, otp, 0);
+
+    });
+
+    $('#resendOTP').on('click', function() {
+        var mobileNumber = $('#shopkeeper_mobile').val();
+        if (mobileNumber.length === 10) {
+            var otp = generateOtp();
+            sendOTPToMobileverify(mobileNumber, otp, 0);
+            $('#otp').val('');
+            // $('#otpField').show();
+            $('#resendOTP').hide();
+            // $('#otpTimerCount').show();
+        } else {
+            $('#mobileerror').text('Please enter a valid mobile number.');
+        }
+    });
+    $('#resendOTP').hide();
+});
+
+function validateMobileNo() {
+    var mobileNumber = $('#shopkeeper_mobile').val();
+    var otp = $('#otpvalue').val();
+    validateOtponpage(mobileNumber, otp)
+}
+
+function validateOtponpage(mobileNumber, otpEntered) {
+
+    if (otpEntered.length == 4) {
         $.ajax({
             type: "POST",
             url: 'action/sendOTP.php',
             data: {
-                mobileNumber: mobileNumber,
-                otp: otp,
-                sessionFlag: sessionFlag
+                verifyMobileNumber: mobileNumber,
+                verifyOtp: otpEntered
             },
             success: function(response) {
-                response = JSON.parse(response);
-                if (response.statusCode === 200) {
-                    alert('OTP has been sent to your mobile number!');
-                    $('#otpTimerCount').show();
+                var responseData = JSON.parse(response);
+                if (responseData.statusCode === 200) {
+                    $('#resendOTP').hide();
                     otpExpiryTime = 5 * 60;
-                    StartOtpTimers();
+                    $('#otpTimerCount').hide();
+                    alert("Mobile Verified successfully!!!")
+                    $('#shopkeeper_mobile').attr('readonly', true);
+                    $('#otpvalue').hide();
                 } else {
-                    alert('Failed to send OTP. Please try again.');
+                    $('#otpvalue').val('');
+                    $('#resendOTP').show();
+                    $('#otpTimerCount').hide();
+                    alert(responseData.msg || 'OTP verification failed.');
                 }
             },
             error: function() {
-                alert('Error occurred while sending OTP.');
+                alert('Error occurred during OTP verification.');
             }
         });
     }
 
-    function generateOtp() {
-        var otp = Math.floor(1000 + Math.random() * 9000);
-        return otp;
-    }
-    </script>
+}
 
-    <!-- New Shop Owner Shop Details End -->
+function sendOTPToMobileverify(mobileNumber, otp, sessionFlag) {
+    $.ajax({
+        type: "POST",
+        url: 'action/sendOTP.php',
+        data: {
+            mobileNumber: mobileNumber,
+            otp: otp,
+            sessionFlag: sessionFlag
+        },
+        success: function(response) {
+            response = JSON.parse(response);
+            if (response.statusCode === 200) {
+                alert('OTP has been sent to your mobile number!');
+                $('#otpTimerCount').show();
+                otpExpiryTime = 5 * 60;
+                StartOtpTimers();
+            } else {
+                alert('Failed to send OTP. Please try again.');
+            }
+        },
+        error: function() {
+            alert('Error occurred while sending OTP.');
+        }
+    });
+}
 
-    <!-- <script>
+function generateOtp() {
+    var otp = Math.floor(1000 + Math.random() * 9000);
+    return otp;
+}
+</script>
+
+<!-- New Shop Owner Shop Details End -->
+
+<!-- <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('copy', event => event.preventDefault());
         document.addEventListener('paste', event => event.preventDefault());
@@ -1810,34 +1813,47 @@ $(document).ready(function() {
             }
         });
 </script> -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script>
-    $('#check_status').on('click', function() {
-        $('#transactionNumber-error').text('');
-        $('.transTable').addClass('d-none');
-        $('#transactionTable tbody').empty();
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+$('#check_status').on('click', function() {
+    $('#transactionNumber-error').text('');
+    $('.transTable').addClass('d-none');
+    $('#transactionTable tbody').empty();
 
-        var transactionNumber = $('#transactionNumber').val().trim();
+    var transactionNumber = $('#transactionNumber').val().trim();
 
-        if (!transactionNumber) {
-            $('#transactionNumber-error').text('Please enter a transaction number.');
-            return;
-        }
+    if (!transactionNumber) {
+        $('#transactionNumber-error').text('Please enter a transaction number.');
+        return;
+    }
 
-        $.ajax({
-            url: 'PHP-GetEPay/PG/Requery.php',
-            type: 'POST',
-            data: {
-                transactionNumber: transactionNumber
-            },
-            beforeSend: function() {
-                // Optional: Show spinner
-            },
-            success: function(response) {
+    $.ajax({
+        url: 'PHP-GetEPay/PG/Requery.php',
+        type: 'POST',
+        data: {
+            transactionNumber: transactionNumber
+        },
+        success: function(response) {
+            try {
                 var data = JSON.parse(response);
 
                 if (data.statusCode === 200) {
+                    if (!data.data || Object.keys(data.data).length === 0) {
+                        $('.transTable').removeClass('d-none');
+
+                        if ($.fn.DataTable.isDataTable('#transactionTable')) {
+                            $('#transactionTable').DataTable().clear().destroy();
+                        }
+
+                        $('#transactionTable tbody').html(`
+                        <tr>
+                            <td colspan="5" class="text-center">No transaction details available.</td>
+                        </tr>
+                    `);
+                        return;
+                    }
+
                     $('.transTable').removeClass('d-none');
 
                     if ($.fn.DataTable.isDataTable('#transactionTable')) {
@@ -1865,7 +1881,7 @@ $(document).ready(function() {
                             },
                             {
                                 data: null,
-                                "render": function(data, type, row) {
+                                render: function(data) {
                                     var txnStatus = data.txnStatus;
                                     var badgeClass = '';
 
@@ -1887,8 +1903,7 @@ $(document).ready(function() {
                             },
                             {
                                 data: null,
-                                "render": function(data, type, row) {
-                                    var txnStatus = data.txnStatus;
+                                render: function(data) {
                                     return `Date : ${data.txnDate}<br> Paid Amount : &#8377; ${parseFloat(data.txnAmount).toFixed(2)}`;
                                 },
                                 className: 'text-left',
@@ -1901,32 +1916,54 @@ $(document).ready(function() {
                             emptyTable: "No transaction details available."
                         }
                     });
-
                 } else {
                     $('#transactionNumber-error').text('Something went wrong. Please try again.');
                 }
-            },
-            error: function() {
-                $('#transactionNumber-error').text('Server error. Please try again later.');
+            } catch (e) {
+                $('#transactionNumber-error').text('Invalid server response.');
             }
-        });
+        },
+        error: function() {
+            $('#transactionNumber-error').text('Server error. Please try again later.');
+        }
     });
+});
 
-    $('#chktransactionModal').on('shown.bs.modal', function() {
-        $('#transactionNumber').val('');
-        $('#transactionNumber-error').text('');
-        $('.transTable').addClass('d-none');
-        $('#transactionTable tbody').empty();
+$('#chktransactionModal').on('shown.bs.modal', function() {
+    $('#transactionNumber').val('');
+    $('#transactionNumber-error').text('');
+    $('.transTable').addClass('d-none');
+    $('#transactionTable tbody').empty();
+});
+
+$('#chktransactionModal').on('hidden.bs.modal', function() {
+    $('#transactionNumber').val('');
+    $('#transactionNumber-error').text('');
+    $('.transTable').addClass('d-none');
+    $('#transactionTable tbody').empty();
+});
+
+function sendApplicationMail(Shop_Cd) {
+    // alert(Shop_Cd);
+    $.ajax({
+        url: "mail_files/sendApplicationMail.php",
+        type: "POST",
+        data: {
+            Shop_Cd: Shop_Cd,
+            operation : 'shopApplication'
+        },
+        success: function(response) {
+            console.log(response);
+
+            alert(response.Message);
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText);
+            alert("Error sending email: " + error);
+        }
     });
+}
+</script>
+</body>
 
-    $('#chktransactionModal').on('hidden.bs.modal', function () {
-        $('#transactionNumber').val('');
-        $('#transactionNumber-error').text('');
-        $('.transTable').addClass('d-none');
-        $('#transactionTable tbody').empty();
-    });
-
-    </script>
-    </body>
-
-    </html>
+</html>
