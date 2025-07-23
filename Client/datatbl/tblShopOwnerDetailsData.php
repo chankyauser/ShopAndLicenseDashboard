@@ -192,10 +192,9 @@
 
 
 <!-- Shop Notice Details Modal -->
-
 <div class="modal fade" id="NoticeDeliveryStatusModal" tabindex="-1" aria-labelledby="NoticeDeliveryStatusModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 80% !important;">
         <div class="modal-content">
             <div class="modal-header p-3">
                 <h5 class="modal-title" id="NoticeDeliveryStatusModalLabel">Notice Delivery Status</h5>
@@ -209,11 +208,12 @@
     </div>
 </div>
 
-<!-- View Notice Details Modal -->
 
+
+<!-- View Notice Details Modal -->
 <div class="modal fade" id="NoticeDetailModal" tabindex="-1" aria-labelledby="NoticeModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 100% !important;">
         <div class="modal-content">
             <div class="modal-header p-3">
                 <h5 class="modal-title" id="NoticeModalLabel">Notice Details</h5>
@@ -278,12 +278,12 @@
        background-color: transparent !important;
     }
 
-    .modal-lg, .modal-xl {
+    /* .modal-lg, .modal-xl {
         max-width: 60% !important;
-    }
+    } */
 
     .modal-lg.custom-fullwidth {
-        max-width: 100% !important; /* adjust as needed */
+        max-width: 100% !important; 
         width: 100%;
     }
     @media (max-width: 768px) {
@@ -320,7 +320,6 @@ function redirectPage(ShopKeeperMobile) {
     });
 }
 
-
     $('#clearFilter').on('click', function() {
         $('#nodeName').val('All');
         $('#setNodeAndWardDetailId').val('All');
@@ -340,8 +339,7 @@ function redirectPage(ShopKeeperMobile) {
         $('.modal-backdrop').remove();
         $('body').removeClass('modal-open');
     });
-  
-});
+
 
 function DeliveryStatus(shopCd) {
      $('#NoticeDetailModal').modal('hide'); 
@@ -404,11 +402,12 @@ function editNotice(noticeId) {
     $('#NoticeDetailModal').one('hidden.bs.modal', function() {
         $('#NoticeDeliveryStatusModal .modal-dialog')
             .removeClass('modal-sm modal-lg modal-xl')
-            .addClass('modal-lg custom-fullwidth');
+            .addClass('modal-lg custom-fullwidth');  
+        
         $('#NoticeStatusModalBody').html('<div class="text-center p-5"><div class="spinner-border text-danger"></div></div>');
 
+  
         $('#NoticeDeliveryStatusModal').modal('show');
-
         $.ajax({
             url: 'NoticeDeliveryForm.php',
             type: 'POST',
@@ -421,12 +420,28 @@ function editNotice(noticeId) {
             }
         });
     });
+
     $('#NoticeDetailModal').modal('hide');
 }
+// function refreshNoticeDetails() {
+//     if ($('#NoticeDetailModal').hasClass('show')) {
+//         var shopCd = $('#NoticeDetailModal').data('shop-cd');
+//         if (shopCd) {
+//             ShopNoticeDetails(shopCd);
+//         }
+//     }
+// }
+
 function refreshNoticeDetails() {
     if ($('#NoticeDetailModal').hasClass('show')) {
         var shopCd = $('#NoticeDetailModal').data('shop-cd');
+        
         if (shopCd) {
+            $('#NoticeDetailModal .modal-dialog')
+                .removeClass('modal-sm modal-lg modal-xl')  
+                .addClass('modal-lg custom-fullwidth');  
+    
+            $('#NoticeDetailModal .modal-content').css('height', 'auto'); 
             ShopNoticeDetails(shopCd);
         }
     }

@@ -14,7 +14,9 @@ $userId = $_SESSION['SAL_UserId'];
 include "../../api/includes/DbOperation.php";
 
 $db = new DbOperation();
-$baseURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/Client/uploads/notices/';
+
+$baseURL = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : 'http')  . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/Client/uploads/notices/';
+
 
 $targetDir = '../uploads/notices/';
 
