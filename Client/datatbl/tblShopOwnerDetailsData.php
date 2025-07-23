@@ -100,7 +100,7 @@
         <?php 
             foreach ($shopListDetail as $key => $shopData) {
         ?>
-        <div class="col-lg-3-6 mt-0 mb-10">
+        <div class="col-lg-6 mt-0 mb-10">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -142,14 +142,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-xl-4">
+                        <div class="col-12 col-xl-10">
                             <div class="product-cart-wrap">
-                                <div class="product-content-wrap">
+                               <div class="product-content-wrap">
                                     <h2><?php echo $shopData["ShopName"]; ?></h2>
-                                    <span class="shop-badges bg-brand"> <?php echo $shopData["BusinessCatName"]; ?>
-                                    </span> <span class="shop-badges bg-brand"> <?php echo $shopData["ShopAreaName"]; ?>
-                                    </span> <span class="shop-badges bg-brand"> <?php echo $shopData["ShopCategory"]; ?>
-                                    </span>
+                                    <!-- <span class="shop-badges bg-brand"> <?php //echo $shopData["BusinessCatName"]; ?></span> 
+                                    <span class="shop-badges bg-brand"> <?php //echo $shopData["ShopAreaName"]; ?></span> 
+                                    <span class="shop-badges bg-brand"> <?php //echo $shopData["ShopCategory"]; ?></span>
+                                    <button class="btn btn-sm" id="ViewNotice" onclick="DeliveryStatus(<?php// echo $shopData['Shop_Cd'];  ?>)">ViewNotice</button> -->
+                                    <div class="shop-info-row">
+                                        <div class="shop-tags">
+                                            <span class="shop-badges bg-brand"><?php echo $shopData["BusinessCatName"]; ?></span> 
+                                            <span class="shop-badges bg-brand"><?php echo $shopData["ShopAreaName"]; ?></span> 
+                                            <span class="shop-badges bg-brand"><?php echo $shopData["ShopCategory"]; ?></span>
+                                        </div>
+                                        <i class="fas fa-eye view-notice-icon" onclick="ShopNoticeDetails(<?php echo $shopData['Shop_Cd']; ?>)" title="View Notice"></i>
+                                    </div>
 
                                     <h5 class="title-detail"><i class="fi-rs-smartphone"></i>
                                         <?php echo $shopData["ShopKeeperName"];  ?> -
@@ -158,13 +166,13 @@
                                         <?php echo $shopData["NodeName"] . " :  "."Ward : ".$shopData["Ward_No"]." - ".$shopData["WardArea"];  ?>
                                     </h6>
 
-                                     <button class="btn btn-sm btn-danger" id="redirectShopDetailsPage" onclick="redirectPage(<?php echo $shopData["ShopKeeperMobile"];  ?>)">Shop Owner Details</button>
+                                    <div class="d-flex gap-2"> <!-- flex container for buttons -->
+                                        <button class="btn btn-sm button-secondary" id="redirectShopDetailsPage" onclick="redirectPage(<?php echo $shopData["ShopKeeperMobile"];  ?>)">Shop Owner Details</button>
+                                        <button class="btn btn-sm btn-danger" id="shopNoticeUpdate" onclick="DeliveryStatus(<?php echo $shopData['Shop_Cd'];  ?>)">Notice Delivery Status</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                     
-
                     </div>
                 </div>
             </div>
@@ -174,6 +182,122 @@
         ?>
     </div>
 </div>
+
+
+<!-- Shop Notice Details Modal -->
+
+<div class="modal fade" id="NoticeDeliveryStatusModal" tabindex="-1" aria-labelledby="NoticeDeliveryStatusModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-3">
+                <h5 class="modal-title" id="NoticeDeliveryStatusModalLabel">Notice Delivery Status</h5>
+                <button type="button" class="btn-close p-3 closetrans" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body mb-3" id="NoticeStatusModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Notice Details Modal -->
+
+<div class="modal fade" id="NoticeDetailModal" tabindex="-1" aria-labelledby="NoticeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-3">
+                <h5 class="modal-title" id="NoticeModalLabel">Notice Details</h5>
+                <button type="button" class="btn-close p-3 closetrans" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body mb-3" id="NoticeModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+   
+   /* .modal-dialog {
+        max-width: 80% !important;
+        margin: 1.75rem auto;
+    } */
+    .shop-badges.bg-brand {
+        background-color: #F2F4F3 !important;
+        color:#7E7E7E !important;
+      
+    }
+    .title-detail .fi, h5{
+        color:#253D4E !important;
+    }
+    .button-secondary{
+        background-color:#EF6324 !important;
+        border:none;
+    }
+    .shop-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .shop-tags {
+        display: flex;
+        gap: 8px; 
+        flex-wrap: wrap;
+    }
+    .view-notice-icon {
+        font-size: 15px;
+        cursor: pointer;
+        color: #0066ffff;
+        padding: 5px;
+        transition: color 0.2s ease;
+    }
+    #NoticeDetailModal {
+        z-index: 1055 !important;
+    }
+
+    #NoticeDetailModal + .modal-backdrop {
+        z-index: 1050 !important;
+        background-color: transparent !important;
+    }
+
+    body.modal-open #NoticeDetailModal ~ .modal-backdrop {
+        z-index: 1050 !important;
+       background-color: transparent !important;
+    }
+
+    .modal-lg, .modal-xl {
+        max-width: 60% !important;
+    }
+
+    .modal-lg.custom-fullwidth {
+        max-width: 100% !important; /* adjust as needed */
+        width: 100%;
+    }
+    @media (max-width: 768px) {
+        .modal-lg.custom-fullwidth {
+            max-width: 95% !important;
+            width: 95%;
+            margin: auto;
+        }
+
+        .modal-content {
+            padding: 10px;
+        }
+
+        .modal-body {
+            overflow-x: auto;
+        }
+    }
+
+</style>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -207,11 +331,21 @@ $(document).ready(function() {
         $('#OwnerMobile').val('');
         setShopOwnerDetailFilter(1);
     });
+    $('#NoticeDetailModal').on('hidden.bs.modal', function () {
+        // Remove any lingering backdrop
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+    });
+
+    $('#NoticeDeliveryStatusModal').on('hidden.bs.modal', function () {
+        // Remove any lingering backdrop
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+    });
+  
 });
 
 function redirectPage(ShopKeeperMobile){
-    
-        
         $.ajax({
             url: 'redirectShopDetailsPage.php', 
             method: 'GET',
@@ -221,4 +355,94 @@ function redirectPage(ShopKeeperMobile){
             },
         });
 }
+
+function DeliveryStatus(shopCd) {
+     $('#NoticeDetailModal').modal('hide'); 
+    $.ajax({
+        url: 'NoticeDeliveryForm.php', 
+        method: 'POST',
+        data: { Shop_Cd: shopCd },
+        success: function (html) {
+            $('#NoticeDeliveryStatusModal').modal('show');
+            $('#NoticeStatusModalBody').html(html);
+        }
+    });
+}
+
+
+function ShopNoticeDetails(Shop_Cd) {
+    $('#NoticeDeliveryStatusModal').modal('hide');
+    $('#NoticeDetailModal .modal-dialog')
+            .removeClass('modal-sm modal-lg modal-xl')
+            .addClass('modal-lg custom-fullwidth');
+    $('#NoticeDetailModal').data('shop-cd', Shop_Cd);
+        
+    $('#NoticeStatusModalBody').html('<div class="text-center p-5"><div class="spinner-border text-danger"></div></div>');
+    $('#NoticeModalBody').html('<div class="text-center p-5"><div class="spinner-border text-danger"></div></div>');
+    $('#NoticeDetailModal').modal('show'); 
+    
+    $.ajax({
+        type: "POST",
+        url: 'ShopNoticeDeliveryDetails.php',
+        data: { shopCd: Shop_Cd },
+        success: function(response) {
+            $('#NoticeModalBody').html(response); 
+        },
+        error: function() {
+            $('#NoticeModalBody').html('<div class="alert alert-danger">Error retrieving shop notice details.</div>');
+        }
+    });
+}
+// function editNotice(noticeId) {
+//     $('#NoticeDetailModal').modal('hide');
+  
+//     $('#NoticeStatusModalBody').html('<div class="text-center p-5"><div class="spinner-border text-danger"></div></div>');
+//     $('#NoticeDeliveryStatusModal').modal('show');
+ 
+//     $.ajax({
+//         url: 'NoticeDeliveryForm.php',
+//         type: 'POST',
+//         data: { Notice_Id: noticeId },
+//         success: function(response) {
+//             $('#NoticeStatusModalBody').html(response);
+//         },
+//         error: function() {
+//             $('#NoticeStatusModalBody').html('<div class="alert alert-danger">Failed to load notice data for editing.</div>');
+//         }
+//     });
+// }
+
+
+function editNotice(noticeId) {
+    $('#NoticeDetailModal').one('hidden.bs.modal', function() {
+        $('#NoticeDeliveryStatusModal .modal-dialog')
+            .removeClass('modal-sm modal-lg modal-xl')
+            .addClass('modal-lg custom-fullwidth');
+        $('#NoticeStatusModalBody').html('<div class="text-center p-5"><div class="spinner-border text-danger"></div></div>');
+
+        $('#NoticeDeliveryStatusModal').modal('show');
+
+        $.ajax({
+            url: 'NoticeDeliveryForm.php',
+            type: 'POST',
+            data: { Notice_Id: noticeId },
+            success: function(response) {
+                $('#NoticeStatusModalBody').html(response);
+            },
+            error: function() {
+                $('#NoticeStatusModalBody').html('<div class="alert alert-danger">Failed to load notice data for editing.</div>');
+            }
+        });
+    });
+    $('#NoticeDetailModal').modal('hide');
+}
+function refreshNoticeDetails() {
+    if ($('#NoticeDetailModal').hasClass('show')) {
+        var shopCd = $('#NoticeDetailModal').data('shop-cd');
+        if (shopCd) {
+            ShopNoticeDetails(shopCd);
+        }
+    }
+}
+
 </script>
