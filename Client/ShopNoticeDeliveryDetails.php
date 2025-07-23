@@ -192,7 +192,7 @@ function closeModal() {
 
 .delivery-details {
     padding: 0px 0px 10px 5px;
-    margin-top: -4rem;
+    margin-top: -2.7rem;
 }
 
 .notice-details p {
@@ -302,7 +302,7 @@ function closeModal() {
     min-width: 150px;
     margin-right: 10px;
 }
-/* .notice-table th:nth-child(1), 
+.notice-table th:nth-child(1), 
 .notice-table td:nth-child(1) {
     width: 65%;
 }
@@ -310,7 +310,7 @@ function closeModal() {
 .notice-table th:nth-child(2), 
 .notice-table td:nth-child(2) {
     width: 35%;
-} */
+}
 </style>
 
 

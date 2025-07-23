@@ -90,6 +90,12 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
         background-color: #f8f9fa;  
         margin-top: 5px;
     }
+   @media (max-width: 576px) {
+        #actionButtons .flex-grow-1 {
+            flex: 0 0 70%;
+        }
+    }
+
 
 </style>
 
@@ -181,23 +187,43 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
                             
                         </div>
                     </div> -->
-                     <div class="col-lg-4 col-sm-6 col-md-3 col-12">
-                    <div class="form-group">
-                            <label>Upload Notice</label><br>
+                    <div class="col-lg-4 col-sm-6 col-md-3 col-12">
+                        <div class="form-group">
+                                <label>Upload Notice</label><br>
 
-                            <button type="button" class="btn btn-sm btn-primary" id="startCamera">📷 Picture</button>
-                            <button type="button" class="btn btn-sm btn-secondary" id="uploadFileBtn">📁 Upload File</button>
+                               <div class="d-flex flex-wrap gap-2 mt-1" id="actionButtons">
+                                    <div class="flex-grow-1" style="min-width: 120px;">
+                                        <button type="button" class="btn btn-sm btn-primary w-100" id="startCamera">
+                                            📷 Picture
+                                        </button>
+                                    </div>
+                                    <div class="flex-grow-1" style="min-width: 120px;">
+                                        <button type="button" class="btn btn-sm btn-secondary w-100" id="uploadFileBtn">
+                                            📁 Upload
+                                        </button>
+                                    </div>
+                                </div>
 
-                            <input type="file" name="NoticeFileURL" accept="image/*,.pdf" class="form-control mt-2" id="NoticeFileURL" style="display: none;">
+                               <div class="d-flex align-items-center">
+                                    <input type="file" name="NoticeFileURL" accept="image/*,.pdf" class="form-control mt-2 me-2" id="NoticeFileURL" style="display: none !important;">
+                                    <i class="fas fa-times" id="cancelIcon" title="Cancel Upload" style="cursor: pointer; display: none !important;"></i>
+                                </div>
 
-                            <video id="videoPreview" width="320" height="240" autoplay style="display:none;"></video>
-                            <button type="button" class="btn btn-sm btn-success mt-2" id="capturePhoto" style="display:none;">📸 Capture Photo</button>
+                                <video id="videoPreview" width="320" height="240" autoplay style="display:none;"></video>
+                                <button type="button" class="btn btn-sm btn-success mt-2" id="capturePhoto" style="display:none;">📸 Capture Photo</button>
 
-                            <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
 
-                            <img id="capturedPreviewImg" src="" alt="Captured" style="max-width: 100%; display: none; margin-top: 10px;">
+                                <img id="capturedPreviewImg" src="" alt="Captured" style="max-width: 100%; display: none; margin-top: 10px;">
 
-                            <input type="hidden" id="capturedImageData" name="capturedImageData">
+                                <input type="hidden" id="capturedImageData" name="capturedImageData">
+                                <?php if (isset($noticeData['NoticeFileURL']) && !empty($noticeData['NoticeFileURL'])) { ?>
+                                    <small class="text-muted filename-container" id="currentFileName">
+                                        <a href="<?= htmlspecialchars($noticeData['NoticeFileURL']) ?>" target="_blank">
+                                            <?= basename($noticeData['NoticeFileURL']) ?>
+                                        </a>
+                                    </small>
+                                <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -338,7 +364,7 @@ $(document).ready(function () {
 
       
         $('#NoticeFileURL').show();
-
+        $('#cancelIcon').show();
       
         $('#videoPreview').hide();
         $('#capturePhoto').hide();
@@ -347,7 +373,14 @@ $(document).ready(function () {
         $('#capturedImageData').val('');
     });
 
+    $('#cancelIcon').on('click', function () {
+       $('#startCamera').show();
+        $('#uploadFileBtn').show();
 
+      
+        $('#NoticeFileURL').hide();
+        $('#cancelIcon').hide();
+    }); 
  
     $('#capturePhoto').on('click', function () {
         let context = canvas.getContext('2d');
@@ -502,23 +535,26 @@ $(document).ready(function () {
                         .show();
                     $('#failedMsg').hide();
 
-                    $('#NoticeDeliveryStatusModal').modal('hide');
-                    if (typeof refreshNoticeDetails === 'function') {
-                        refreshNoticeDetails();
-                    }
+                   
+                   $('#successMsg')
+                        .text(operationType === 'update' ? 'Notice updated successfully.' : 'Notice submitted successfully.')
+                        .fadeIn(300) 
+                        .delay(1000) 
+                        .fadeOut(300, function () {
+                            $('#NoticeDeliveryStatusModal').modal('hide');
 
-                    setTimeout(function () {
-                        $('#successMsg').fadeOut();
-                    }, 5000);
+                            if (typeof refreshNoticeDetails === 'function') {
+                                refreshNoticeDetails();
+                            }
+                        });
                 } else {
-                    $('#failedMsg')
-                        .text("Failed to " + (operationType === 'update' ? 'update' : 'submit') + " notice.")
-                        .show();
                     $('#successMsg').hide();
 
-                    setTimeout(function () {
-                        $('#failedMsg').fadeOut();
-                    }, 5000);
+                    $('#failedMsg')
+                        .text("Failed to " + (operationType === 'update' ? 'update' : 'submit') + " notice.")
+                        .fadeIn(300)
+                        .delay(1000)
+                        .fadeOut(300);
                 }
             },
             error: function () {
@@ -526,7 +562,7 @@ $(document).ready(function () {
                 $('#successMsg').hide();
                 setTimeout(function () {
                     $('#failedMsg').fadeOut();
-                }, 5000);
+                }, 800);
             }
         });
     });
