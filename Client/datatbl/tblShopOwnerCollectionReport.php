@@ -80,8 +80,7 @@
                     <div class="form-group mb-2">
                         <label>Shop No / Shop Name</label>
                         <input type="text" class="form-control" name="ShopSearch" id="ShopSearch"
-                            placeholder="Search Shop No & Shop Name..."
-                            style="border: 1px solid #F01954;">
+                            placeholder="Search Shop No & Shop Name..." style="border: 1px solid #F01954;">
                     </div>
                 </div>
 
@@ -544,12 +543,40 @@ $(document).ready(function() {
                 holdReason: holdReason || ''
             }),
             success: function(response) {
-                alert('Status updated successfully.');
-                $('#shopTable').DataTable().ajax.reload(null, false);
-                $('#Status').val('');
-                $('#HoldReasonInput').val('')
-                $('.status-filter').addClass('d-none');
-                $('.hold-reason').addClass('d-none');
+                var data = response;
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        showConfirmButton: true,
+                    }).then(() => {
+                        $('#shopTable').DataTable().ajax.reload(null, false);
+                        $('#Status').val('');
+                        $('#HoldReasonInput').val('');
+                        $('.status-filter').addClass('d-none');
+                        $('.hold-reason').addClass('d-none');
+                    });
+                } else {
+                     Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: data.message,
+                        showConfirmButton: true,
+                    }).then(() => {
+                        $('#shopTable').DataTable().ajax.reload(null, false);
+                        $('#Status').val('');
+                        $('#HoldReasonInput').val('');
+                        $('.status-filter').addClass('d-none');
+                        $('.hold-reason').addClass('d-none');
+                    });
+                }
+                // alert('Status updated successfully.');
+                // $('#shopTable').DataTable().ajax.reload(null, false);
+                // $('#Status').val('');
+                // $('#HoldReasonInput').val('')
+                // $('.status-filter').addClass('d-none');
+                // $('.hold-reason').addClass('d-none');
             },
             error: function() {
                 alert('Error updating status.');

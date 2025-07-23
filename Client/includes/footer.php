@@ -259,52 +259,47 @@
         
     </script>
     <script>
-document.addEventListener('contextmenu', event => event.preventDefault());
-document.addEventListener('copy', event => event.preventDefault());
-document.addEventListener('paste', event => event.preventDefault());
-
-// // Disable right click
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-
-// Disable F12 and Ctrl+Shift+I
-document.addEventListener('keydown', function(e) {
- if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-     e.preventDefault();
- }
-});
-
-document.addEventListener('keydown', function(e) {
-    // keyCode 44 is for the Print Screen key
-    if (e.keyCode == 44) {
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('copy', event => event.preventDefault());
+    document.addEventListener('paste', event => event.preventDefault());
+    document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
-        alert('Print Screen is disabled');
-    }
-});
+    });
 
-document.addEventListener('keydown', function(e) {
-    // Disable F12 (Open DevTools)
-    if (e.key === "F12") {
+    document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
         e.preventDefault();
     }
+    });
 
-    // Disable Ctrl+Shift+I (Open DevTools in some browsers)
-    if (e.ctrlKey && e.shiftKey && e.key === "I") {
-        e.preventDefault();
-    }
+    document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 44) {
+            e.preventDefault();
+            alert('Print Screen is disabled');
+        }
+    });
 
-    // Disable Ctrl+Shift+C (Element inspector)
-    if (e.ctrlKey && e.shiftKey && e.key === "C") {
-        e.preventDefault();
-    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === "F12") {
+            e.preventDefault();
+        }
 
-    // Disable Ctrl+U (View Page Source)
-    if (e.ctrlKey && e.key === "u") {
-        e.preventDefault();
-    }
-});
+        if (e.ctrlKey && e.shiftKey && e.key === "I") {
+            e.preventDefault();
+        }
+
+        if (e.ctrlKey && e.shiftKey && e.key === "C") {
+            e.preventDefault();
+        }
+
+        if (e.ctrlKey && e.key === "u") {
+            e.preventDefault();
+        }
+    });
 </script>
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
 </body>
 
 </html>

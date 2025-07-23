@@ -81,8 +81,7 @@ include '../../api/includes/DbOperation.php';
                 }
                 else
                 {
-
-                    $query2 ="INSERT INTO CallingCategoryMaster (Calling_Category_Cd, Calling_Category, Calling_Type, SrNo, Type_SrNo, QC_Type, IsActive, Remark, UpdatedDate, UpdatedByUser)  VALUES ((SELECT ISNULL(MAX(Calling_Category_Cd),0)+1 from CallingCategoryMaster) ,'$callingCategory', '$callingType', $srNo, $callingTypeSrNo, '$qcType' $IsActive ,N'$remark',  GETDATE(), '$userName');";
+                    $query2 ="INSERT INTO CallingCategoryMaster (Calling_Category_Cd, Calling_Category, Calling_Type, SrNo, Type_SrNo, QC_Type, IsActive, Remark, UpdatedDate, UpdatedByUser)  VALUES ((SELECT ISNULL(MAX(Calling_Category_Cd),0)+1 from CallingCategoryMaster) ,'$callingCategory', '$callingType', $srNo, $callingTypeSrNo, '$qcType', $IsActive ,N'$remark',  GETDATE(), '$userName');";
                     $Insert = $db->RunQueryData($query2, $electionName, $developmentMode);
 
                     if($Insert){

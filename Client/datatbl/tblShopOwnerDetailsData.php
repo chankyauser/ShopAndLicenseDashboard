@@ -34,6 +34,7 @@
                             onchange="setShopOwnerDetailFilter(<?php echo "1"; ?>)">
                             <option value="All">All Ward </option>
                             <?php 
+                                    
                                     foreach ($dataNode as $key => $valueNode) {
                                         if($nodeCd==$valueNode["Node_Cd"]){
                                 ?>
@@ -56,8 +57,9 @@
                     <div class="form-group">
                         <label>Shop Name</label>
                         <input type="text" class="form-control" name="ShopName" id="ShopName"
-                            value="<?php if(isset($_SESSION['SAL_Shop_Name']) && !empty($_SESSION['SAL_Shop_Name'])){ echo $_SESSION['SAL_Shop_Name']; } ?>"
-                            placeholder="Search Shop Name..." style="border: 1px solid #F01954;">
+                            value="<?php if(isset($_SESSION['SAL_Shop_Name']) && !empty($_SESSION['SAL_Shop_Name']) && $_SESSION['SAL_Shop_Name'] != 'All' && $_SESSION['SAL_Shop_Name'] != 'undefined'){ echo $_SESSION['SAL_Shop_Name']; } ?>"
+                            placeholder="Shop name (min 3 letters)" style="border: 1px solid #F01954;"
+                            onkeyup="if(this.value.trim().length >= 3 || this.value.trim().length === 0) setShopOwnerDetailFilter(1);">
                     </div>
                 </div>
 
@@ -65,8 +67,9 @@
                     <div class="form-group">
                         <label>Shop Owner Name</label>
                         <input type="text" class="form-control" name="OwnerName" id="OwnerName"
-                            value="<?php if(isset($_SESSION['SAL_search_Owner_Name']) && !empty($_SESSION['SAL_search_Owner_Name'])){ echo $_SESSION['SAL_search_Owner_Name']; } ?>"
-                            placeholder="Search Owner Name..." style="border: 1px solid #F01954;">
+                            value="<?php if(isset($_SESSION['SAL_search_Owner_Name']) && !empty($_SESSION['SAL_search_Owner_Name']) && $_SESSION['SAL_search_Owner_Name'] != 'undefined'){ echo $_SESSION['SAL_search_Owner_Name']; } ?>"
+                            placeholder="Owner name (min 3 letters)" style="border: 1px solid #F01954;"
+                            onkeyup="if(this.value.trim().length >= 3 || this.value.trim().length === 0) setShopOwnerDetailFilter(1);">
                     </div>
                 </div>
 
@@ -75,14 +78,19 @@
                         <label>Shop Owner Mobile</label>
                         <input type="text" class="form-control" name="OwnerMobile" id="OwnerMobile"
                             placeholder="Search Owner Mobile No..." maxlength="10"
-                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57) "
-                            style="border: 1px solid #F01954;">
+                            value="<?php if(isset($_SESSION['SAL_search_mobile']) && !empty($_SESSION['SAL_search_mobile']) && $_SESSION['SAL_search_mobile'] != 'undefined'){ echo $_SESSION['SAL_search_mobile']; } ?>"
+                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57) " onkeyup="
+                            setTimeout(function() {
+                                if (event.target.value.trim().length >= 10 || event.target.value.trim().length === 0) {
+                                    setShopOwnerDetailFilter(1);
+                                }
+                            }, 100);" style="border: 1px solid #F01954;">
                     </div>
                 </div>
 
                 <div class="col-lg-2 col-md-3 col-sm-6 col-12" style="margin-top: 2rem;">
                     <div class="form-group">
-                        <button class="btn btn-sm btn-danger" id="clearFilter">Clear</button>
+                        <button class="btn btn-sm btn-danger" id="clearFilter" onclick="clearFilter()">Clear</button>
                     </div>
                 </div>
 
@@ -165,7 +173,6 @@
                                     <h6 class="title-detail"><i class="fi-rs-location-alt"></i>
                                         <?php echo $shopData["NodeName"] . " :  "."Ward : ".$shopData["Ward_No"]." - ".$shopData["WardArea"];  ?>
                                     </h6>
-
                                     <div class="d-flex gap-2"> <!-- flex container for buttons -->
                                         <button class="btn btn-sm button-secondary" id="redirectShopDetailsPage" onclick="redirectPage(<?php echo $shopData["ShopKeeperMobile"];  ?>)">Shop Owner Details</button>
                                         <button class="btn btn-sm btn-danger" id="shopNoticeUpdate" onclick="DeliveryStatus(<?php echo $shopData['Shop_Cd'];  ?>)">Notice Delivery Status</button>
@@ -300,28 +307,19 @@
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    $('#ShopName, #OwnerName').on('keypress input', function(e) {
-        let inputVal = $(this).val().trim();
-
-        if (e.which === 13 || inputVal.length === 0) {
-            if (inputVal.length >= 3 || inputVal.length === 0) {
-                setShopOwnerDetailFilter(1);
-            }
-        }
+function redirectPage(ShopKeeperMobile) {
+    $.ajax({
+        url: 'redirectShopDetailsPage.php',
+        method: 'GET',
+        data: {
+            ShopKeeperMobile: ShopKeeperMobile
+        },
+        success: function(response) {
+            window.open('../index.php?p=ShopDetalisListOfOwner', '_blank');
+        },
     });
+}
 
-
-    $('#OwnerMobile').on('keypress input', function(e) {
-        let inputVal = $(this).val().trim();
-        if (e.which === 13 || inputVal.length === 0) {
-            if (inputVal.length === 10 && /^[0-9]{10}$/.test(inputVal)) {
-                setShopOwnerDetailFilter(1);
-            } else if (inputVal.length === 0) {
-                setShopOwnerDetailFilter(1);
-            }
-        }
-    });
 
     $('#clearFilter').on('click', function() {
         $('#nodeName').val('All');
@@ -344,17 +342,6 @@ $(document).ready(function() {
     });
   
 });
-
-function redirectPage(ShopKeeperMobile){
-        $.ajax({
-            url: 'redirectShopDetailsPage.php', 
-            method: 'GET',
-            data: { ShopKeeperMobile: ShopKeeperMobile }, 
-            success: function(response) {
-               window.open('../index.php?p=ShopDetalisListOfOwner', '_blank');
-            },
-        });
-}
 
 function DeliveryStatus(shopCd) {
      $('#NoticeDetailModal').modal('hide'); 
