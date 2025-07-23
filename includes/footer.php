@@ -810,9 +810,11 @@ let globalWardNo = 0;
 let globalSpaceType = 0;
 let otpExpiryTime = 300;
 let otpTimeInterval;
+let updateShop = 0;
 
 function redirectToEditPage(Shop_Cd) {
     // alert('hello');
+    updateShop = 1;
     $.ajax({
         url: './action/getShopAddressDetails.php',
         type: 'POST',
@@ -1461,12 +1463,13 @@ function SubmitDocumentForm(form_id) {
             success: function(response) {
                 var data = JSON.parse(response);
                 if (data.status == 200) {
-                    // alert(data.message);
+                    if(updateShop !== 1){
+                        sendApplicationMail(Shop_Cd);
+                    }
                     $(`#${form_id} #submitmsgsuccess`).html(data.message)
                         .hide().fadeIn(800, function() {
                             $("submitmsgsuccess").append("");
                         }).delay(3000).fadeOut("fast");
-
                     $('input[name="file[]"]').val('');
                     window.location.href = 'index.php?p=ShopDetalisListOfOwner';
                 } else {
@@ -1763,7 +1766,7 @@ function generateOtp() {
 
 <!-- New Shop Owner Shop Details End -->
 
-<script>
+<!-- <script>
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('copy', event => event.preventDefault());
         document.addEventListener('paste', event => event.preventDefault());
@@ -1809,7 +1812,7 @@ function generateOtp() {
                 e.preventDefault();
             }
         });
-</script>
+</script> -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
@@ -1939,6 +1942,27 @@ $('#chktransactionModal').on('hidden.bs.modal', function() {
     $('.transTable').addClass('d-none');
     $('#transactionTable tbody').empty();
 });
+
+function sendApplicationMail(Shop_Cd) {
+    // alert(Shop_Cd);
+    $.ajax({
+        url: "mail_files/sendApplicationMail.php",
+        type: "POST",
+        data: {
+            Shop_Cd: Shop_Cd,
+            operation : 'shopApplication'
+        },
+        success: function(response) {
+            console.log(response);
+
+            alert(response.Message);
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText);
+            alert("Error sending email: " + error);
+        }
+    });
+}
 </script>
 </body>
 
