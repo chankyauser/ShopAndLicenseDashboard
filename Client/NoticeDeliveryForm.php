@@ -93,7 +93,6 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
   @media (max-width: 576px) {
     #actionButtons {
             flex-direction: column !important;
-            gap: 5px;
         }
     }
 
@@ -183,10 +182,10 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
                         <label>Upload Notice</label><br>
                         <div class="d-flex gap-2" id="actionButtons">
                             <button type="button" class="btn btn-sm btn-primary" id="openCameraBtn">
-                                📷 Picture
+                                📷Picture
                             </button>
                             <button type="button" class="btn btn-sm btn-secondary" id="uploadFileBtn">
-                                📁 Upload File
+                                📁Upload File
                             </button>
                         </div>
                        
