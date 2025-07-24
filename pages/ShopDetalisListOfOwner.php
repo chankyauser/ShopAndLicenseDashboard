@@ -227,6 +227,19 @@ a[data-tooltip]:hover::before {
     opacity: 1;
     pointer-events: auto;
 }
+.badge.msg {
+    display: block;
+    white-space: normal;
+    word-break: break-word;
+    max-width: 200px;
+    font-size: 13px;
+    /* border: 1px solid black; */
+    /* background-color: #e3e1cd; */
+     background-color: #ffe4bc;
+    color:#000000;
+    align-items: center;
+    margin: 0 auto;
+}
 
 </style>
 <div class="container mb-0 mt-0">
@@ -503,20 +516,24 @@ function getBillDetails() {
                                                                 </a>`;
                             }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "hold"){
                                 tableHtml += `      <td> 
-                                                            <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
+                                                            <div class="badge bg-warning msg" style="max-width: 300px; word-wrap: break-word; white-space: normal;">
                                                                 <span style="color:#C90D41";>Your application is currently on hold due to this reason : ${item.HoldReason}</span>`;
                         
                             }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === ""){
-                                tableHtml += `      <td> 
-                                                            <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
-                                                                <span style="color:#C90D41";>Your Application is currently being processed. 
-                                                                Once completed, your receipt and license will be generated </span>`;
+                               tableHtml += `<td style="max-width: 300px; white-space: normal; word-break: break-word;">
+                                            <span class="badge msg" style="display: block;">
+                                                Your Application is currently being processed. 
+                                                Once completed, your receipt and license will be generated
+                                            </span>`;
 
                             }else if(item.PaymentStatus.toLowerCase() === "success" && item.ConfirmationStatus.toLowerCase() === "pending"){
-                                tableHtml += `      <td> 
-                                                            <div style="max-width: 300px; word-wrap: break-word; white-space: normal;">
-                                                                <span style="color:#C90D41";>Your Application is currently being processed. 
-                                                                Once completed, your receipt and license will be generated </span>`;
+                            
+                                tableHtml += `<td style="max-width: 300px; white-space: normal; word-break: break-word;">
+                                            <span class="badge msg" style="display: block;">
+                                                Your Application is currently being processed. 
+                                                Once completed, your receipt and license will be generated
+                                            </span>`;
+
                             }else{
                                 tableHtml += `<td> `;
                             }
