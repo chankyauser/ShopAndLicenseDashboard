@@ -42,79 +42,88 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <div class="container-fluid">
     <div class="card">
         <div class="card-body">
-           <div class="col-12">
-             <?php if (!empty($NoticeData)) { ?>
+            <div class="col-12">
+                <?php if (!empty($NoticeData)) { ?>
                 <?php foreach ($NoticeData as $notice): ?>
-                    <div class="notice-container">
-                        <table class="notice-table">
-                            <tr class="notice-subheading">
-                                <th>Notice Details</th>
-                                <th>Delivery Details</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex">
-                                        <div class="notice-image">
-                                          <?php 
+                <div class="notice-container">
+                    <table class="notice-table">
+                        <tr class="notice-subheading">
+                            <th>Notice Details</th>
+                            <th>Delivery Details</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex">
+                                    <div class="notice-image">
+                                        <?php 
                                               $fileUrl = $notice['NoticeFileURL']; 
                                               $fileExt = strtolower(pathinfo($fileUrl, PATHINFO_EXTENSION)); 
                                           ?>
-                                            <?php if (!empty($fileUrl)) { ?>
-                                              <?php if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) { ?>
-                                                  <img src="<?php echo htmlspecialchars($fileUrl); ?>" 
-                                                      alt="Notice Image" class="clickable-image" style="width:200px;height:200px"
-                                                      onclick="openModal('<?php echo htmlspecialchars($fileUrl); ?>', 'image')">
-                                              
-                                              <?php } elseif ($fileExt === 'pdf') { ?>
-                                               <i class="fas fa-file-pdf clickable-image"
-                                                  style="font-size: 100px; color: red; width: 150px; height: 200px; display: flex; align-items: center; justify-content: center; cursor: pointer;"
-                                                  onclick="window.open('<?php echo htmlspecialchars($fileUrl); ?>', '_blank')"></i>
-                                              <?php } else { ?>
-                                                  <img src="./assets/imgs/noticeImg.png" alt="Default Image" class="img-fluid custom-product-image" style="width:150px;height:200px">
-                                              <?php } ?>
+                                        <?php if (!empty($fileUrl)) { ?>
+                                        <?php if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) { ?>
+                                        <img src="<?php echo htmlspecialchars($fileUrl); ?>" alt="Notice Image"
+                                            class="clickable-image" style="width: 50rem; height: 20rem;"
+                                            onclick="window.open('<?php echo ($fileUrl); ?>', '_blank')">
 
-                                          <?php } else { ?>
-                                              <img src="./assets/imgs/noticeImg.png" alt="Default Image" class="img-fluid custom-product-image" style="width:150px;height:200px">
-                                          <?php } ?>
-                                        </div>
-                                       
-                                        <div class="notice-details">
-                                            <p style="color: black;"><strong>Date:</strong> <?php echo !empty($notice['Notice_Date']) ? date('d-m-Y', strtotime($notice['Notice_Date'])) : 'N/A'; ?></p>
-                                            <p style="color: black;"><strong>Subject:</strong> <?php echo htmlspecialchars($notice['Subject']); ?></p>
-                                            <p style="color: black;"><strong>Description:</strong> <?php echo htmlspecialchars($notice['Description']); ?></p>
-                                            <p style="color: black;"><strong>Response Received:</strong> <?php echo htmlspecialchars($notice['Response_Received']); ?></p>
-                                        </div>
+                                        <?php } elseif ($fileExt === 'pdf') { ?>
+                                        <i class="fas fa-file-pdf clickable-image"
+                                            style="font-size: 100px; color: red; width: 50rem; height: 20rem; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                                            onclick="window.open('<?php echo htmlspecialchars($fileUrl); ?>', '_blank')"></i>
+                                        <?php } else { ?>
+                                        <img src="./assets/imgs/noticeImg.png" alt="Default Image"
+                                            class="img-fluid custom-product-image" style="width: 50rem; height: 20rem;">
+                                        <?php } ?>
+
+                                        <?php } else { ?>
+                                        <img src="./assets/imgs/noticeImg.png" alt="Default Image"
+                                            class="img-fluid custom-product-image" style="width: 50rem; height: 20rem;">
+                                        <?php } ?>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="delivery-details">
-                                        <p style="color: black;"><strong>Type:</strong> <?php echo htmlspecialchars($notice['Notice_Type']); ?></p>
-                                        <p style="color: black;"><strong>Status:</strong> <?php echo htmlspecialchars($notice['Status']); ?></p>
-                                        <p style="color: black;"><strong>Remark:</strong> <?php echo htmlspecialchars($notice['Remark']); ?></p>
-                                        <p style="color: black;"><strong>Acknowledged Date:</strong> <?php echo !empty($notice['Acknowledged_Date']) ? date('d-m-Y', strtotime($notice['Acknowledged_Date'])) : 'N/A'; ?></p>
-                                        <p style="color: black;"><strong>Delivered By:</strong> <?php echo htmlspecialchars($notice['DeliveredBy']); ?></p>
+
+                                    <div class="notice-details">
+                                        <p style="color: black;"><strong>Date:</strong>
+                                            <?php echo !empty($notice['Notice_Date']) ? date('d-m-Y', strtotime($notice['Notice_Date'])) : 'N/A'; ?>
+                                        </p>
+                                        <p style="color: black;"><strong>Subject:</strong>
+                                            <?php echo htmlspecialchars($notice['Subject']); ?></p>
+                                        <p style="color: black;"><strong>Description:</strong>
+                                            <?php echo htmlspecialchars($notice['Description']); ?></p>
+                                        <p style="color: black;"><strong>Response Received:</strong>
+                                            <?php echo htmlspecialchars($notice['Response_Received']); ?></p>
                                     </div>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="d-flex justify-content-end mt-3 mb-3">
-                          <button class="btn btn-primary btn-sm" onclick="editNotice('<?php echo $notice['Notice_Id']; ?>')" style="margin-right: 10px;">Edit</button>
-                      </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="delivery-details">
+                                    <p style="color: black;"><strong>Type:</strong>
+                                        <?php echo htmlspecialchars($notice['Notice_Type']); ?></p>
+                                    <p style="color: black;"><strong>Status:</strong>
+                                        <?php echo htmlspecialchars($notice['Status']); ?></p>
+                                    <p style="color: black;"><strong>Remark:</strong>
+                                        <?php echo htmlspecialchars($notice['Remark']); ?></p>
+                                    <p style="color: black;"><strong>Acknowledged Date:</strong>
+                                        <?php echo !empty($notice['Acknowledged_Date']) ? date('d-m-Y', strtotime($notice['Acknowledged_Date'])) : 'N/A'; ?>
+                                    </p>
+                                    <p style="color: black;"><strong>Delivered By:</strong>
+                                        <?php echo htmlspecialchars($notice['DeliveredBy']); ?></p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="d-flex justify-content-end mt-3 mb-3">
+                        <button class="btn btn-primary btn-sm"
+                            onclick="editNotice('<?php echo $notice['Notice_Id']; ?>')"
+                            style="margin-right: 10px;">Edit</button>
                     </div>
+                </div>
                 <?php endforeach; ?>
-                <div id="fileModal" class="modal">
-                  <span class="close" onclick="closeModal()">&times;</span>
-                  <div id="fileContent" class="modal-content-container" style="text-align:center">
-                     
-                  </div>
-              </div>
-            <?php } else { ?>
+                <?php } else { ?>
                 <div class="alert alert-info">
                     <h5>No Notice Found</h5>
                     <p>No notices have been recorded for this shop yet.</p>
                 </div>
-            <?php } ?>
-           </div>
+                <?php } ?>
+            </div>
         </div>
     </div>
 </div>
@@ -133,34 +142,34 @@ $(document).ready(function() {
     $('#NoticeDetailModal').data('shop-cd', '<?php echo $shopCd; ?>');
 });
 
-function openModal(fileUrl, type) {
-    const modal = document.getElementById("fileModal");
-    const contentDiv = document.getElementById("fileContent");
+// function openFileModal(fileUrl, type) {
+//     const modal = document.getElementById("fileModal");
+//     const contentDiv = document.getElementById("fileContent");
 
-    contentDiv.innerHTML = ''; // Clear previous content
+//     contentDiv.innerHTML = '';
 
-    if (type === 'image') {
-        const img = document.createElement('img');
-        img.src = fileUrl;
-        img.className = 'modal-content';
-        img.alt = "Notice Image";
-        contentDiv.appendChild(img);
-    } else if (type === 'pdf') {
-        const iframe = document.createElement('iframe');
-        iframe.src = fileUrl;
-        iframe.style.width = '100%';
-        iframe.style.height = '80vh';
-        iframe.frameBorder = 0;
-        contentDiv.appendChild(iframe);
-    }
+//     if (type === 'image') {
+//         const img = document.createElement('img');
+//         img.src = fileUrl;
+//         img.className = 'modal-content';
+//         img.alt = "Notice Image";
+//         contentDiv.appendChild(img);
+//     } else if (type === 'pdf') {
+//         const iframe = document.createElement('iframe');
+//         iframe.src = fileUrl;
+//         iframe.style.width = '100%';
+//         iframe.style.height = '80vh';
+//         iframe.frameBorder = 0;
+//         contentDiv.appendChild(iframe);
+//     }
 
-    modal.style.display = "block";
-}
+//     modal.style.display = "block";
+// }
 
-function closeModal() {
-    const modal = document.getElementById("fileModal");
-    modal.style.display = "none";
-}
+// function closeFileModal() {
+//     const modal = document.getElementById("fileModal");
+//     modal.style.display = "none";
+// }
 </script>
 
 <style>
@@ -169,7 +178,7 @@ function closeModal() {
     border: 1px solid #ccc;
     overflow: hidden;
     background-color: #fff;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .notice-header {
@@ -182,17 +191,16 @@ function closeModal() {
 }
 
 .notice-image {
-   padding: 10px;
+    padding: 10px;
 }
 
 .notice-details {
     padding: 5px 0px 10px 10px;
-   
+
 }
 
 .delivery-details {
     padding: 0px 0px 10px 5px;
-    margin-top: -2.7rem;
 }
 
 .notice-details p {
@@ -210,13 +218,13 @@ function closeModal() {
     margin-bottom: 10px;
 }
 
-/* .notice-table th, .notice-table td {
+.notice-table th, .notice-table td {
     width: 50%; 
     padding: 10px;
     vertical-align: top;
     border-bottom: 1px solid #eee;
     word-wrap: break-word; 
-} */
+}
 
 .notice-subheading {
     background-color: #f9f9f9;
@@ -234,36 +242,6 @@ function closeModal() {
         display: block;
         width: 100%;
     }
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    padding-top: 60px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content {
-    margin: auto;
-    display: block;
-    max-width: 50%;
-    max-height: 80%;
-}
-
-.close {
-    position: absolute;
-    top: 30px;
-    right: 35px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
 }
 
 .clickable-image {
@@ -286,7 +264,7 @@ function closeModal() {
 
 .notice-table {
     width: 100%;
-    table-layout: fixed; 
+    table-layout: fixed;
 }
 
 .notice-container {
@@ -302,15 +280,14 @@ function closeModal() {
     min-width: 150px;
     margin-right: 10px;
 }
-.notice-table th:nth-child(1), 
+
+.notice-table th:nth-child(1),
 .notice-table td:nth-child(1) {
     width: 65%;
 }
 
-.notice-table th:nth-child(2), 
+.notice-table th:nth-child(2),
 .notice-table td:nth-child(2) {
     width: 35%;
 }
 </style>
-
-
