@@ -29,6 +29,24 @@
     max-height: 70vh;
     overflow-y: auto;
 }
+
+.badge-warning {
+    background-color: #f39c12;
+}
+
+.badge-success {
+    background-color: #27ae60;
+}
+
+.badge-danger {
+    background-color: #e74c3c;
+}
+
+.view-bills-icon {
+    color: #C90D41 !important;
+    text-decoration: underline;
+    font-weight: 700;
+}
 </style>
 <div class="container mt-10 mb-2">
     <div class="card">
@@ -151,10 +169,10 @@
                                     <th class="text-left">Node / Ward</th>
                                     <th class="text-left">Shop Owner </th>
                                     <th class="text-left">Shop Details</th>
-                                    <th class="text-right">Lincense Details</th>
-                                    <th class="text-right"> Status </th>
-                                    <th class="text-right">Pending </th>
-                                    <th class="text-right">Collection</th>
+                                    <th class="text-left">Lincense Details</th>
+                                    <th class="text-left"> Status </th>
+                                    <th class="text-end">Pending </th>
+                                    <th class="text-end">Collection</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -168,7 +186,7 @@
 
 <!-- Billing Details Modal -->
 <div class="modal fade" id="billingModal" tabindex="-1" aria-labelledby="billingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable" style="width: auto; max-width: 75%; min-width: 120px;">
         <div class="modal-content">
             <div class="modal-header p-2 m-2">
                 <h5 class="modal-title" id="billingModalLabel">Billing Details</h5>
@@ -186,6 +204,8 @@ $(document).ready(function() {
     var shopTable = $('#shopTable').DataTable({
         processing: true,
         serverSide: true,
+        autoWidth: false, 
+        scrollX: true,
         ajax: {
             type: "POST",
             url: "./action/setOwnerCollectionReport.php",
@@ -262,20 +282,22 @@ $(document).ready(function() {
             },
             {
                 data: null,
-                // render: function(data) {
-                //     return `${data.BillCount}
-                //     &nbsp;&nbsp;
-                //     <i class="fas fa-eye text-primary view-bills-icon text-danger" data-bill='${data.BillDetailsArray || "[]"}' data-shopname='${data.ShopName || ''}'style="cursor: pointer;" title="View Bill Details"> </i>`;
-                // },
                 render: function(data) {
                     const bills = JSON.parse(data.BillDetailsArray || '[]');
                     const safeBillDataAttr = JSON.stringify(bills).replace(/"/g, '&quot;');
 
                     if (data.BillCount === 1 && bills.length === 1) {
+                        const safeBillDataAttr = JSON.stringify(bills).replace(/"/g, '&quot;');
                         return `Transaction Number: <strong>${bills[0].TransNumber || ''}</strong><br>
                                 Transaction Date: <strong>${bills[0].TranDateTime || ''}</strong><br>
                                 License Period: <strong>${bills[0].LicenseStartDate || ''} to ${bills[0].LicenseEndDate || ''}</strong><br>
-                                Amount: <strong>₹${parseFloat(bills[0].Amount || 0).toFixed(2)}</strong><br>`;
+                                Amount: <strong>₹${parseFloat(bills[0].Amount || 0).toFixed(2)}</strong><br>
+                                <a class="text-primary view-bills-icon" 
+                                data-bill="${safeBillDataAttr}" 
+                                data-shopname="${data.ShopName || ''}" 
+                                style="cursor: pointer;" 
+                                title="View Bill Details"> View More </a>`;
+
 
                     } else if (data.BillCount > 1 && bills.length > 1) {
                         const latestBill = bills[bills.length - 1];
@@ -284,7 +306,7 @@ $(document).ready(function() {
                                 Transaction Date: <strong>${latestBill.TranDateTime || ''}</strong><br>
                                 License Period: <strong>${latestBill.LicenseStartDate || ''} to ${latestBill.LicenseEndDate || ''}</strong><br>
                                 Amount: <strong>₹${parseFloat(latestBill.Amount || 0).toFixed(2)}</strong><br>
-                                <a class="text-primary view-bills-icon text-danger" 
+                                <a class="text-primary view-bills-icon" 
                                 data-bill="${safeBillDataAttr}" 
                                 data-shopname="${data.ShopName || ''}" 
                                 style="cursor: pointer;" 
@@ -294,7 +316,7 @@ $(document).ready(function() {
                     return '';
                 },
                 orderable: false,
-                className: 'text-right'
+                className: 'text-left'
             },
             {
                 data: null,
@@ -326,16 +348,32 @@ $(document).ready(function() {
                         }
                     }
 
-                    if (status) {
-                        return `<strong>${status}</strong><br>
+                    if (status != 'Pending' && status != '') {
+                        let badgeClass = '';
+                        let reasonText = '';
+                        switch (status) {
+                            case 'Hold':
+                                badgeClass = 'badge-danger';
+                                if (holdReason) {
+                                    reasonText =
+                                        `<br>Hold Reason: <strong>${holdReason}</strong>`;
+                                }
+                                break;
+                            case 'Success':
+                                badgeClass = 'badge-success';
+                                break;
+                            default:
+                                badgeClass = 'badge-success';
+                        }
+                        return `<span class="badge badge-pil ${badgeClass}">${status}</span><br>
                                 Status By: <strong>${statusBy}</strong><br>
-                                Status Updated Date: <strong>${statusDate}</strong>${holdReason}`;
+                                Status Date: <strong>${statusDate}</strong>${reasonText}`;
                     }
 
-                    return 'Pending';
+                    return '<span class="badge badge-pil badge-warning">Pending</span>';
                 },
                 orderable: false,
-                className: 'text-right'
+                className: 'text-left'
             },
             {
                 data: null,
@@ -362,13 +400,13 @@ $(document).ready(function() {
                             return sum + parseFloat(bill.Amount || 0);
                         }, 0);
 
-                        return `₹${totalPendingAmount.toFixed(2)}`;
+                        return `<span style="font-weight: 700">₹${totalPendingAmount.toFixed(2)} </span>`;
                     }
 
-                    return `₹0.00`;
+                    return `<span style="font-weight: 700"> ₹0.00 </span>`;
                 },
                 orderable: false,
-                className: 'text-right'
+                className: 'text-end'
             },
             {
                 data: null,
@@ -395,13 +433,13 @@ $(document).ready(function() {
                             return sum + parseFloat(bill.Amount || 0);
                         }, 0);
 
-                        return `₹${totalPendingAmount.toFixed(2)}`;
+                        return `<span style="font-weight: 700"> ₹${totalPendingAmount.toFixed(2)} </span>`;
                     }
 
-                    return `₹0.00`;
+                    return `<span style="font-weight: 700"> ₹0.00 </span>`;
                 },
                 orderable: false,
-                className: 'text-right'
+                className: 'text-end'
             }
         ],
         drawCallback: function(settings) {
@@ -411,8 +449,13 @@ $(document).ready(function() {
             } else {
                 $('#GetTotalRecods').text(totalRecords + ' Shops');
             }
+            $('.dataTables_processing').hide();
+            
         }
     });
+    
+    shopTable.columns.adjust().draw();
+
 
     $('#shopTable tbody').on('click', '.view-bills-icon', function() {
         const billData = $(this).attr('data-bill');
@@ -426,37 +469,44 @@ $(document).ready(function() {
         }
 
         const billingTable = `
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Sr.No</th>
-                        <th>Transaction Number</th>
-                        <th>Transaction Date</th>
-                        <th>Amount</th>
-                        <th>License Period</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${billDetailsArray.map((bill, index) => {
-                        const isPending = !bill.ConfirmationStatus || bill.ConfirmationStatus === 'Pending';
-                        return `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${bill.TransNumber || ''}</td>
-                                <td>${bill.TranDateTime || ''}</td>
-                                <td>₹${parseFloat(bill.Amount || 0).toFixed(2)}</td>
-                                <td>${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
-                                <td>
-                                    ${bill.ConfirmationStatus || 'Pending'}
-                                    ${!isPending && bill.ConfirmationUpdatedBy ? `<br> By: ${bill.ConfirmationUpdatedBy}` : ''}
-                                    ${!isPending && bill.ConfirmationUpdatedDate ? `<br> Date: ${bill.ConfirmationUpdatedDate}` : ''}
-                                </td>
-                            </tr>
-                        `;
-                    }).join('')}
-                </tbody>
-            </table>
+           <table class="table table-bordered" style="width: 100%; table-layout: auto;">
+    <thead>
+        <tr>
+            <th class="text-center" style="width : 8%">Sr.No</th> 
+            <th class="text-left" style="width : 10%">Transaction No</th> 
+            <th class="text-left" style="width : 12%">Transaction Date</th> 
+            <th class="text-center" style="width : 10%">Payment Mode</th> 
+            <th class="text-end" style="width : 10%">Amount</th> 
+            <th class="text-left" style="width : 18%">License Period</th> 
+            <th class="text-left" style="width : 25%">Status</th> 
+        </tr>
+    </thead>
+    <tbody>
+        ${billDetailsArray.map((bill, index) => {
+            const isPending = !bill.ConfirmationStatus || bill.ConfirmationStatus === 'Pending';
+            return `
+                <tr>
+                    <td class="text-center">${index + 1}</td>
+                    <td class="text-left">${bill.TransNumber || ''}</td>
+                    <td class="text-left">${bill.TranDateTime || ''}</td>
+                    <td class="text-center">${bill.paymentMode || ''}</td>
+                    <td class="text-end"><span style="font-weight: 700"> ₹${parseFloat(bill.Amount || 0).toFixed(2)} </span></td>
+                    <td class="text-left">${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
+                    <td class="text-left">
+                        <span class="badge 
+                            ${bill.ConfirmationStatus === 'Hold' ? 'badge-danger' : 
+                            bill.ConfirmationStatus === 'Confirm' ? 'badge-success' : 
+                            'badge-warning'}">
+                            ${bill.ConfirmationStatus  || 'Pending'}
+                        </span>
+                        ${!isPending && bill.ConfirmationUpdatedBy && bill.ConfirmationUpdatedBy != '' && bill.ConfirmationUpdatedBy != null ? `<br> Status By: ${bill.ConfirmationUpdatedBy}` : ''}
+                        ${!isPending && bill.ConfirmationUpdatedDate  && bill.ConfirmationUpdatedDate != '' && bill.ConfirmationUpdatedDate != null ? `<br> Status Date: ${bill.ConfirmationUpdatedDate}` : ''}
+                    </td>
+                </tr>
+            `;
+        }).join('')}
+    </tbody>
+</table>
         `;
 
         $('#billingModalBody').html(billingTable);
@@ -558,7 +608,7 @@ $(document).ready(function() {
                         $('.hold-reason').addClass('d-none');
                     });
                 } else {
-                     Swal.fire({
+                    Swal.fire({
                         icon: 'error',
                         title: 'Error!',
                         text: data.message,
@@ -599,6 +649,7 @@ $('#clearFilter').click(function() {
     $('#setNodeAndWardDetailId').val('All');
     $('#OwnerSearch').val('');
     $('#ShopSearch').val('');
+    $('#confirmationStatus').val('Pending');
     $('#shopTable').DataTable().ajax.reload();
 
 });
