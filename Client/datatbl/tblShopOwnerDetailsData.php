@@ -164,7 +164,25 @@
                                             <span class="shop-badges bg-brand"><?php echo $shopData["ShopAreaName"]; ?></span> 
                                             <span class="shop-badges bg-brand"><?php echo $shopData["ShopCategory"]; ?></span>
                                         </div>
-                                        <i class="fas fa-eye view-notice-icon" onclick="ShopNoticeDetails(<?php echo $shopData['Shop_Cd']; ?>)" title="View Notice"></i>
+                                       <div class="d-flex gap-3">
+                                            <i class="fas fa-user text-primary icon-action" 
+                                            id="redirectShopDetailsPage" 
+                                            onclick="redirectPage(<?php echo $shopData['ShopKeeperMobile']; ?>)" 
+                                           
+                                            title="Shop Owner Details"></i>
+
+                                            <i class="fas fa-truck-loading text-success icon-action" 
+                                            id="shopNoticeUpdate" 
+                                            onclick="DeliveryStatus(<?php echo $shopData['Shop_Cd']; ?>)" 
+                                           
+                                            title="Update Delivery Status"></i>
+
+                                            <i class="fas fa-eye text-warning icon-action" 
+                                            onclick="ShopNoticeDetails(<?php echo $shopData['Shop_Cd']; ?>)" 
+                                         
+                                            title="View Notice"></i>
+                                        </div>
+                                       
                                     </div>
 
                                     <h5 class="title-detail"><i class="fi-rs-smartphone"></i>
@@ -173,10 +191,7 @@
                                     <h6 class="title-detail"><i class="fi-rs-location-alt"></i>
                                         <?php echo $shopData["NodeName"] . " :  "."Ward : ".$shopData["Ward_No"]." - ".$shopData["WardArea"];  ?>
                                     </h6>
-                                    <div class="d-flex gap-2"> <!-- flex container for buttons -->
-                                        <button class="btn btn-sm button-secondary" id="redirectShopDetailsPage" onclick="redirectPage(<?php echo $shopData["ShopKeeperMobile"];  ?>)">Shop Owner Details</button>
-                                        <button class="btn btn-sm btn-danger" id="shopNoticeUpdate" onclick="DeliveryStatus(<?php echo $shopData['Shop_Cd'];  ?>)">Notice Delivery Status</button>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -257,13 +272,28 @@
         gap: 8px; 
         flex-wrap: wrap;
     }
-    .view-notice-icon {
-        font-size: 15px;
+   .icon-action {
+        font-size: 1.0rem;
         cursor: pointer;
-        color: #0066ffff;
-        padding: 5px;
-        transition: color 0.2s ease;
+        transition: color 0.3s ease;
     }
+
+    .icon-action:hover {
+        opacity: 0.8;
+    }
+
+    .text-primary {
+        color: #007bff;
+    }
+
+    .text-success {
+        color: #28a745;
+    }
+
+    .text-warning {
+        color: #ca4360ff !important;
+    }
+
     #NoticeDetailModal {
         z-index: 1055 !important;
     }
@@ -307,6 +337,11 @@
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+$(document).ready(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
+
 function redirectPage(ShopKeeperMobile) {
     $.ajax({
         url: 'redirectShopDetailsPage.php',
@@ -408,6 +443,7 @@ function editNotice(noticeId) {
 
   
         $('#NoticeDeliveryStatusModal').modal('show');
+
         $.ajax({
             url: 'NoticeDeliveryForm.php',
             type: 'POST',
