@@ -1,4 +1,4 @@
-
+<!-- 
 <style>
     .notice-container {
     margin-bottom: 30px;
@@ -63,6 +63,77 @@
 .notice-image img:hover {
         transform: scale(1.1); 
 }
+</style> -->
+
+<style>
+    .notice-container {
+    padding: 2px 20px 2px 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.notice-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+.notice-table th, 
+.notice-table td {
+    padding: 16px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.notice-table th {
+    background-color: #e9ecef;
+    font-weight: bold;
+      text-align: center;
+}
+
+.notice-image {
+    margin-right: 15px;
+}
+
+.notice-image img {
+    border-radius: 5px;
+    object-fit: cover;
+    border: 1px solid #dee2e6;
+}
+
+.notice-details p,
+.delivery-details p {
+    margin: 0 0 8px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.notice-details strong,
+.delivery-details strong {
+    color: #343a40;
+}
+
+.d-flex {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column;
+    }
+
+    .notice-image img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .notice-table td, 
+    .notice-table th {
+        padding: 12px;
+    }
+}
 </style>
 <?php  
 include 'api/includes/DbOperation.php'; 
@@ -102,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $NoticeData = $db->ExecutveQueryMultipleRowSALData($Noticequery, $electionName, $developmentMode);
     if (!empty($NoticeData)) {
         foreach ($NoticeData as $notice): ?>
-            <div class="notice-container mb-4">
+            <div class="notice-container">
                 <table class="table table-bordered notice-table">
                     <thead class="table-light">
                         <tr>
@@ -119,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                                                 <img src="<?php echo htmlspecialchars($notice['NoticeFileURL']); ?>" alt="Notice Image" class="img-fluid mb-2" style="max-width: 150px; height: 200px;">
                                             <?php }else{ ?>
                                             <img src="./assets/imgs/shopImage.png" alt="Default Image"
-                                                        class="img-fluid custom-product-image">
+                                                        class="img-fluid custom-product-image" style="max-width: 150px; height: 200px;">
                                             <?php } ?>
                                     </div>
                                 <div class="notice-details">
