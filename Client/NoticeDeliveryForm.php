@@ -96,7 +96,18 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
         }
     }
 
-
+    #cancelIcon {
+        cursor: pointer;
+        color: red;
+        display: none; 
+        font-size: 20px;
+        border: 1px solid red;
+        border-radius: 4px;
+        padding: 4px 8px;
+        transition: all 0.2s ease;
+        margin-left: 10px;
+        margin-top : 6px;
+    }
 </style>
 
 <div class="container-fluid mt-5 mb-5">
@@ -196,11 +207,13 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
                             <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display: none;">
                             <img id="capturedPreviewImg" style="max-width: 100%; display: none; margin-top: 10px;">
                             <input type="hidden" id="capturedImageData" name="capturedImageData">
-                        <div class="filename-container" id="fileNameContainer">
-                            <span id="fileNameText">  
-                                <?php echo htmlspecialchars($noticeData['NoticeFileURL']); ?>
-                            </span>
-                        </div>
+                            <?php if(isset($noticeData['NoticeFileURL']) && $noticeData['NoticeFileURL'] != '') { ?>
+                                <div class="filename-container" id="fileNameContainer">
+                                    <a href="<?php echo htmlspecialchars($noticeData['NoticeFileURL']); ?>" target="_blank" id="fileNameLink">
+                                        <?php echo htmlspecialchars(basename($noticeData['NoticeFileURL'])); ?>
+                                    </a>
+                                </div>
+                            <?php } ?>
                     </div>
                 </div>
             </div>

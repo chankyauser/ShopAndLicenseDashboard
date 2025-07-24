@@ -773,7 +773,5 @@ function ShopNoticeDetails(Shop_Cd){
     });
 }
 
-function ShopNoticeDetailsClose(){
-    
-}
+
 </script>

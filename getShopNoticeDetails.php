@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             COALESCE(sd.DeliveredBy, '') AS DeliveredBy
         FROM ShopNoticeDetails sd
         LEFT JOIN ShopMaster AS sm ON sm.Shop_Cd = sd.Shop_Cd
-        WHERE sd.Shop_Cd = 12";
+        WHERE sd.Shop_Cd = $shopCd";
 
         $NoticeData = $db->ExecutveQueryMultipleRowSALData($Noticequery, $electionName, $developmentMode);
     if (!empty($NoticeData)) {
