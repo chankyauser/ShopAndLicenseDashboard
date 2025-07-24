@@ -62,21 +62,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                                         <?php if (!empty($fileUrl)) { ?>
                                         <?php if (in_array($fileExt, ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) { ?>
                                         <img src="<?php echo htmlspecialchars($fileUrl); ?>" alt="Notice Image"
-                                            class="clickable-image" style="width: 50rem; height: 20rem;"
+                                            class="clickable-image" style="width: 200px; height: 200px;"
                                             onclick="window.open('<?php echo ($fileUrl); ?>', '_blank')">
 
                                         <?php } elseif ($fileExt === 'pdf') { ?>
                                         <i class="fas fa-file-pdf clickable-image"
-                                            style="font-size: 100px; color: red; width: 50rem; height: 20rem; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                                            style="font-size: 200px; color: red; width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; cursor: pointer;"
                                             onclick="window.open('<?php echo htmlspecialchars($fileUrl); ?>', '_blank')"></i>
                                         <?php } else { ?>
                                         <img src="./assets/imgs/noticeImg.png" alt="Default Image"
-                                            class="img-fluid custom-product-image" style="width: 50rem; height: 20rem;">
+                                            class="img-fluid custom-product-image" style="width: 200px; height: 200px;">
                                         <?php } ?>
 
                                         <?php } else { ?>
                                         <img src="./assets/imgs/noticeImg.png" alt="Default Image"
-                                            class="img-fluid custom-product-image" style="width: 50rem; height: 20rem;">
+                                            class="img-fluid custom-product-image" style="width: 200px; height: 200px;">
                                         <?php } ?>
                                     </div>
 
