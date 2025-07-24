@@ -90,9 +90,10 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
         background-color: #f8f9fa;  
         margin-top: 5px;
     }
-   @media (max-width: 576px) {
-        #actionButtons .flex-grow-1 {
-            flex: 0 0 70%;
+  @media (max-width: 576px) {
+    #actionButtons {
+            flex-direction: column !important;
+            gap: 5px;
         }
     }
 
@@ -180,13 +181,27 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="form-group">
                         <label>Upload Notice</label><br>
-                        <button type="button" class="btn btn-sm btn-primary" id="openCameraBtn">📷 Picture</button>
-                        <button type="button" class="btn btn-sm btn-secondary" id="uploadFileBtn">📁 Upload File</button>
-                        <input type="file" name="NoticeFileURL" accept="image/*,.pdf" class="form-control mt-2" id="NoticeFileURL" style="display: none;">
-                        
-                        <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display: none;">
-                        <img id="capturedPreviewImg" style="max-width: 100%; display: none; margin-top: 10px;">
-                        <input type="hidden" id="capturedImageData" name="capturedImageData">
+                        <div class="d-flex gap-2" id="actionButtons">
+                            <button type="button" class="btn btn-sm btn-primary" id="openCameraBtn">
+                                📷 Picture
+                            </button>
+                            <button type="button" class="btn btn-sm btn-secondary" id="uploadFileBtn">
+                                📁 Upload File
+                            </button>
+                        </div>
+                       
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="file" name="NoticeFileURL" accept="image/*,.pdf" class="form-control mt-2" id="NoticeFileURL" style="display: none;">
+                            <span id="cancelIcon" style="cursor: pointer; color: red;display: none;">&#10006;</span>
+                        </div>
+                            <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display: none;">
+                            <img id="capturedPreviewImg" style="max-width: 100%; display: none; margin-top: 10px;">
+                            <input type="hidden" id="capturedImageData" name="capturedImageData">
+                        <div class="filename-container" id="fileNameContainer">
+                            <span id="fileNameText">  
+                                <?php echo htmlspecialchars($noticeData['NoticeFileURL']); ?>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -283,62 +298,32 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
 </div>
 
 
-<!-- <script>
+
+
+
+
+
+<script>
 $(document).ready(function () {
  
-    let video = document.getElementById('videoPreview');
-    let canvas = document.getElementById('canvas');
-    let capturedImage = document.getElementById('capturedImageData');
-    let captureBtn = document.getElementById('capturePhoto');
-    let capturedPreview = document.getElementById('capturedPreviewImg');
-    let fileInput = document.getElementById('NoticeFileURL');
-
    
-    $('#startCamera').on('click', function () {
-        fileInput.value = ''; 
-        $('#NoticeFileURL').hide(); 
-
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    video.srcObject = stream;
-                    video.style.display = 'block';
-                    $('#capturePhoto').show();
-                })
-                .catch(function (err) {
-                    alert("Camera access denied: " + err);
-                });
-        } else {
-            alert("Your browser does not support camera access or this page is not served over HTTPS.");
-        }
-    });
 
    
     $('#uploadFileBtn').on('click', function () {
      
-        if (video.srcObject) {
-            let tracks = video.srcObject.getTracks();
-            tracks.forEach(track => track.stop());
-            video.srcObject = null;
-        }
-
-      
-        $('#startCamera').hide();
+        $('#openCameraBtn').hide();
         $('#uploadFileBtn').hide();
 
       
         $('#NoticeFileURL').show();
         $('#cancelIcon').show();
       
-        $('#videoPreview').hide();
-        $('#capturePhoto').hide();
-        $('#canvas').hide();
         $('#capturedPreviewImg').hide();
         $('#capturedImageData').val('');
     });
 
     $('#cancelIcon').on('click', function () {
-       $('#startCamera').show();
+       $('#openCameraBtn').show();
         $('#uploadFileBtn').show();
 
       
@@ -346,19 +331,6 @@ $(document).ready(function () {
         $('#cancelIcon').hide();
     }); 
  
-    $('#capturePhoto').on('click', function () {
-        let context = canvas.getContext('2d');
-        canvas.style.display = 'block';
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        let imageData = canvas.toDataURL('image/jpeg');
-        $('#capturedImageData').val(imageData);
-
-        $('#capturedPreviewImg').attr('src', imageData).show();
-    });
-
-
-
     function clearErrors() {
         $('.error-message').text('');
     }
@@ -493,223 +465,31 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (res) {
-                if (res.status === 'success') {
-                    $('#successMsg')
-                        .text(operationType === 'update' ? 'Notice updated successfully.' : 'Notice submitted successfully.')
-                        .show();
+                 if (res.status === 'success') {
                     $('#failedMsg').hide();
 
-                   
-                   $('#successMsg')
+                    $('#successMsg')
+                        .hide() 
                         .text(operationType === 'update' ? 'Notice updated successfully.' : 'Notice submitted successfully.')
-                        .fadeIn(300) 
+                        .fadeIn() 
                         .delay(1000) 
-                        .fadeOut(300, function () {
+                        .fadeOut(800, function () {
                             $('#NoticeDeliveryStatusModal').modal('hide');
-
-                            if (typeof refreshNoticeDetails === 'function') {
-                                refreshNoticeDetails();
-                            }
                         });
-                } else {
-                    $('#successMsg').hide();
 
-                    $('#failedMsg')
-                        .text("Failed to " + (operationType === 'update' ? 'update' : 'submit') + " notice.")
-                        .fadeIn(300)
-                        .delay(1000)
-                        .fadeOut(300);
-                }
-            },
-            error: function () {
-                $('#failedMsg').text("AJAX error occurred.").show();
-                $('#successMsg').hide();
-                setTimeout(function () {
-                    $('#failedMsg').fadeOut();
-                }, 800);
-            }
-        });
-    });
-});
-
-</script> -->
-
-<script>
-    function setError(fieldSelector, message) {
-        $(fieldSelector).siblings('.error-message').text(message);
-    }
-
-    $('input, select').on('input change', function () {
-        if ($(this).val().trim() !== '') {
-            $(this).siblings('.error-message').text('');
-        }
-    });
-    document.getElementById('openCameraBtn').addEventListener('click', function () {
-    document.getElementById('cameraInput').click();
-});
-
-document.getElementById('cameraInput').addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            const base64Image = e.target.result;
-            const preview = document.getElementById('capturedPreviewImg');
-            preview.src = base64Image;
-            preview.style.display = 'block';
-            document.getElementById('capturedImageData').value = base64Image;
-        };
-        reader.readAsDataURL(file);
-    }    
-});
-
- function clearErrors() {
-        $('.error-message').text('');
-    }
-
- $('#SubmitBtn').on('click', function () {
-        clearErrors();
-        let isValid = true;
-
-        let callingCategory = $('#Calling_Category_Cd').val().trim();
-        let noticeType = $('#Notice_Type').val().trim();
-        let noticeDate = $('#Notice_date').val().trim();
-        let subject = $('#Subject').val().trim();
-        let description = $('#Description').val().trim();
-        let acknowledgedDate = $('#Acknowledged_Date').val().trim();
-        let deliveredBy = $('#DeliveredBy').val().trim();
-        let Response_Received = $('#Response_Received').val().trim();
-        let status = $('#Status').val().trim();
-
-        if (!callingCategory) {
-            setError('#Calling_Category_Cd', 'Please select Calling Category.');
-            isValid = false;
-        }
-
-        if (!noticeType) {
-            setError('#Notice_Type', 'Please select Notice Type.');
-            isValid = false;
-        }
-
-        if (!noticeDate) {
-            setError('#Notice_date', 'Please enter Notice Date.');
-            isValid = false;
-        } else if (isNaN(Date.parse(noticeDate))) {
-            setError('#Notice_date', 'Notice Date is invalid.');
-            isValid = false;
-        }
-
-        if (!subject) {
-            setError('#Subject', 'Please select Subject.');
-            isValid = false;
-        }
-
-        if (!description) {
-            setError('#Description', 'Please enter Description.');
-            isValid = false;
-        }
-
-        if (acknowledgedDate) {
-            if (isNaN(Date.parse(acknowledgedDate))) {
-                setError('#Acknowledged_Date', 'Acknowledged Date is invalid.');
-                isValid = false;
-            } else if (new Date(acknowledgedDate) < new Date(noticeDate)) {
-                setError('#Acknowledged_Date', 'Acknowledged Date cannot be before Notice Date.');
-                isValid = false;
-            }
-        }else{
-            setError('#Acknowledged_Date', 'Please enter Acknowledged Date.');
-            isValid = false;
-        }
-
-        if (!deliveredBy) {
-            setError('#DeliveredBy', 'Please select Delivered By.');
-            isValid = false;
-        }
-
-        if (!status) {
-            setError('#Status', 'Please select Status.');
-            isValid = false;
-        }
-
-        if (!Response_Received) {
-            setError('#Response_Received', 'Please select Response.');
-            isValid = false;
-        }
-
-        // File validation
-        let fileInput = $('#NoticeFileURL')[0];
-        let file = fileInput.files[0];
-        if (file) {
-            let allowedTypes = ['application/pdf', 'image/png', 'image/jpg', 'image/jpeg'];
-            let maxSize = 5 * 1024 * 1024; // 5MB
-
-            if (!allowedTypes.includes(file.type)) {
-                setError('#NoticeFileURL', 'Invalid file type (PDF, PNG, JPG, JPEG only).');
-                isValid = false;
-            }
-            if (file.size > maxSize) {
-                setError('#NoticeFileURL', 'File size exceeds 5MB.');
-                isValid = false;
-            }
-        }
-
-        if (!isValid) return;
-
-      
-        var formData = new FormData();
-        var operationType = $('[name="operation_type"]').val();
-        var noticeId = $('[name="Notice_Id"]').val();
-
-        formData.append("action", operationType === 'update' ? 'updateNotice' : 'insertNotice');
-        formData.append("Calling_Category_Cd", callingCategory);
-        formData.append("Notice_Type", noticeType);
-        formData.append("Notice_date", noticeDate);
-        formData.append("Subject", subject);
-        formData.append("Description", description);
-        formData.append("NoticeFileURL", file || '');
-        formData.append("capturedImageData", $('#capturedImageData').val());
-        formData.append("Remark", $('[name="Remark"]').val());
-        formData.append("Response_Received", Response_Received);
-        formData.append("Status", status);
-        formData.append("Acknowledged_Date", acknowledgedDate);
-        formData.append("DeliveredBy", deliveredBy);
-        formData.append("Shop_Cd", $('[name="Shop_Cd"]').val());
-
-        if (operationType === 'update' && noticeId) {
-            formData.append("Notice_Id", noticeId);
-        }
-
-        $.ajax({
-            url: 'action/ShopNoticeDeliveryOperation.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (res) {
-                if (res.status === 'success') {
-                    $('#successMsg')
-                        .text(operationType === 'update' ? 'Notice updated successfully.' : 'Notice submitted successfully.')
-                        .show();
-                    $('#failedMsg').hide();
-
-                    $('#NoticeDeliveryStatusModal').modal('hide');
                     if (typeof refreshNoticeDetails === 'function') {
                         refreshNoticeDetails();
                     }
 
-                    setTimeout(function () {
-                        $('#successMsg').fadeOut();
-                    }, 5000);
                 } else {
-                    $('#failedMsg')
-                        .text("Failed to " + (operationType === 'update' ? 'update' : 'submit') + " notice.")
-                        .show();
                     $('#successMsg').hide();
 
-                    setTimeout(function () {
-                        $('#failedMsg').fadeOut();
-                    }, 5000);
+                    $('#failedMsg')
+                        .hide()
+                        .text("Failed to " + (operationType === 'update' ? 'update' : 'submit') + " notice.")
+                        .fadeIn()
+                        .delay(1000)
+                        .fadeOut(800);
                 }
             },
             error: function () {
@@ -721,5 +501,44 @@ document.getElementById('cameraInput').addEventListener('change', function (even
             }
         });
     });
+
+    document.getElementById('cameraInput').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64Image = e.target.result;
+                const preview = document.getElementById('capturedPreviewImg');
+                preview.src = base64Image;
+                preview.style.display = 'block';
+                document.getElementById('capturedImageData').value = base64Image;
+            };
+            reader.readAsDataURL(file);
+        }    
+    });
+
+});
+    function setError(fieldSelector, message) {
+        $(fieldSelector).siblings('.error-message').text(message);
+    }
+
+    $('input, select').on('input change', function () {
+        if ($(this).val().trim() !== '') {
+            $(this).siblings('.error-message').text('');
+        }
+    });
+    document.getElementById('openCameraBtn').addEventListener('click', function () {
+    document.getElementById('cameraInput').click();
+
+
+
+});
+
+
+ function clearErrors() {
+        $('.error-message').text('');
+    }
+
+ 
 </script>
 
