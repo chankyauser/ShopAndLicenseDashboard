@@ -523,26 +523,15 @@ function editNotice(noticeId) {
     $('#NoticeDetailModal').modal('hide');
 }
 
-// function refreshNoticeDetails() {
-//     if ($('#NoticeDetailModal').hasClass('show')) {
-//         var shopCd = $('#NoticeDetailModal').data('shop-cd');
 
-//         if (shopCd) {
-//             ShopNoticeDetails(shopCd);
-//         }
-//     }
-// }
 
 function refreshNoticeDetails() {
     if ($('#NoticeDetailModal').hasClass('show')) {
         var shopCd = $('#NoticeDetailModal').data('shop-cd');
 
-        if (shopCd) {
-            // Show a loading indicator before making the request
+        if (shopCd) {            
             $('#NoticeModalBody').html(
                 '<div class="text-center p-5"><div class="spinner-border text-danger"></div></div>');
-
-            // Call ShopNoticeDetails to refresh content
             ShopNoticeDetails(shopCd);
         }
     }
