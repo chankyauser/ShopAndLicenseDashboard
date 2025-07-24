@@ -157,8 +157,7 @@ a[data-tooltip]:hover::before {
                         <label>Shop Name</label>
                         <input type="text" class="form-control" name="ShopName" id="ShopName"
                             value="<?php if(isset($_SESSION['SAL_Shop_Name']) && !empty($_SESSION['SAL_Shop_Name']) && $_SESSION['SAL_Shop_Name'] != 'All' && $_SESSION['SAL_Shop_Name'] != 'undefined'){ echo $_SESSION['SAL_Shop_Name']; } ?>"
-                            placeholder="Shop name (min 3 letters)" style="border: 1px solid #F01954;"
-                            onkeyup="if(this.value.trim().length >= 3 || this.value.trim().length === 0) setShopOwnerDetailFilter(1);">
+                            placeholder="Please Enter Shop name " style="border: 1px solid #F01954;">
                     </div>
                 </div>
 
@@ -167,8 +166,7 @@ a[data-tooltip]:hover::before {
                         <label>Shop Owner Name</label>
                         <input type="text" class="form-control" name="OwnerName" id="OwnerName"
                             value="<?php if(isset($_SESSION['SAL_search_Owner_Name']) && !empty($_SESSION['SAL_search_Owner_Name']) && $_SESSION['SAL_search_Owner_Name'] != 'undefined'){ echo $_SESSION['SAL_search_Owner_Name']; } ?>"
-                            placeholder="Owner name (min 3 letters)" style="border: 1px solid #F01954;"
-                            onkeyup="if(this.value.trim().length >= 3 || this.value.trim().length === 0) setShopOwnerDetailFilter(1);">
+                            placeholder="Please Enter Owner name " style="border: 1px solid #F01954;">
                     </div>
                 </div>
 
@@ -230,7 +228,7 @@ a[data-tooltip]:hover::before {
                                                 }else{
                                             ?>
                                             <img class="default-img" src="../assets/imgs/shopImage.png" alt=""
-                                                width="100%" height="100" />
+                                                width="100%" height="150" />
                                             <?php
                                                 }
                                             ?>
@@ -243,22 +241,17 @@ a[data-tooltip]:hover::before {
                         <div class="col-12 col-xl-10">
                             <div class="product-cart-wrap">
                                 <div class="product-content-wrap">
-                                    <h2><?php echo $shopData["ShopName"]; ?></h2>
-                                    <div class="shop-info-row">
-                                        <div class="shop-tags">
-                                            <span
-                                                class="shop-badges bg-brand"><?php echo $shopData["BusinessCatName"]; ?></span>
-                                            <span
-                                                class="shop-badges bg-brand"><?php echo $shopData["ShopAreaName"]; ?></span>
-                                            <span
-                                                class="shop-badges bg-brand"><?php echo $shopData["ShopCategory"]; ?></span>
-                                        </div>
-                                        <div class="d-flex gap-3 mt-auto p-2">
-                                            <a data-tooltip="Shop Owner Details" style="margin-right: 12px;"
-                                                target="_blank"
-                                                onclick="redirectPage(<?php echo $shopData['ShopKeeperMobile']; ?>)">
-                                                <!-- <i class="fas fa-user text-primary icon-action"
-                                                    onclick="redirectPage(< ?php echo $shopData['ShopKeeperMobile']; ?>)"></i> -->
+                                    <div class="d-flex justify-content-between align-items-center p-2">
+                                        <!-- Shop Title -->
+                                        <h2 class="mb-0"><?php echo $shopData["ShopName"]; ?></h2>
+
+                                        <!-- Icons Section -->
+                                        <div class="d-flex align-items-center gap-3">
+                                            <!-- Shop Owner Details Icon -->
+                                            <a data-tooltip="Shop Owner Details"
+                                                onclick="redirectPage(<?php echo $shopData['ShopKeeperMobile']; ?>)"
+                                                target="_blank" class="d-inline-flex align-items-center"
+                                                style="cursor: pointer;">
                                                 <svg width="32px" height="32px" viewBox="0 0 1024 1024" class="icon"
                                                     version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000">
                                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -326,10 +319,12 @@ a[data-tooltip]:hover::before {
                                                 </svg>
                                             </a>
 
-                                            <a data-tooltip="Update Delivery Status" style="margin-right: 12px;"
-                                                onclick="DeliveryStatus(<?php echo $shopData['Shop_Cd']; ?>)">
-                                                <!-- <i class="fas fa-truck-loading text-success icon-action"
-                                                    onclick="DeliveryStatus(< ?php echo $shopData['Shop_Cd']; ?>)"></i> -->
+                                            
+
+                                            <!-- Update Delivery Status Icon -->
+                                            <a data-tooltip="Update Delivery Status"
+                                                onclick="DeliveryStatus(<?php echo $shopData['Shop_Cd']; ?>)"
+                                                class="d-inline-flex align-items-center" style="cursor: pointer;">
                                                 <svg width="32px" height="32px" viewBox="0 0 32 32"
                                                     xmlns="http://www.w3.org/2000/svg" fill="#000000">
                                                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -366,12 +361,33 @@ a[data-tooltip]:hover::before {
                                                 </svg>
                                             </a>
 
-                                            <a data-tooltip="View Notice" style="margin-right: 12px;">
-                                                <i class="fas fa-eye text-warning icon-action"
-                                                    onclick="ShopNoticeDetails(<?php echo $shopData['Shop_Cd']; ?>)"></i>
+                                            <!-- View Notice Icon -->
+                                            <a data-tooltip="View Notice"
+                                                onclick="ShopNoticeDetails(<?php echo $shopData['Shop_Cd']; ?>)"
+                                                class="d-inline-flex align-items-center" style="cursor: pointer;">
+                                                <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg" stroke="#ca4360ff">
+                                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                        stroke-linejoin="round"></g>
+                                                    <g id="SVGRepo_iconCarrier">
+                                                        <circle cx="12" cy="12" r="4" fill=""></circle>
+                                                        <path d="M21 12C21 12 20 4 12 4C4 4 3 12 3 12" stroke=""
+                                                            stroke-width="2"></path>
+                                                    </g>
+                                                </svg>
                                             </a>
                                         </div>
-
+                                    </div>
+                                    <div class="shop-info-row">
+                                        <div class="shop-tags">
+                                            <span
+                                                class="shop-badges bg-brand"><?php echo $shopData["BusinessCatName"]; ?></span>
+                                            <span
+                                                class="shop-badges bg-brand"><?php echo $shopData["ShopAreaName"]; ?></span>
+                                            <span
+                                                class="shop-badges bg-brand"><?php echo $shopData["ShopCategory"]; ?></span>
+                                        </div>
                                     </div>
 
                                     <h5 class="title-detail"><i class="fi-rs-smartphone"></i>
@@ -433,11 +449,27 @@ a[data-tooltip]:hover::before {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    let debounceTimer;
+     let debounceTimer1;
 $(document).ready(function() {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
     tooltipTriggerList.forEach(el => {
         new bootstrap.Tooltip(el);
     });
+});
+
+$(document).on('keyup', '#OwnerName', function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(function () {
+        setShopOwnerDetailFilter(1);
+    }, 600);
+});
+
+$(document).on('keyup', '#ShopName', function () {
+    clearTimeout(debounceTimer1);
+    debounceTimer1 = setTimeout(function () {
+        setShopOwnerDetailFilter(1);
+    }, 600);
 });
 
 function redirectPage(ShopKeeperMobile) {
@@ -529,7 +561,7 @@ function refreshNoticeDetails() {
     if ($('#NoticeDetailModal').hasClass('show')) {
         var shopCd = $('#NoticeDetailModal').data('shop-cd');
 
-        if (shopCd) {            
+        if (shopCd) {
             $('#NoticeModalBody').html(
                 '<div class="text-center p-5"><div class="spinner-border text-danger"></div></div>');
             ShopNoticeDetails(shopCd);
