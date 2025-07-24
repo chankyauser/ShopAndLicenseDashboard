@@ -113,6 +113,7 @@ function fetchData()
                             sb.BillingDate,
                             td.Transaction_Cd, 
                             td.TransNumber,
+                            td.paymentMode,
                             COALESCE(CONVERT(VARCHAR, td.TranDateTime, 105), '') AS TranDateTime,
                             CONVERT(VARCHAR(20), sb.BillAmount, 1) AS BillAmount,
                             CONVERT(VARCHAR(20), td.Amount, 1) AS Amount,
@@ -122,7 +123,7 @@ function fetchData()
                             ISNULL(td.ConfirmationStatus, '') AS ConfirmationStatus,
                             ISNULL(td.HoldReason, '') AS HoldReason,
                             ISNULL(td.ConfirmationUpdatedBy, '') AS ConfirmationUpdatedBy,
-                            ISNULL(CONVERT(VARCHAR, td.ConfirmationUpdatedDate, 105), '') AS ConfirmationUpdatedDate
+                            ISNULL(FORMAT(CONVERT(datetime, td.ConfirmationUpdatedDate, 103), 'dd MMM yyyy hh:mmtt'), '') AS ConfirmationUpdatedDate
                         FROM ShopBilling sb
                         INNER JOIN TransactionDetails td 
                             ON td.Billing_Cd = sb.Billing_Cd AND td.paymentStatus = 'SUCCESS'
