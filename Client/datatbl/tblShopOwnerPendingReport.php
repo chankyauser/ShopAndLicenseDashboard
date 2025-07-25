@@ -24,6 +24,13 @@
     border-radius: 2px;
     padding: 0;
 }
+
+.badge-danger {
+    background-color: #e74c3c;
+}
+.badge-warning {
+    background-color: #f39c12;
+}
 </style>
 <div class="container mt-10 mb-2">
     <div class="card">
@@ -109,8 +116,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">SR NO</th>
-                                        <th class="text-left">Node Name</th>
-                                        <th class="text-left">Ward Name</th>
+                                        <th class="text-left">Node / Ward</th>
+                                        <!-- <th class="text-left">Ward Name</th> -->
                                         <th class="text-left">Shop Owner </th>
                                         <th class="text-left">Shop Details</th>
                                         <th class="text-right">Bill Count</th>
@@ -281,31 +288,33 @@ $(document).ready(function() {
             {
                 data: null,
                 render: function(data) {
-                    return `${data.NodeName}`;
+                    return `Node : <strong>${data.NodeName}</strong> <br> Ward : <strong>${data.Area}</strong>`;
                 },
                 orderable: false,
                 className: 'text-left'
             },
-            {
-                data: null,
-                render: function(data) {
-                    return `${data.Area}`;
-                },
-                orderable: false,
-                className: 'text-left'
-
-            },
-            {
+           {
                 data: null,
                 render: function(data) {
                     return `<strong>${data.ShopOwnerName}</strong><br><small>${data.ShopOwnerMobile}</small>`;
                 },
                 orderable: false
             },
-            {
+           {
                 data: null,
                 render: function(data) {
-                    return `Shop Name: <strong>${data.ShopName}</strong><br>Shop No: <small>${data.Shop_UID}</small>`;
+                    const shopName = data.ShopName || '';
+                    const shopUID = data.Shop_UID;
+                    const Shop_Cd = data.Shop_Cd || '';
+
+                    let output =
+                        `Shop No : <strong>${Shop_Cd}</strong> <br> Shop Name: <strong>${shopName}</strong>`;
+
+                    if (shopUID) {
+                        output += `<br>Shop UID: <strong>${shopUID}</strong>`;
+                    }
+
+                    return output;
                 },
                 orderable: false
             },
@@ -322,7 +331,7 @@ $(document).ready(function() {
             {
                 data: null,
                 render: function(data) {
-                    return `<strong>${data.Amount}</strong>`;
+                    return `<strong>₹ ${data.Amount}</strong>`;
                 },
                 orderable: false,
                 className: 'text-right'
@@ -353,23 +362,29 @@ $(document).ready(function() {
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Sr.No</th>
-                        <th>Bill No</th>
-                        <th>Bill Date</th>
-                        <th>Payment Status</th> 
-                        <th>Amount</th>
-                        <th>License Period</th>
+                        <th class="text-center">Sr.No</th>
+                        <th class="text-left">Bill No</th>
+                        <th class="text-left">Bill Date</th>
+                        <th class="text-center">Payment Status</th> 
+                        <th class="text-end">Amount</th>
+                        <th class="text-left">License Period</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${billDetailsArray.map((bill, index) => `
                         <tr>
-                            <td>${index + 1}</td>
-                            <td>${bill.BillNo || ''}</td>
-                            <td>${bill.BillingDate || ''}</td>
-                            <td>${bill.PaymentStatus || 'Cancelled'}</td>
-                            <td>₹${parseFloat(bill.Amount || 0).toFixed(2)}</td>
-                            <td>${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
+                            <td class="text-center">${index + 1}</td>
+                            <td class="text-left">${bill.BillNo || ''}</td>
+                            <td class="text-left">${bill.BillingDate || ''}</td>
+                            <td class="text-center">  
+                                <span class="badge 
+                                    ${bill.paymentStatus === 'Failed' ? 'badge-danger' : 
+                                    'badge-warning'}">
+                                    ${bill.paymentStatus  || 'Cancelled'}
+                                </span> 
+                            </td>
+                            <td class="text-end"><span style="font-weight: 700">₹${parseFloat(bill.Amount || 0).toFixed(2)}</span></td>
+                            <td class="text-left">${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
                         </tr>
                     `).join('')}
                 </tbody>

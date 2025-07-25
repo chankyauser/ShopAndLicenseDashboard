@@ -1463,9 +1463,9 @@ function SubmitDocumentForm(form_id) {
             success: function(response) {
                 var data = JSON.parse(response);
                 if (data.status == 200) {
-                    if(updateShop !== 1){
-                        sendApplicationMail(Shop_Cd);
-                    }
+                    // if(updateShop !== 1){
+                    //     sendApplicationMail(Shop_Cd);
+                    // }
                     $(`#${form_id} #submitmsgsuccess`).html(data.message)
                         .hide().fadeIn(800, function() {
                             $("submitmsgsuccess").append("");
