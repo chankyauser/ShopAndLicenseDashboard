@@ -142,8 +142,6 @@
             $y += 20;
             imagettftext($image, 12, 0, $x, $y, $black, $fontRegular, "Digitally Signed by");
 
-            
-
             $checkmarkFontSize = 90;
             $bbox = imagettfbbox($checkmarkFontSize, 0, $fontWithTick, "✓");
             $tickWidth = $bbox[2] - $bbox[0];
