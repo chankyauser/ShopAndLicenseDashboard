@@ -139,17 +139,17 @@
 
             imagettftext($image, 12, 0, $x, $y, $black, $fontRegular, "Signature Valid");
 
-            $y += 20;
-            imagettftext($image, 12, 0, $x, $y, $black, $fontRegular, "Digitally Signed by");
-
             $checkmarkFontSize = 90;
             $bbox = imagettfbbox($checkmarkFontSize, 0, $fontWithTick, "✓");
             $tickWidth = $bbox[2] - $bbox[0];
             $tickHeight = abs($bbox[5] - $bbox[1]);
 
             $tickX = (($width - $tickWidth) / 2) - 75;
-            $tickY = ($y + $tickHeight) +5; 
+            $tickY = ($y + $tickHeight) + 15; 
             imagettftext($image, $checkmarkFontSize, 0, $tickX, $tickY, $green, $fontWithTick, "✓");
+
+             $y += 20;
+            imagettftext($image, 12, 0, $x, $y, $black, $fontRegular, "Digitally Signed by");
 
             $y += 25;  
             imagettftext($image, 12, 0, $x, $y, $black, $fontRegular, "$signerName");
@@ -728,7 +728,7 @@ function acknowledgementPrinting() {
                 body {
                     -webkit-print-color-adjust: exact !important;
                     print-color-adjust: exact !important;
-                    zoom: 0.9; /* Try 0.85 or 0.8 if still going to 2 pages */
+                    zoom: 0.9; 
                 }
 
                 header {
