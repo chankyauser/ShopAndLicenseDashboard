@@ -79,7 +79,7 @@ if ($_POST['action'] === 'insertNotice') {
     }
 
 
-    $insertSQL = "INSERT INTO Aurangabad_ShopAndLicense..ShopNoticeDetails (
+    $insertSQL = "INSERT INTO ShopNoticeDetails (
         Calling_Category_Cd, Shop_Cd, Notice_Date, Notice_Type, Subject, Description,
         NoticeFileURL, Remark, Response_Received, Status, IsActive,
         Acknowledged_Date, AddedBy, AddedDate, DeliveredBy, DeliveredDate
@@ -176,7 +176,7 @@ if ($_POST['action'] === 'updateNotice') {
         }
     }
 
-    $updateSQL = "UPDATE Aurangabad_ShopAndLicense..ShopNoticeDetails SET
+    $updateSQL = "UPDATE ShopNoticeDetails SET
         Calling_Category_Cd = $Calling_Category_Cd,
         Shop_Cd = $Shop_Cd,
         Notice_Date = '$Notice_date',
