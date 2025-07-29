@@ -66,6 +66,8 @@
             $nodeCd = "All";
         }
         
+        $callingCategoryCd = '';
+        
         if(isset($_SESSION['SAL_Calling_Category_Cd'])){
             $callingCategoryCd = $_SESSION['SAL_Calling_Category_Cd'];
         }
@@ -140,8 +142,10 @@
                                                  value="QCDocumentPending">QC - Document Pending</option>
                                              <?php if(isset($_SESSION['SAL_UserType']) && !empty($_SESSION['SAL_UserType']) && ( $_SESSION['SAL_UserType']== 'Admin' ) && ( $_SESSION['SAL_ElectionName']== 'PCMC' ) ){ ?>
 
-
                                              <?php } ?>
+                                             <option
+                                                 <?php echo $shopAssignFilterType == 'NoticeDistribution' ? 'selected' : '' ; ?>
+                                                 value="NoticeDistribution">Notice Distribution</option>
                                          </select>
                                      </div>
                                  </div>
@@ -558,7 +562,7 @@
                                                 ?>
 
                                      <?php } ?>
-                                     <?php } ?>
+                                     <?php }?>
                                  </div>
                              </div>
                              <input type="hidden" class="form-control" name="pocketsCount" value="" disabled>
@@ -886,7 +890,36 @@
                 // echo $query3; exit;
                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
             }
-        }
+        }else if($shopAssignFilterType == "NoticeDistribution"){
+            if($callingType=="Notice"){
+                if($nodeCd == 'All'){
+                    $nodeWardCondition1 = " AND nm.Node_Cd <> '' ";
+                }else{
+                    $nodeWardCondition1 = " AND nm.Node_Cd = $nodeCd ";
+                }
+
+                $query3 ="SELECT ISNULL(sm.Ward_No, 0) AS Ward_No,
+                            ISNULL(nm.NodeName, '') AS NodeName,
+                            ISNULL(pm.Pocket_Cd, 0) AS Pocket_Cd,
+                            ISNULL(pm.PocketName, '') AS PocketName,
+                            COUNT(DISTINCT sm.Shop_Cd) AS ShopCount,
+                            ISNULL(STRING_AGG(CAST(sm.Shop_Cd AS VARCHAR), ','), '') AS ShopCdList,
+                            -- COUNT(DISTINCT CASE WHEN sd.Shop_Cd IS NOT NULL AND st.Shop_Cd IS NULL THEN sm.Shop_Cd  END) AS AP_Count,
+                            COUNT(DISTINCT CASE WHEN st.Shop_Cd IS NOT NULL AND st.ST_Exec_Cd IS NULL AND st.ST_DateTime IS NULL AND st.ST_StageName IS NULL THEN sm.Shop_Cd END) AS AP_Count,
+                            COUNT(DISTINCT  CASE WHEN sd.Shop_Cd IS NULL THEN sm.Shop_Cd END) AS P_COUNT
+                        FROM ShopMaster sm
+                        LEFT JOIN PocketMaster pm ON pm.Pocket_Cd = sm.Pocket_Cd
+                        INNER JOIN NodeMaster nm ON nm.Ward_No = sm.Ward_No
+                        LEFT JOIN ScheduleDetails sd ON sd.Shop_Cd = sm.Shop_Cd AND sd.IsActive = 1
+                        LEFT JOIN ShopTracking st ON st.Shop_Cd = sd.Shop_Cd AND st.ST_Exec_Cd IS NULL AND st.ST_DateTime IS NULL AND st.ST_StageName IS NULL 
+                        WHERE sm.IsActive = 1 
+                        $nodeNameCondition
+                        $nodeWardCondition1
+                        GROUP BY pm.PocketName, pm.Pocket_Cd, nm.NodeName, sm.Ward_No
+                        ORDER BY pm.PocketName";
+                 $dataSurveyAssignSummary = $db3->ExecutveQueryMultipleRowSALData($query3, $electionName, $developmentMode);
+            }
+        }                                   
 
     ?>
 
@@ -915,26 +948,34 @@
                                          <th>Zone Office</th>
                                          <th>Shops</th>
                                          <?php 
-                                           // if($callingType != "Calling"){
+                                           if($callingType == "Notice"){
                                         ?>
-                                         <!-- <th>Action</th> -->
+                                         <th>Assigned Pending Shops</th>
+                                         <th>Pending Shops</th>
                                          <?php
-                                          //  }
+                                           }
                                         ?>
                                      </tr>
                                  </thead>
                                  <tbody>
                                      <?php 
                                         $totalShops = 0;
+                                        $totalAPShops = 0;
+                                        $totalPS = 0;
+
                                         // echo "<pre>"; print_r($dataSurveyAssignSummary);exit;
                                         foreach ($dataSurveyAssignSummary as $key => $value) {
                                             $totalShops = $totalShops + $value["ShopCount"];
+                                            if($callingType == "Notice"){
+                                                $totalAPShops = $totalAPShops + $value["AP_Count"];
+                                                $totalPS = $totalPS + $value["P_COUNT"];
+                                            }
                                     ?>
                                      <tr>
                                          <td>
                                              <div class="vs-checkbox-con vs-checkbox-primary">
                                                  <input type="checkbox"
-                                                     value="<?php echo $value["Pocket_Cd"]; ?>,<?php echo $value["ShopCount"]; ?>"
+                                                     value="<?php if($callingType == 'Notice'){ echo $value["ShopCdList"]; ?>, <?php echo $value["ShopCount"]; }else { echo $value["Pocket_Cd"]; ?>,<?php echo $value["ShopCount"];} ?>"
                                                      name="assignPockets" onclick="setSelectMultiplePockets()">
                                                  <span class="vs-checkbox">
                                                      <span class="vs-checkbox--check">
@@ -947,15 +988,11 @@
                                          <td><?php echo "W-".$value["Ward_No"]; ?></td>
                                          <td><?php echo $value["NodeName"]; ?></td>
                                          <td><?php echo $value["ShopCount"]; ?></td>
-                                         <?php 
-                                                //if($callingType != "Calling"){
-                                            ?>
-                                         <!-- <td>
-                                                    <a href="home.php?p=shops-assign-list&assignDate=<?php echo $assign_date; ?>&pocktCd=<?php echo $value["Pocket_Cd"]; ?>&action=assign" ><i class="feather icon-layers" style="font-size: 1.5rem;color:#c90d41;" title="Assign Shops"></i></a>
-                                                </td> -->
-                                         <?php
-                                                //}
-                                            ?>
+                                         <?php if($callingType == "Notice"){ ?>
+                                         <td> <?php echo $value["AP_Count"]; ?> </td>
+                                         <td> <?php echo $value["P_COUNT"]; ?> </td>
+                                         <?php } ?>
+
                                      </tr>
 
                                      <?php
@@ -966,6 +1003,10 @@
                                      <tr>
                                          <th colspan="4"></th>
                                          <th><?php echo $totalShops; ?></th>
+                                         <?php if($callingType == "Notice"){ ?>
+                                         <td> <?php echo $totalAPShops; ?> </td>
+                                         <td> <?php echo $totalPS; ?> </td>
+                                         <?php } ?>
                                          <!-- <th colspan="1"></th> -->
                                  </tfoot>
                              </table>
@@ -997,43 +1038,50 @@
                         GROUP BY CPExecutive_Cd";
         }
 
-        $query4 = "SELECT
-                    a.Executive_Cd,em.ExecutiveName,
-                    em.MobileNo, lm.User_Type,
-                    COUNT(DISTINCT(a.Pocket_Cd)) as PocketCount,
-                    COUNT(DISTINCT(a.Shop_Cd)) as ShopCount,
-                    COUNT(DISTINCT(a.ST_StatusPocket)) as PocketsCompleted,
-                    COUNT(DISTINCT(a.ST_StatusShop)) as ShopsCompleted,
-                    ISNULL(CONVERT(VARCHAR,MAX(a.ST_DateTime),121),'') as LastActiveTime
-                FROM
-                (
-                    SELECT 
-                        t.Executive_Cd,
-                        st.AssignDate,
-                        st.ScheduleCall_Cd,
-                        st.Shop_Cd,
-                        st.Calling_Category_Cd, st.ST_DateTime,
-                        CASE WHEN st.ST_Status = 1 then st.Shop_Cd ELSE NULL END as ST_StatusShop,
-                        CASE WHEN st.ST_Status = 1 then sm.Pocket_Cd ELSE NULL END as ST_StatusPocket,
-                    sm.Pocket_Cd
-                    FROM(
-                        $assignExecutives
-                    ) as t,
-                    ShopTracking st, ScheduleDetails sd,
-                    ShopMaster sm, PocketMaster pm 
-                    WHERE CONVERT(VARCHAR,st.AssignDate,23) = '$assign_date'
-                    AND st.AssignExec_Cd = t.Executive_Cd
-                    AND st.Calling_Category_Cd in ( SELECT Calling_Category_Cd FROM CallingCategoryMaster WHERE Calling_Type = '$callingType' )
-                    AND sd.ScheduleCall_Cd = st.ScheduleCall_Cd
-                    AND sm.Shop_Cd = st.Shop_Cd
-                    AND pm.Pocket_Cd = sm.Pocket_Cd
-                   
-                    AND sm.IsActive = 1
-                ) a
-                INNER JOIN Survey_Entry_Data..Executive_Master em on em.Executive_Cd = a.Executive_Cd
-                INNER JOIN LoginMaster lm on lm.Executive_Cd = a.Executive_Cd
-                GROUP BY a.Executive_Cd,em.ExecutiveName, em.MobileNo, lm.User_Type";
-        $dataAssignExeSummary = $db3->ExecutveQueryMultipleRowSALData($query4, $electionName, $developmentMode);
+        if($callingType !=='Notice'){
+          
+            $query4 = "SELECT
+                                a.Executive_Cd,em.ExecutiveName,
+                                em.MobileNo, lm.User_Type,
+                                COUNT(DISTINCT(a.Pocket_Cd)) as PocketCount,
+                                COUNT(DISTINCT(a.Shop_Cd)) as ShopCount,
+                                COUNT(DISTINCT(a.ST_StatusPocket)) as PocketsCompleted,
+                                COUNT(DISTINCT(a.ST_StatusShop)) as ShopsCompleted,
+                                ISNULL(CONVERT(VARCHAR,MAX(a.ST_DateTime),121),'') as LastActiveTime
+                            FROM
+                            (
+                                SELECT 
+                                    t.Executive_Cd,
+                                    st.AssignDate,
+                                    st.ScheduleCall_Cd,
+                                    st.Shop_Cd,
+                                    st.Calling_Category_Cd, st.ST_DateTime,
+                                    CASE WHEN st.ST_Status = 1 then st.Shop_Cd ELSE NULL END as ST_StatusShop,
+                                    CASE WHEN st.ST_Status = 1 then sm.Pocket_Cd ELSE NULL END as ST_StatusPocket,
+                                sm.Pocket_Cd
+                                FROM(
+                                    $assignExecutives
+                                ) as t,
+                                ShopTracking st, ScheduleDetails sd,
+                                ShopMaster sm, PocketMaster pm 
+                                WHERE CONVERT(VARCHAR,st.AssignDate,23) = '$assign_date'
+                                AND st.AssignExec_Cd = t.Executive_Cd
+                                AND st.Calling_Category_Cd in ( SELECT Calling_Category_Cd FROM CallingCategoryMaster WHERE Calling_Type = '$callingType' )
+                                AND sd.ScheduleCall_Cd = st.ScheduleCall_Cd
+                                AND sm.Shop_Cd = st.Shop_Cd
+                                AND pm.Pocket_Cd = sm.Pocket_Cd
+                            
+                                AND sm.IsActive = 1
+                            ) a
+                            INNER JOIN Survey_Entry_Data..Executive_Master em on em.Executive_Cd = a.Executive_Cd
+                            INNER JOIN LoginMaster lm on lm.Executive_Cd = a.Executive_Cd
+                            GROUP BY a.Executive_Cd,em.ExecutiveName, em.MobileNo, lm.User_Type";
+                            
+            $dataAssignExeSummary = $db3->ExecutveQueryMultipleRowSALData($query4, $electionName, $developmentMode);
+        }
+
+        
+       
 
         // if($shopAssignFilterType == "New"){
         //     $query4 = "SELECT
