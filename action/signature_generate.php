@@ -58,7 +58,7 @@
             $y += 25;  
             imagettftext($image, 12, 0, $x, $y, $black, $fontRegular, "Date: $timestamp");
 
-            $outputPath = '../Signature/CSMC_Signature.png';
+            $outputPath = "../Signature/CSMC_Signature".$BillNo.".png";
             imagepng($image, $outputPath);
 
             imagedestroy($image);

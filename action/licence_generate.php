@@ -97,7 +97,7 @@
 
     // Signature 
     $cerFile = '../Signature/CSMC_Shop_License_Signatures.cer';
-    $SignPath = '../Signature/CSMC_Signature.png';  
+    $SignPath = "../Signature/CSMC_Signature_".$BillNo.".png";  
 
     if(!file_exists($SignPath)){
         include('signature_generate.php');
