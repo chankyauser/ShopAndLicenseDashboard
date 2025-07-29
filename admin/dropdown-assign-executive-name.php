@@ -1,11 +1,11 @@
 <!-- <div class="col-sm-12"> -->
     <?php 
         if($callingType == 'Survey'){
-            $userTypeCondition = " lm.User_Type like '%Executive%' ";       
+            $userTypeCondition = " WHERE lm.User_Type like '%Executive%' ";       
         }else if($callingType == 'Calling'){
-            $userTypeCondition = " lm.User_Type like '%Calling%' ";       
+            $userTypeCondition = " WHERE lm.User_Type like '%Calling%' ";       
         }else if($callingType == 'Collection'){
-            $userTypeCondition = " lm.User_Type like '%Collection%' ";       
+            $userTypeCondition = " WHERE lm.User_Type like '%Collection%' ";       
         }else{
             $userTypeCondition = " ";
         }
@@ -17,7 +17,7 @@
             ISNULL(em.MobileNo,'')  as MobileNo
             FROM LoginMaster lm
             INNER JOIN Survey_Entry_Data..Executive_Master em on em.Executive_Cd = lm.Executive_Cd
-            WHERE $userTypeCondition
+            $userTypeCondition
             GROUP BY lm.Executive_Cd, em.ExecutiveName, em.MobileNo
             ";
             // echo $query1;

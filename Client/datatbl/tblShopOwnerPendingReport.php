@@ -377,11 +377,12 @@ $(document).ready(function() {
                             <td class="text-left">${bill.BillNo || ''}</td>
                             <td class="text-left">${bill.BillingDate || ''}</td>
                             <td class="text-center">  
-                                <span class="badge 
-                                    ${bill.paymentStatus === 'Failed' ? 'badge-danger' : 
-                                    'badge-warning'}">
-                                    ${bill.paymentStatus  || 'Cancelled'}
-                                </span> 
+                               <span class="badge 
+                                ${bill.paymentStatus?.toLowerCase() === 'failed' ? 'badge-danger' : 'badge-warning'}">
+                                ${bill.paymentStatus 
+                                    ? bill.paymentStatus.charAt(0).toUpperCase() + bill.paymentStatus.slice(1).toLowerCase() 
+                                    : 'Cancelled'}
+                                </span>
                             </td>
                             <td class="text-end"><span style="font-weight: 700">₹${parseFloat(bill.Amount || 0).toFixed(2)}</span></td>
                             <td class="text-left">${bill.LicenseStartDate || ''} to ${bill.LicenseEndDate || ''}</td>
