@@ -595,6 +595,7 @@ $(document).ready(function() {
             success: function(response) {
                 var data = response;
                 if (data.status === 'success') {
+                    LicenseConfirmationMail(selectedTranscds);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -653,5 +654,22 @@ $('#clearFilter').click(function() {
     $('#shopTable').DataTable().ajax.reload();
 
 });
+
+function LicenseConfirmationMail(transactionIds){
+
+     $.each(transactionIds, function(index, transactionId) {
+        $.ajax({
+            url: "../mail_files/sendApplicationMail.php",
+            type: "POST",
+            data: {
+                transID: transactionId,
+                operation: 'licenseIssued'
+            },
+            success: function(response) {
+                console.log(response)
+            }
+        });
+    });
+}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

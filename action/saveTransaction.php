@@ -140,23 +140,44 @@ if (isset($json) && !empty($json)) {
         $QRKey = trim($QRKey);
 
         $fileName = 'QR_' . $billingId . '.png';
-        $QRDataURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/action/LicenseQR.php?QRKey=' . urlencode($QRKey);
+        // $QRDataURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/action/LicenseQR.php?QRKey=' . urlencode($QRKey);
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+
+        $QRDataURL = $protocol . '://' . $host . '/ShopAndLicenseDashboard/action/LicenseQR.php?QRKey=' . urlencode($QRKey);
 
         $Path = '../../app-assets/qrcodes/' . $fileName;
 
         QRcode::png($QRDataURL, $Path, QR_ECLEVEL_L, 10);
-        $QRImageURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/app-assets/qrcodes/' . $fileName;
+        $QRImageURL = $protocol . '://' . $host . '/ShopAndLicenseDashboard/app-assets/qrcodes/' . $fileName;
 
         $UpdateQuery = "UPDATE ShopBilling SET QRCode_URL = '$QRImageURL', QRCode_Key = '$QRKey' WHERE Billing_Cd = $billingId";
         $UpdateDB = new DBOperation();
         $result = $UpdateDB->RunQuerySALData($UpdateQuery, $electionName, $developmentMode);
 
+        
+
     ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const paymentStatus = '<?php echo strtolower($paymentStatus); ?>';
+    const billing_id = '<?php echo $billingId; ?>';
 
     if (paymentStatus === 'success') {
+
+        $.ajax({
+            url: "../../mail_files/sendApplicationMail.php",
+            type: "POST",
+            data: {
+                Billing_Cd: billing_id,
+                operation: 'shopLicensePay'
+            },
+            success: function(response) {
+                console.log(response);
+            }
+        });
+
         Swal.fire({
             icon: 'success',
             title: 'Payment Successful',
@@ -164,7 +185,8 @@ document.addEventListener('DOMContentLoaded', function() {
             timer: 2000,
             showConfirmButton: false,
             didClose: () => {
-                window.location.href = "../../index.php?p=ShopDetalisListOfOwner";
+                window.location.href =
+                    "../../index.php?p=ShopDetalisListOfOwner";
             }
         });
     } else {

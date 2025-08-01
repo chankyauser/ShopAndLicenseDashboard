@@ -18,25 +18,28 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $isEdit = true;
 
         $Noticequery = "SELECT 
-            COALESCE(Notice_Id, 0) AS Notice_Id,
-            COALESCE(Calling_Category_Cd, '') AS Calling_Category_Cd,
-            COALESCE(Shop_Cd, '') AS Shop_Cd,
-            ISNULL(CONVERT(VARCHAR, Notice_Date, 23), '') AS Notice_Date,
-            COALESCE(Notice_Type, '') AS Notice_Type,
-            COALESCE(Subject, '') AS Subject,
-            COALESCE(Description, '') AS Description,
-            COALESCE(NoticeFileURL, '') AS NoticeFileURL,
-            COALESCE(Remark, '') AS Remark,
-            COALESCE(Response_Received, '') AS Response_Received,
-            COALESCE(Status, '') AS Status,
-            COALESCE(IsActive, 0) AS IsActive,
-            ISNULL(CONVERT(VARCHAR,Acknowledged_Date, 23), '') AS Acknowledged_Date,
-            COALESCE(DeliveredBy, '') AS DeliveredBy
-        FROM ShopNoticeDetails 
+            COALESCE(nd.Notice_Id, 0) AS Notice_Id,
+            COALESCE(nd.Calling_Category_Cd, '') AS Calling_Category_Cd,
+            COALESCE(nd.Shop_Cd, '') AS Shop_Cd,
+            ISNULL(CONVERT(VARCHAR, nd.Notice_Date, 23), '') AS Notice_Date,
+            COALESCE(nd.Notice_Type, '') AS Notice_Type,
+            COALESCE(nd.Subject, '') AS Subject,
+            COALESCE(nd.Description, '') AS Description,
+            COALESCE(nd.NoticeFileURL, '') AS NoticeFileURL,
+            COALESCE(nd.Remark, '') AS Remark,
+            COALESCE(nd.Response_Received, '') AS Response_Received,
+            COALESCE(nd.Status, '') AS Status,
+            COALESCE(nd.IsActive, 0) AS IsActive,
+            ISNULL(CONVERT(VARCHAR,nd.Acknowledged_Date, 23), '') AS Acknowledged_Date,
+            COALESCE(nd.DeliveredBy, '') AS DeliveredBy,
+            COALESCE(um.ExecutiveName, '') AS DeliveredByName
+        FROM ShopNoticeDetails nd
+        LEFT JOIN Survey_Entry_Data..User_Master um  ON nd.DeliveredBy = um.Executive_Cd
         WHERE Notice_Id = $Notice_Id";
 
         $db = new DbOperation();
         $existNoticeData = $db->ExecutveQueryMultipleRowSALData($Noticequery, $electionName, $developmentMode);
+        // echo "<pre>"; print_r($existNoticeData);exit;
         
         if (!empty($existNoticeData)) {
             $shopCd = $existNoticeData[0]['Shop_Cd'];
@@ -64,10 +67,12 @@ $responseOptions = $db->ExecutveQueryMultipleRowSALData($Responsesql, $electionN
 $Statussql = "SELECT DValue FROM DropDownMaster WHERE DTitle = 'Notice_Status'";
 $statusOptions = $db->ExecutveQueryMultipleRowSALData($Statussql, $electionName, $developmentMode);
 
-$Deliveredsql = "SELECT um.User_Id,um.ExecutiveName FROM LoginMaster lm
+$Deliveredsql = "SELECT um.Executive_Cd,um.ExecutiveName FROM LoginMaster lm
                 INNER JOIN Survey_Entry_Data..User_Master um ON um.User_Id = lm.User_Cd AND um.AppName = 'ShopAndLicence' 
                 WHERE lm.IsActive = 1";
 $deliveredByOptions = $db->ExecutveQueryMultipleRowSALData($Deliveredsql, $electionName, $developmentMode);
+
+// echo "<pre>"; print_r($deliveredByOptions);exit;
 
 
 $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
@@ -117,9 +122,9 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
                 <!-- Calling Category -->
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="form-group">
-                        <label for="Calling_Category_Cd">Calling Category<span class="text-danger">*</span></label>
+                        <label for="Calling_Category_Cd"> Category<span class="text-danger">*</span></label>
                         <select name="Calling_Category_Cd" id="Calling_Category_Cd" class="form-control">
-                            <option value="">Select Calling Category</option>
+                            <option value="">Select Category</option>
                             <?php foreach ($callingCategoryDropdown as $category) { ?>
                                 <option value="<?= $category['Calling_Category_Cd'] ?>" 
                                     <?= (isset($noticeData['Calling_Category_Cd']) && $noticeData['Calling_Category_Cd'] == $category['Calling_Category_Cd']) ? 'selected' : '' ?>>
@@ -297,12 +302,12 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
                 <!-- Delivered By -->
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="form-group">
-                        <label for="DeliveredBy">Delivered By<span class="text-danger">*</span></label>
+                        <label for="DeliveredBy">Delivered By <span class="text-danger">*</span></label>
                         <select name="DeliveredBy" id="DeliveredBy" class="form-control">
                             <option value="">Select Delivered By</option>
                             <?php foreach ($deliveredByOptions as $user) { ?>
-                                <option value="<?= $user['User_Id'] ?>" 
-                                    <?= (isset($noticeData['DeliveredBy']) && $noticeData['DeliveredBy'] == $user['User_Id']) ? 'selected' : '' ?>>
+                                <option value="<?= $user['Executive_Cd'] ?>" 
+                                    <?= (isset($noticeData['DeliveredBy']) && $noticeData['DeliveredBy'] == $user['Executive_Cd']) ? 'selected' : '' ?>>
                                     <?= $user['ExecutiveName'] ?>
                                 </option>
                             <?php } ?>
@@ -466,6 +471,7 @@ $(document).ready(function () {
         var formData = new FormData();
         var operationType = $('[name="operation_type"]').val();
         var noticeId = $('[name="Notice_Id"]').val();
+        var ShopCd = $('[name="ShopCd"]').val();
 
         formData.append("action", operationType === 'update' ? 'updateNotice' : 'insertNotice');
         formData.append("Calling_Category_Cd", callingCategory);
@@ -481,7 +487,7 @@ $(document).ready(function () {
         formData.append("Acknowledged_Date", acknowledgedDate);
         formData.append("DeliveredBy", deliveredBy);
         formData.append("Shop_Cd", $('[name="Shop_Cd"]').val());
-
+        
         if (operationType === 'update' && noticeId) {
             formData.append("Notice_Id", noticeId);
         }
@@ -495,7 +501,7 @@ $(document).ready(function () {
             success: function (res) {
                  if (res.status === 'success') {
                     $('#failedMsg').hide();
-
+                    ShopOwnerMail(res.Id);
                     $('#successMsg')
                         .hide() 
                         .text(operationType === 'update' ? 'Notice updated successfully.' : 'Notice submitted successfully.')
@@ -563,10 +569,29 @@ $(document).ready(function () {
 });
 
 
- function clearErrors() {
-        $('.error-message').text('');
-    }
+function clearErrors() {
+    $('.error-message').text('');
+}
 
+
+function ShopOwnerMail(NoticeId){
+    $.ajax({
+        url: "../mail_files/sendApplicationMail.php",
+        type: "POST",
+        data: {
+            Notice_Id: NoticeId,
+            operation: 'ShopNotice'
+        },
+        success: function(response) {
+            console.log(response);
+            // exit();
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText);
+            alert("Error sending email: " + error);
+        }
+    });
+}
  
 </script>
 

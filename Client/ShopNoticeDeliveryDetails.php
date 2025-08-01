@@ -27,11 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                             COALESCE(sd.IsActive, 0) AS IsActive,
                             COALESCE(sm.ShopName, '') AS ShopName,
                             ISNULL(CONVERT(VARCHAR, sd.Acknowledged_Date, 23), '') AS Acknowledged_Date,
-                            COALESCE(sd.DeliveredBy, '') AS DeliveredBy
+                            COALESCE(sd.DeliveredBy, '') AS DeliveredBy,
+                            COALESCE(um.ExecutiveName, '') AS DeliveredByName
                         FROM ShopNoticeDetails sd
                         LEFT JOIN ShopMaster AS sm ON sm.Shop_Cd=sd.Shop_Cd
-                        WHERE sd.Shop_Cd = $shopCd AND sd.IsActive = 1
-                        ORDER BY sd.Notice_Date DESC";
+                        LEFT JOIN Survey_Entry_Data..User_Master um ON sd.DeliveredBy = um.Executive_Cd AND AppName = '$appName'
+                        WHERE sd.Shop_Cd = $shopCd AND sd.IsActive = 1";
+
+        // echo $Noticequery; exit;
 
         $NoticeData = $db->ExecutveQueryMultipleRowSALData($Noticequery, $electionName, $developmentMode);
         // print_r($NoticeData);
@@ -105,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                                         <?php echo !empty($notice['Acknowledged_Date']) ? date('d-m-Y', strtotime($notice['Acknowledged_Date'])) : 'N/A'; ?>
                                     </p>
                                     <p style="color: black;"><strong>Delivered By:</strong>
-                                        <?php echo htmlspecialchars($notice['DeliveredBy']); ?></p>
+                                        <?php echo htmlspecialchars($notice['DeliveredByName']); ?></p>
                                 </div>
                             </td>
                         </tr>
