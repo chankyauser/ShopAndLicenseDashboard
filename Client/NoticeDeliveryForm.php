@@ -207,13 +207,33 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
                             <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display: none;">
                             <img id="capturedPreviewImg" style="max-width: 100%; display: none; margin-top: 10px;">
                             <input type="hidden" id="capturedImageData" name="capturedImageData">
-                            <?php if(isset($noticeData['NoticeFileURL']) && $noticeData['NoticeFileURL'] != '') { ?>
+                            <!-- < ?php if(isset($noticeData['NoticeFileURL']) && $noticeData['NoticeFileURL'] != '') { ?>
                                 <div class="filename-container" id="fileNameContainer">
-                                    <a href="<?php echo htmlspecialchars($noticeData['NoticeFileURL']); ?>" target="_blank" id="fileNameLink">
-                                        <?php echo htmlspecialchars(basename($noticeData['NoticeFileURL'])); ?>
+                                    <a href="< ?php echo htmlspecialchars($noticeData['NoticeFileURL']); ?>" target="_blank" id="fileNameLink">
+                                        < ?php echo htmlspecialchars(basename($noticeData['NoticeFileURL'])); ?>
                                     </a>
                                 </div>
-                            <?php } ?>
+                            < ?php } ?> -->
+
+                            <?php if (isset($noticeData['NoticeFileURL']) && $noticeData['NoticeFileURL'] != '') {
+                                $fileUrl = htmlspecialchars($noticeData['NoticeFileURL']);
+                                $fileName = basename($noticeData['NoticeFileURL']);
+                                $fileExtension = strtolower(pathinfo($fileUrl, PATHINFO_EXTENSION));
+                                $imageExtensions = ['jpg', 'jpeg', 'png'];
+                                $isImage = in_array($fileExtension, $imageExtensions);
+                                ?>
+                                
+                                <div class="filename-container" id="fileNameContainer">
+                                    <a href="<?php echo $fileUrl; ?>" target="_blank" id="fileNameLink">
+                                        <?php if ($isImage) { ?>
+                                            <img src="<?php echo $fileUrl; ?>" alt="Image Preview" style="max-width: 100px; max-height: 100px;" />
+                                        <?php } else { ?>
+                                            <i class="fa fa-file"></i>
+                                            <span><?php echo $fileName; ?></span>
+                                        <?php } ?>
+                                    </a>
+                                </div>
+                                <?php } ?>
                     </div>
                 </div>
             </div>
@@ -317,10 +337,6 @@ $noticeData = !empty($existNoticeData) ? $existNoticeData[0] : [];
 
 <script>
 $(document).ready(function () {
- 
-   
-
-   
     $('#uploadFileBtn').on('click', function () {
      
         $('#openCameraBtn').hide();
