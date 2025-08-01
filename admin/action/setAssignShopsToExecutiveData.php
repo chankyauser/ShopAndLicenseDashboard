@@ -85,8 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         if(!empty($Schedule)){
                             $MaxCdQuery = "SELECT MAX(ScheduleCall_Cd) as ScheduleCall_Cd FROM ScheduleDetails";
                             $MaxCdRes = $db->ExecutveQuerySingleRowSALData($MaxCdQuery, $electionName, $developmentMode);
-                            $MaxCd = $MaxCdRes['ScheduleCall_Cd'];
-                            $ScheduleCall_Cd = $MaxCd + 1;
+                            $ScheduleCall_Cd = $MaxCdRes['ScheduleCall_Cd'];
 
                             $StageQuery = "SELECT DValue FROM DropDownMaster WHERE DTitle = 'StageName' AND SerialNo = 19";
                             $StageRes = $db->ExecutveQuerySingleRowSALData($StageQuery, $electionName, $developmentMode);

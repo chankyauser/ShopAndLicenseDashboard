@@ -38,8 +38,6 @@
     $electionName=$_SESSION['SAL_ElectionName'];
     $developmentMode=$_SESSION['SAL_DevelopmentMode'];
 
-    $electionName = 'CSMC';
-
     $db=new DbOperation();
     $currentDate = date('Y-m-d');
     $fromDate = $currentDate." ".$_SESSION['StartTime'];
