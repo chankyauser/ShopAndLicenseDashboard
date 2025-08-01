@@ -14,8 +14,10 @@ $userId = $_SESSION['SAL_UserId'];
 include "../../api/includes/DbOperation.php";
 
 $db = new DbOperation();
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+$host = $_SERVER['HTTP_HOST'];
 
-$baseURL = (isset($_SERVER['REQUEST_SCHEME']) ? $_SERVER['REQUEST_SCHEME'] : 'http')  . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/Client/uploads/notices/';
+$baseURL = $protocol  . '://' . $host . '/ShopAndLicenseDashboard/Client/uploads/notices/';
 
 
 $targetDir = '../uploads/notices/';
@@ -90,7 +92,19 @@ if ($_POST['action'] === 'insertNotice') {
     )";
 
     $result = $db->RunQueryData($insertSQL, $electionName, $developmentMode);
-    echo json_encode(['status' => $result ? 'success' : 'fail']);
+ 
+
+    $Notice_Id = '';
+    if($result){
+        $NoticeIdQuery = "SELECT MAX(Notice_Id) as Notice_Id FROM ShopNoticeDetails";
+        $Res = $db->ExecutveQuerySingleRowSALData($NoticeIdQuery, $electionName, $developmentMode);
+        // echo "<pre>"; print_r($NoticeId);echo "</pre>";exit;
+        if($Res){
+            $Notice_Id = $Res['Notice_Id'];
+        }
+    }
+
+    echo json_encode(['status' => $result ? 'success' : 'fail', 'Id' => $Notice_Id]);
     exit;
 }
 
@@ -194,7 +208,7 @@ if ($_POST['action'] === 'updateNotice') {
         WHERE Notice_Id = $Notice_Id";
 
     $result = $db->RunQueryData($updateSQL, $electionName, $developmentMode);
-    echo json_encode(['status' => $result ? 'success' : 'fail']);
+    echo json_encode(['status' => $result ? 'success' : 'fail', 'Id' => $Notice_Id]);
     exit;
 }
 

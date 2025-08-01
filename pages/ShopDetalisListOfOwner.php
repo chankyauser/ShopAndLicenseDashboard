@@ -674,7 +674,7 @@ function applyforlicense(shopCd, renewDate) {
                     console.log(response);
                     var data = JSON.parse(response);
                     if (data.status == 'success') {
-                        LicenseGenerationMail();
+                        LicenseGenerationMail(data.Billing_Id, renewFlag);
                         paymentGateway(data.Billing_Id, data.Amount, data.ShopCd);
                     }
                 },
@@ -769,6 +769,26 @@ function ShopNoticeDetails(Shop_Cd){
         },
         error: function() {
             alert('Error retrieving shop notice details.');
+        }
+    });
+}
+
+function LicenseGenerationMail(Billing_Cd, RenewalFlag) {
+    $.ajax({
+        url: "mail_files/sendApplicationMail.php",
+        type: "POST",
+        data: {
+            Billing_Cd: Billing_Cd,
+            operation: 'shopLicense'
+        },
+        success: function(response) {
+            console.log(response);
+
+            alert(response.Message);
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText);
+            alert("Error sending email: " + error);
         }
     });
 }

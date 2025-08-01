@@ -294,7 +294,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                             </div>
                                             <div class="banner-text">
                                                 <h6 class="icon-box-title">Demand</h6>
-                                                <p class="text-bold-400 mb-0"> &#8377;
+                                                <p class="text-bold-400 mb-0">
                                                     <?php echo $shopBillingCountData["BillAmount"]; ?>
                                                 </p>
                                             </div>
@@ -328,7 +328,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                             </div>
                                             <div class="banner-text">
                                                 <h6 class="icon-box-title">Receipt</h6>
-                                                <p class="text-bold-700 mb-0"> &#8377;
+                                                <p class="text-bold-700 mb-0">
                                                     <?php echo $shopBillingCountData["CollectedAmount"]; ?>
                                                 </p>
                                             </div>
@@ -362,7 +362,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                             <div class="banner-text">
                                                 <h6 class="icon-box-title">Pending</h6>
                                                 <p class="text-bold-700 mb-0"> 
-                                                    &#8377; <?php echo ($shopBillingCountData["BillAmount"] - $shopBillingCountData["CollectedAmount"]); ?>
+                                                     <?php echo ($shopBillingCountData["BillAmount"] - $shopBillingCountData["CollectedAmount"]); ?>
                                                 </p>
                                             </div>
                                         </div>
@@ -430,7 +430,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                             </div>
                                             <div class="banner-text">
                                                 <h6 class="icon-box-title">Renew Bill</h6>
-                                                <p class="text-bold-700 mb-0"> &#8377;
+                                                <p class="text-bold-700 mb-0">
                                                     <?php echo $shopBillingCountData["RenewalBillAmount"]; ?>
                                                 </p>
                                             </div>
@@ -462,7 +462,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                             </div>
                                             <div class="banner-text">
                                                 <h6 class="icon-box-title">Renew Receipt</h6>
-                                                <p class="text-bold-700 mb-0"> &#8377;
+                                                <p class="text-bold-700 mb-0">
                                                     <?php echo $shopBillingCountData["RenewalPaidAmount"]; ?>
                                                 </p>
                                             </div>
