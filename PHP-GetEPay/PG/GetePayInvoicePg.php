@@ -9,7 +9,10 @@
       
             $date = date('D M d H:i:s') . ' IST ' . date('Y');
             // $returnUrl = 'https://csmcshoplicenses.com/PHP-GetEPay/PG/response.php';
-            $returnUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/PHP-GetEPay/PG/response.php';  
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+            $host = $_SERVER['HTTP_HOST'];
+            // $returnUrl = $protocol . '://' . $host . '/ShopAndLicenseDashboard/PHP-GetEPay/PG/response.php';  
+            $returnUrl = $protocol . '://' . $host . '/PHP-GetEPay/PG/response.php';
             
             // $data = $_POST['data'];
             // $amount = $_POST['Amount'];

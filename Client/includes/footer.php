@@ -257,8 +257,7 @@
         });
 
         
-    </script>
-    <script>
+   
         document.addEventListener('contextmenu', event => event.preventDefault());
         // document.addEventListener('copy', event => event.preventDefault());
         // document.addEventListener('paste', event => event.preventDefault());
