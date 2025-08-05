@@ -1,7 +1,8 @@
 <?php
 
 
-$mid = "108"; 
+// $mid = "108"; 
+$mid = "1325212";
 // $paymentId = "19185111";
 $paymentId = $_POST['transactionNumber'] ?? '';
 $terminalId = "Getepay.merchant61062@icici";
@@ -29,8 +30,8 @@ $request = array(
     "terminalId" => $terminalId,
     "req" => $newCipher
 );
-$url = 'https://pay1.getepay.in:8443/getepayPortal/pg/invoiceStatus'; // Uat
-// $url = 'https://portal.getepay.in:8443//getepayPortal/pg/invoiceStatus'; //Portal
+// $url = 'https://pay1.getepay.in:8443/getepayPortal/pg/invoiceStatus'; // Uat
+$url = 'https://portal.getepay.in:8443//getepayPortal/pg/invoiceStatus'; //Portal
 
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_URL, $url);

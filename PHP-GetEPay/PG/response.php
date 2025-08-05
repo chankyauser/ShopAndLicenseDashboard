@@ -11,12 +11,12 @@
         $developmentMode = $_SESSION['SAL_DevelopmentMode'];
 
         // UAT --------------
-	$key = base64_decode('JoYPd+qso9s7T+Ebj8pi4Wl8i+AHLv+5UNJxA3JkDgY=');
-        $iv = base64_decode('hlnuyA9b4YxDq6oJSZFl8g');
+	// $key = base64_decode('JoYPd+qso9s7T+Ebj8pi4Wl8i+AHLv+5UNJxA3JkDgY=');
+        // $iv = base64_decode('hlnuyA9b4YxDq6oJSZFl8g');
 
         // LIVE --------------
-	// $key = base64_decode('tPjvm0W0iIO4lpX/Ry9VQcGGcx0gAB1D1salkTrtpP4=');
-        // $iv = base64_decode('FRaquqRsN0nrEStG0ukNOA==');
+	$key = base64_decode('tPjvm0W0iIO4lpX/Ry9VQcGGcx0gAB1D1salkTrtpP4=');
+        $iv = base64_decode('FRaquqRsN0nrEStG0ukNOA==');
 
 	$result = $_POST['response'];
         $ciphertext_raw = hex2bin($result);
