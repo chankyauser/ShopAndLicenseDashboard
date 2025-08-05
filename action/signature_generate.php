@@ -7,7 +7,8 @@
         if ($certData !== false) {
             $signerName = $certData['subject']['CN'] ?? 'Unknown';
             $corporation  = $certData['subject']['O'] ?? 'Unknown';
-            $timestamp = date('d-m-Y H:i:s');  
+            // $timestamp = date('d-m-Y H:i:s');  
+            $timestamp = $LicenseStartDate;
 
             $width = 300;   
             $height = 130; 

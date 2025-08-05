@@ -1463,9 +1463,11 @@ function SubmitDocumentForm(form_id) {
             success: function(response) {
                 var data = JSON.parse(response);
                 if (data.status == 200) {
-                    // if(updateShop !== 1){
-                    //     sendApplicationMail(Shop_Cd);
-                    // }
+                    if(updateShop !== 1){
+                        sendApplicationMail(Shop_Cd, 'shopApplication');
+                    }else{
+                        sendApplicationMail(Shop_Cd, 'updateInfo');
+                    }
                     $(`#${form_id} #submitmsgsuccess`).html(data.message)
                         .hide().fadeIn(800, function() {
                             $("submitmsgsuccess").append("");
@@ -1897,19 +1899,18 @@ $('#chktransactionModal').on('hidden.bs.modal', function() {
     $('#transactionTable tbody').empty();
 });
 
-function sendApplicationMail(Shop_Cd) {
+function sendApplicationMail(Shop_Cd, Operation) {
     // alert(Shop_Cd);
     $.ajax({
         url: "mail_files/sendApplicationMail.php",
         type: "POST",
         data: {
             Shop_Cd: Shop_Cd,
-            operation: 'shopApplication'
+            operation: Operation
         },
         success: function(response) {
             console.log(response);
-
-            alert(response.Message);
+            // exit();
         },
         error: function(xhr, status, error) {
             console.log(xhr.responseText);
