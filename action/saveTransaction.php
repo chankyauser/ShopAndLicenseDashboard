@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: "POST",
             data: {
                 Billing_Cd: billing_id,
-                operation: 'shopLicensePay'
+                operation: 'licensePayment'
             },
             success: function(response) {
                 console.log(response);

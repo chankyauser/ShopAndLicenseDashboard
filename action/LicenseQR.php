@@ -56,10 +56,9 @@
                     ISNULL(nm.NodeName, '') AS Node,
                     ISNULL(nm.Area, '') AS ward,
                     ISNULL(sm.Shop_Cd, '') AS Shop_Cd
-
               FROM ShopBilling sb 
               INNER JOIN ShopMaster sm ON sb.Shop_Cd = sm.Shop_Cd AND sm.IsActive = 1
-              INNER JOIN NodeMaster nm ON nm.Ward_No = sm.Ward_No AND nm.IsActive = 1
+              LEFT JOIN NodeMaster nm ON nm.Ward_No = sm.Ward_No AND nm.IsActive = 1
               WHERE sb.Billing_Cd = $billingId";
     $DB = new DBOperation();
     $result = $DB->ExecutveQuerySingleRowSALData($Query, $electionName, $developmentMode);

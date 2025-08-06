@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     $Message = '';
     if(!empty($operation)){
-        if($operation === 'shopApplication'){
+        if($operation === 'shopRegister'){
             $Shop_Cd = isset($_POST['Shop_Cd']) ? trim($_POST['Shop_Cd']) : '';
             if(!empty($Shop_Cd)){
                 $ShopCd = isset($_POST['Shop_Cd']) ? trim($_POST['Shop_Cd']) : '';
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 }
             }
 
-        } else if($operation === 'shopLicense'){
+        } else if($operation === 'licenseApplication'){
 
             $BillingCd = isset($_POST['Billing_Cd']) ? trim($_POST['Billing_Cd']) : '';
             if(!empty($BillingCd)){
@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
             }
 
-        } else if($operation === 'shopLicensePay'){
+        } else if($operation === 'licensePayment'){
 
             $BillingCd = isset($_POST['Billing_Cd']) ? trim($_POST['Billing_Cd']) : '';
             if(!empty($BillingCd)){
@@ -393,7 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 }
                 
             }
-        } else if($operation === 'updateInfo'){
+        } else if($operation === 'shopInfoUpdate'){
             $Shop_Cd = isset($_POST['Shop_Cd']) ? trim($_POST['Shop_Cd']) : '';
             if(!empty($Shop_Cd)){
                 $query = "SELECT ISNULL(Shop_Cd , '') AS Shop_Cd,

@@ -494,7 +494,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                             </div>
                                             <div class="banner-text">
                                                 <h6 class="icon-box-title">Renew Pending </h6>
-                                                <p class="text-bold-700 mb-0"> &#8377;
+                                                <p class="text-bold-700 mb-0"> 
                                                     <?php echo $shopBillingCountData["RenewalUnpaidAmount"]; ?>
                                                 </p>
                                             </div>

@@ -17,7 +17,7 @@ if (isset($_SESSION['SAL_UserName']) && !empty($_SESSION['SAL_UserName'])) {
 if (isset($_SESSION['ShopOwner_Shop_Cd']) && !empty($_SESSION['ShopOwner_Shop_Cd'])) {
     $ShopOwner_Shop_Cd = $_SESSION['ShopOwner_Shop_Cd'];
 }
-// print_r($_SESSION);
+// print_r($_SESSION); exit;
 $appName = $_SESSION['SAL_AppName'];
 $electionName = $_SESSION['SAL_ElectionName'];
 $developmentMode = $_SESSION['SAL_DevelopmentMode'];
