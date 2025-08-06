@@ -779,12 +779,10 @@ function LicenseGenerationMail(Billing_Cd, RenewalFlag) {
         type: "POST",
         data: {
             Billing_Cd: Billing_Cd,
-            operation: 'shopLicense'
+            operation: 'licenseApplication'
         },
         success: function(response) {
             console.log(response);
-
-            alert(response.Message);
         },
         error: function(xhr, status, error) {
             console.log(xhr.responseText);
