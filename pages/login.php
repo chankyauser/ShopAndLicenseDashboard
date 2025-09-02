@@ -49,17 +49,17 @@ $ipdat = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" .
               // echo 'Currency Code: ' . $ipdat->geoplugin_currencyCode . "\n"; 
               // echo 'Timezone: ' . $ipdat->geoplugin_timezone. "\n"; 
                  
-              $latitude= $ipdat->geoplugin_latitude;
+              $latitude= $ipdat->geoplugin_latitude ?? '';
               // echo "<br>";
-              $longitude= $ipdat->geoplugin_longitude;
+              $longitude= $ipdat->geoplugin_longitude ?? '';
                // "<br>";
-              $city= $ipdat->geoplugin_city;
+              $city= $ipdat->geoplugin_city ?? '';
               // echo "<br>";
-              $region= $ipdat->geoplugin_region;
+              $region= $ipdat->geoplugin_region ?? '';
               // echo "<br>";
-              $country= $ipdat->geoplugin_countryName;
+              $country= $ipdat->geoplugin_countryName ?? '';
               // echo "<br>";
-              $locAddress = $city.", ".$region.", ".$country;
+              $locAddress = $city.", ".$region.", ".$country ?? '';
               // echo "<br>";
 
 ?>
