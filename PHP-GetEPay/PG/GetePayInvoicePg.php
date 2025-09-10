@@ -9,7 +9,10 @@
       
             $date = date('D M d H:i:s') . ' IST ' . date('Y');
             // $returnUrl = 'https://csmcshoplicenses.com/PHP-GetEPay/PG/response.php';
-            $returnUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/PHP-GetEPay/PG/response.php';  
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+            $host = $_SERVER['HTTP_HOST'];
+            // $returnUrl = $protocol . '://' . $host . '/ShopAndLicenseDashboard/PHP-GetEPay/PG/response.php';  
+            $returnUrl = $protocol . '://' . $host . '/PHP-GetEPay/PG/response.php';
             
             // $data = $_POST['data'];
             // $amount = $_POST['Amount'];
@@ -26,16 +29,16 @@
             $txtnote = $ShopName;
 
             $request=array(
-                "mid"=>"108",
+                // "mid"=>"108",
                 // Live
-                // "mid"=>"1325212",
+                "mid"=>"1325212",
                 // "amount"=> "10.00",
                 "amount"=> "$amount",
                 "merchantTransactionId"=>$TransId,
                 "transactionDate"=>"$date",
-                "terminalId"=>"Getepay.merchant61062@icici",
+                // "terminalId"=>"Getepay.merchant61062@icici",
                 // Live
-                // "terminalId"=>"getepay.merchant689865@icici",
+                "terminalId"=>"getepay.merchant689865@icici",
                 "udf1" => "$ShopKeeperMobile",
                 "udf2"=>"$ShopEmailAddress",
                 "udf3"=>"$ShopKeeperName",
@@ -54,19 +57,19 @@
                 "txnType"=>"single",
                 "productType"=>"IPG",
                 "txnNote"=>"$txtnote",
-                "vpa"=>"Getepay.merchant61062@icici"
+                // "vpa"=>"Getepay.merchant61062@icici"
                 // Live
-                // "vpa"=>"getepay.merchant689865@icici"
+                "vpa"=>"getepay.merchant689865@icici"
             );
             $json_requset = json_encode($request);
             
             //UAT -----------------
-            $key = base64_decode('JoYPd+qso9s7T+Ebj8pi4Wl8i+AHLv+5UNJxA3JkDgY=');
-            $iv = base64_decode('hlnuyA9b4YxDq6oJSZFl8g==');
+            // $key = base64_decode('JoYPd+qso9s7T+Ebj8pi4Wl8i+AHLv+5UNJxA3JkDgY=');
+            // $iv = base64_decode('hlnuyA9b4YxDq6oJSZFl8g==');
 
             // LIVE -----------------
-            // $key = base64_decode('tPjvm0W0iIO4lpX/Ry9VQcGGcx0gAB1D1salkTrtpP4=');
-            // $iv = base64_decode('FRaquqRsN0nrEStG0ukNOA==');
+            $key = base64_decode('tPjvm0W0iIO4lpX/Ry9VQcGGcx0gAB1D1salkTrtpP4=');
+            $iv = base64_decode('FRaquqRsN0nrEStG0ukNOA==');
 
             // Encryption Code //
             $ciphertext_raw = openssl_encrypt($json_requset, "AES-256-CBC", $key, $options = OPENSSL_RAW_DATA, $iv);
@@ -74,24 +77,24 @@
             $newCipher = strtoupper($ciphertext);
             
             //UAT -----------------
-                $request=array(
-                    "mid"=>'108',
-                    "terminalId"=>'Getepay.merchant61062@icici',
-                    "req"=>$newCipher
-                );
-
-            // LIVE -----------------
                 // $request=array(
-                //     "mid"=>'1325212',
-                //     "terminalId"=>'getepay.merchant689865@icici',
+                //     "mid"=>'108',
+                //     "terminalId"=>'Getepay.merchant61062@icici',
                 //     "req"=>$newCipher
                 // );
+
+            // LIVE -----------------
+                $request=array(
+                    "mid"=>'1325212',
+                    "terminalId"=>'getepay.merchant689865@icici',
+                    "req"=>$newCipher
+                );
             
             // UAT -----------------
-            $url = "https://pay1.getepay.in:8443/getepayPortal/pg/generateInvoice";
+            // $url = "https://pay1.getepay.in:8443/getepayPortal/pg/generateInvoice";
             
             // LIVE -----------------
-            // $url = "https://portal.getepay.in:8443/getepayPortal/pg/generateInvoice";
+            $url = "https://portal.getepay.in:8443/getepayPortal/pg/generateInvoice";
 
             $curl = curl_init();   
             curl_setopt($curl, CURLOPT_URL, $url);

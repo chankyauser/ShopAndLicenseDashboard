@@ -257,45 +257,44 @@
         });
 
         
-    </script>
-    <script>
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.addEventListener('copy', event => event.preventDefault());
-    document.addEventListener('paste', event => event.preventDefault());
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-    });
-
-    document.addEventListener('keydown', function(e) {
-    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-        e.preventDefault();
-    }
-    });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 44) {
+   
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        // document.addEventListener('copy', event => event.preventDefault());
+        // document.addEventListener('paste', event => event.preventDefault());
+        document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
-            alert('Print Screen is disabled');
-        }
-    });
+        });
 
-    document.addEventListener('keydown', function(e) {
-        if (e.key === "F12") {
+        document.addEventListener('keydown', function(e) {
+        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
             e.preventDefault();
         }
+        });
 
-        if (e.ctrlKey && e.shiftKey && e.key === "I") {
-            e.preventDefault();
-        }
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode == 44) {
+                e.preventDefault();
+                alert('Print Screen is disabled');
+            }
+        });
 
-        if (e.ctrlKey && e.shiftKey && e.key === "C") {
-            e.preventDefault();
-        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "F12") {
+                e.preventDefault();
+            }
 
-        if (e.ctrlKey && e.key === "u") {
-            e.preventDefault();
-        }
-    });
+            if (e.ctrlKey && e.shiftKey && e.key === "I") {
+                e.preventDefault();
+            }
+
+            if (e.ctrlKey && e.shiftKey && e.key === "C") {
+                e.preventDefault();
+            }
+
+            if (e.ctrlKey && e.key === "u") {
+                e.preventDefault();
+            }
+        });
 </script>
 
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.min.css" rel="stylesheet">

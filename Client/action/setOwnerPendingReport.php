@@ -118,9 +118,9 @@ function fetchData()
                         COALESCE(CONVERT(VARCHAR, sbb.LicenseEndDate, 105), '') AS LicenseEndDate,
                         COALESCE(td.paymentStatus, '') as paymentStatus
                     FROM ShopBilling sbb
-                    INNER JOIN TransactionDetails td 
-                        ON td.Billing_Cd = sbb.Billing_Cd AND (td.PaymentStatus IS NULL OR td.PaymentStatus <> 'SUCCESS')
-                    WHERE sbb.Shop_Cd = sm.Shop_Cd AND sbb.IsActive = 1
+                    LEFT JOIN TransactionDetails td 
+                        ON td.Billing_Cd = sbb.Billing_Cd AND (td.PaymentStatus <> 'SUCCESS' OR td.paymentStatus IS NULL)
+                    WHERE sbb.Shop_Cd = sm.Shop_Cd AND sbb.IsActive = 1  AND sbb.BillAmount != 0
                     ORDER BY sbb.LicenseEndDate DESC
                     FOR JSON PATH
                 ) AS BillDetailsArray,
@@ -130,9 +130,10 @@ function fetchData()
                 COALESCE(nm.Area, '') AS Area
             FROM ShopBilling sb
             INNER JOIN ShopMaster sm ON sm.Shop_Cd = sb.Shop_Cd 
-            INNER JOIN TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
-            INNER JOIN NodeMaster nm ON nm.Ward_No = sm.Ward_No AND nm.IsActive = 1
-            WHERE (td.PaymentStatus IS NULL OR td.PaymentStatus <> 'SUCCESS')
+            LEFT JOIN TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
+            LEFT JOIN NodeMaster nm ON nm.Ward_No = sm.Ward_No AND nm.IsActive = 1
+            WHERE (td.PaymentStatus <> 'SUCCESS' OR td.paymentStatus IS NULL)
+             AND sb.BillAmount != 0 
             $whereClause
             GROUP BY 
                 sm.Shop_Cd, 
@@ -150,8 +151,8 @@ function fetchData()
                 nm.Node_Cd, 
                 nm.NodeName,
                 nm.Area";
-    // echo $query;
-    // exit;
+    
+
     // $data = $db->getMultiRecordsAJAXDatatable($query);
     $data = $db->ExecutveQueryMultipleRowSALData($query, $electionName, $developmentMode);
     // print_r($data);

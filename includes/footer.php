@@ -1464,7 +1464,9 @@ function SubmitDocumentForm(form_id) {
                 var data = JSON.parse(response);
                 if (data.status == 200) {
                     if(updateShop !== 1){
-                        sendApplicationMail(Shop_Cd);
+                        sendApplicationMail(Shop_Cd, 'shopRegister');
+                    }else{
+                        sendApplicationMail(Shop_Cd, 'shopInfoUpdate');
                     }
                     $(`#${form_id} #submitmsgsuccess`).html(data.message)
                         .hide().fadeIn(800, function() {
@@ -1766,53 +1768,7 @@ function generateOtp() {
 
 <!-- New Shop Owner Shop Details End -->
 
-<!-- <script>
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('copy', event => event.preventDefault());
-        document.addEventListener('paste', event => event.preventDefault());
 
-        // // Disable right click
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // Disable F12 and Ctrl+Shift+I
-        document.addEventListener('keydown', function(e) {
-        if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-            e.preventDefault();
-        }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            // keyCode 44 is for the Print Screen key
-            if (e.keyCode == 44) {
-                e.preventDefault();
-                alert('Print Screen is disabled');
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            // Disable F12 (Open DevTools)
-            if (e.key === "F12") {
-                e.preventDefault();
-            }
-
-            // Disable Ctrl+Shift+I (Open DevTools in some browsers)
-            if (e.ctrlKey && e.shiftKey && e.key === "I") {
-                e.preventDefault();
-            }
-
-            // Disable Ctrl+Shift+C (Element inspector)
-            if (e.ctrlKey && e.shiftKey && e.key === "C") {
-                e.preventDefault();
-            }
-
-            // Disable Ctrl+U (View Page Source)
-            if (e.ctrlKey && e.key === "u") {
-                e.preventDefault();
-            }
-        });
-</script> -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
@@ -1943,19 +1899,18 @@ $('#chktransactionModal').on('hidden.bs.modal', function() {
     $('#transactionTable tbody').empty();
 });
 
-function sendApplicationMail(Shop_Cd) {
+function sendApplicationMail(Shop_Cd, Operation) {
     // alert(Shop_Cd);
     $.ajax({
         url: "mail_files/sendApplicationMail.php",
         type: "POST",
         data: {
             Shop_Cd: Shop_Cd,
-            operation : 'shopApplication'
+            operation: Operation
         },
         success: function(response) {
             console.log(response);
-
-            alert(response.Message);
+            // exit();
         },
         error: function(xhr, status, error) {
             console.log(xhr.responseText);
@@ -1963,6 +1918,45 @@ function sendApplicationMail(Shop_Cd) {
         }
     });
 }
+
+document.addEventListener('contextmenu', event => event.preventDefault());
+// document.addEventListener('copy', event => event.preventDefault());
+// document.addEventListener('paste', event => event.preventDefault());
+
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+        e.preventDefault();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 44) {
+        e.preventDefault();
+        alert('Print Screen is disabled');
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
+
+    if (e.ctrlKey && e.shiftKey && e.key === "I") {
+        e.preventDefault();
+    }
+
+    if (e.ctrlKey && e.shiftKey && e.key === "C") {
+        e.preventDefault();
+    }
+    
+    if (e.ctrlKey && e.key === "u") {
+        e.preventDefault();
+    }
+});
 </script>
 </body>
 

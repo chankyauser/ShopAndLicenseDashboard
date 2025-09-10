@@ -2403,6 +2403,7 @@ function setAssignShopsToExecutiveByPockets(){
     var shopsAssignCount = document.getElementsByName('shopsAssignCount')[0].value;
     var multiplePockets = document.getElementsByName('multiplePockets')[0].value;
     var assignDate = document.getElementsByName('assign_date')[0].value;
+    var calling_Category = document.getElementsByName('calling_Category')[0].value;
    
     if (electionName === '') {
         alert("Select Corporation!!");
@@ -2416,7 +2417,9 @@ function setAssignShopsToExecutiveByPockets(){
         alert("Select Pocket!!");
     } else if (shopsAssignCount === '') {
         alert("Enter Shops Counts!!");
-    } else {
+    } else if(calling_Type === 'Notice' && calling_Category === '') {
+        alert("Select Category!!");
+    }else {
         $.ajax({
             type: "POST",
             url: 'action/setAssignShopsToExecutiveData.php',
@@ -2429,7 +2432,8 @@ function setAssignShopsToExecutiveByPockets(){
                 assignDate: assignDate,
                 multiplePockets: multiplePockets,
                 shopsAssignCount: shopsAssignCount,
-                executiveCd:executiveCd
+                executiveCd:executiveCd,
+                calling_Category: calling_Category
             },
            
             beforeSend: function() { 

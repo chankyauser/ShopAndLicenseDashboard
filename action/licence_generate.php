@@ -93,7 +93,17 @@
     list($startYear, $shortYear) = explode('-', $FinYear);
     $nextYear = (int)$startYear + 1;
     $BillDate = "01-April-{$startYear} to 31-March-{$nextYear}";
-    
+
+
+    // Signature 
+    $cerFile = '../Signature/CSMC_Shop_License_Signatures.cer';
+    $SignPath = "../Signature/CSMC_Signature_".$Billing_Cd.".png";  
+
+    if(!file_exists($SignPath)){
+        include('signature_generate.php');
+    }else{
+        $outputPath = $SignPath;
+    } 
 ?>
 
 <head>
@@ -427,7 +437,7 @@ td:first-child .info::before {
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <div class="row" style="margin-bottom: 50px;">
+                                                    <div class="row" style="margin-bottom: 10px;">
                                                         <p style="font-size: 14px;">उपरोक्त व्यावसायिक अस्थापना परवाना
                                                             पुढील
                                                             एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना
@@ -446,15 +456,18 @@ td:first-child .info::before {
                                                         </div>
                                                     </div> -->
                                                     <div class="row"
-                                                        style="display: flex; justify-content: space-between; margin-bottom: 5px; margin-right: 10px;">
+                                                        style="display: flex; justify-content: space-between;  margin-right: 10px;">
                                                         <img class="qrImg" src="<?= $QRCode_URL ?>" id="qrCode"
                                                             style="width: 10vw; height: 10vw;" />
-                                                       <div
-                                                            style="display: flex; flex-direction: column; align-content: center; align-items: center;">
-                                                            <p style="font-size: 14px; margin-bottom: 0;">उपायुक्त</p>
-                                                            <p style="font-size: 14px; margin-top: 5px;">छत्रपती
+                                                        <div
+                                                            style="display: flex; flex-direction: column;">
+                                                            <img src='<?= $outputPath ?>'
+                                                                alt='Verified Digital Signature' style='width: 300px;'>
+                                                            <br>
+                                                            <!-- <p style="font-size: 14px; margin-bottom: 0; margin-right: 45px">उपायुक्त</p>
+                                                            <p style="font-size: 14px; margin-top: 5px; margin-right: 45px">छत्रपती
                                                                 संभाजीनगर महानगरपलिका
-                                                            </p>
+                                                            </p> -->
                                                         </div>
                                                     </div>
                                                     <!-- <div class="row" style="display: flex; gap: 10px;">
@@ -498,57 +511,129 @@ td:first-child .info::before {
 </div>
 
 <script>
+// function acknowledgementPrinting() {
+//     var c = document.getElementById("PrintApplicationID").innerHTML;
+//     var a = window.open("", "print_content", "width=800,height=1000,resizable=1,scrollbars=1");
+//     a.document.open();
+//     a.document.write('<html><head><title>ShopLicenseInvoice</title>');
+//     a.document.write(
+//         '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
+//     );
+//     a.document.write('<style>');
+//     a.document.write(`
+//         body {
+//             font-family: "Laila", serif !important;
+//             font-weight: 300;
+//             font-style: normal;
+//         }
+
+//         .watermarked-container {
+//             position: relative;
+//         }
+
+//         .watermarked-container::before {
+//             content: "";
+//             background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg'); /* Adjust path if needed */
+//             background-repeat: no-repeat;
+//             background-position: center;
+//             background-size: 300px 300px;
+//             opacity: 0.05;
+//             position: absolute;
+//             top: 0;
+//             left: 0;
+//             width: 100%;
+//             height: 100%;
+//             z-index: 0;
+//             pointer-events: none;
+//         }
+
+
+//         #PrintApplicationTableID {
+//             position: relative;
+//             z-index: 1;
+//         }
+
+//         @page {
+//             margin: 5mm;
+//         }
+
+
+//         @media print {
+//             header { display: none; }
+//             .logo { margin-left: 10px !important; }
+
+//             .watermarked-container::before {
+//                 content: "";
+//                 background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+//                 background-repeat: no-repeat;
+//                 background-position: center;
+//                 background-size: 300px 300px;
+//                 opacity: 0.05;
+//                 position: absolute;
+//                 top: 0;
+//                 left: 0;
+//                 width: 100%;
+//                 height: 100%;
+//                 z-index: 0;
+//             }
+
+//             .template_bg {
+//                 background-image: url(../assets/imgs/license_bg.jpeg);
+//                 background-repeat: no-repeat;
+//                 background-size: 100% 100%;
+//                 background-position: unset;
+//                 position: relative;
+//                 border : none !important;
+//             }
+
+//             body {
+//                 -webkit-print-color-adjust: exact !important;
+//                 print-color-adjust: exact !important;
+//             }
+//         }
+
+//         td:first-child .info::before {
+//             content: "• ";
+//             margin-right: 5px;
+//             color: black;
+//         }
+//     `);
+//     a.document.write('@media print {');
+//     a.document.write('  header { display: none; }');
+//     a.document.write(
+//         '  body { padding-left: 10; padding-right: 10; font-family: "Laila", serif !important;font-weight: 300;font-style: normal;}'
+//     );
+//     a.document.write('  .logo { margin-left: 10px !important; margin-top : 2px;}');
+//     // a.document.write('  @page { margin: 2;}');
+//     a.document.write('}');
+//     a.document.write('</style>');
+
+//     a.document.write('</head><body onload="window.print()">' + c + '</body></html>');
+//     a.document.close();
+// }
+
 function acknowledgementPrinting() {
     var c = document.getElementById("PrintApplicationID").innerHTML;
     var a = window.open("", "print_content", "width=800,height=1000,resizable=1,scrollbars=1");
     a.document.open();
-    a.document.write('<html><head><title>ShopLicenseInvoice</title>');
-    a.document.write(
-        '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
-    );
-    a.document.write('<style>');
     a.document.write(`
-        body {
-            font-family: "Laila", serif !important;
-            font-weight: 300;
-            font-style: normal;
-        }
+    <html>
+    <head>
+        <title>ShopLicenseInvoice</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Laila:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: "Laila", serif !important;
+                font-weight: 300;
+                margin: 0;
+                padding: 0;
+            }
 
-        .watermarked-container {
-            position: relative;
-        }
-
-        .watermarked-container::before {
-            content: "";
-            background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg'); /* Adjust path if needed */
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 300px 300px;
-            opacity: 0.05;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-
-
-        #PrintApplicationTableID {
-            position: relative;
-            z-index: 1;
-        }
-
-        @page {
-            margin: 10mm;
-        }
-
-
-        @media print {
-            header { display: none; }
-            .logo { margin-left: 10px !important; }
+            .watermarked-container {
+                position: relative;
+            }
 
             .watermarked-container::before {
                 content: "";
@@ -563,40 +648,64 @@ function acknowledgementPrinting() {
                 width: 100%;
                 height: 100%;
                 z-index: 0;
+                pointer-events: none;
             }
 
-            .template_bg {
-                background-image: url(../assets/imgs/license_bg.jpeg);
-                background-repeat: no-repeat;
-                background-size: 100% 100%;
-                background-position: unset;
+            #PrintApplicationTableID {
                 position: relative;
-                border : none !important;
+                z-index: 1;
             }
 
-            body {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-        }
+            @media print {
+                @page {
+                    size: A4;
+                    margin: 5mm;
+                }
 
-        td:first-child .info::before {
-            content: "• ";
-            margin-right: 5px;
-            color: black;
-        }
+                body {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                    zoom: 0.9; 
+                }
+
+                header {
+                    display: none;
+                }
+
+                .template_bg {
+                    background-image: url('../assets/imgs/license_bg.jpeg');
+                    background-repeat: no-repeat;
+                    background-size: 100% 100%;
+                    background-position: unset;
+                    position: relative;
+                    border: none !important;
+                }
+
+                .watermarked-container::before {
+                    background-image: url('../assets/imgs/<?=trim($_SESSION['SAL_ElectionName'])?>_Logo.jpeg');
+                }
+
+                .logo {
+                    margin-left: 10px !important;
+                    margin-top: 2px;
+                }
+            }
+
+            td:first-child .info::before {
+                content: "• ";
+                margin-right: 5px;
+                color: black;
+            }
+            
+            .qrImg{
+                width: 20vw !important; 
+                height: 20vw !important;
+            }
+        </style>
+    </head>
+    <body onload="window.print()">${c}</body>
+    </html>
     `);
-    a.document.write('@media print {');
-    a.document.write('  header { display: none; }');
-    a.document.write(
-        '  body { padding-left: 10; padding-right: 10; font-family: "Laila", serif !important;font-weight: 300;font-style: normal;}'
-    );
-    a.document.write('  .logo { margin-left: 10px !important; margin-top : 2px;}');
-    a.document.write('  @page { margin: 10;}');
-    a.document.write('}');
-    a.document.write('</style>');
-
-    a.document.write('</head><body onload="window.print()">' + c + '</body></html>');
     a.document.close();
 }
 </script>
