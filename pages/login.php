@@ -400,7 +400,7 @@ function updateOTP() {
 function checkmobileNoExists(mobileNumber) {
     $.ajax({
         type: "POST",
-        url: 'action/checkMobileExists.php',
+        url: 'action/adminMobileExists.php',
         data: {
             mobileNumber: mobileNumber
         },
