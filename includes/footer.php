@@ -362,7 +362,7 @@ $(document).ready(function() {
 
                                                     <p id="otpTimerCount"
                                                         style="color: red; font-size: 12px; display:none">OTP expires in
-                                                        <span id="countdown_text">05:00</span>
+                                                        <span id="countdown_text">00:30</span>
                                                     </p>
                                                 </div>
                                             </div>
@@ -426,7 +426,7 @@ $(document).ready(function() {
 
                             <div class="tab-pane" id="shop-details-content">
                                 <h3 class="m-2">Shop Details</h3>
-                                <form id="shop-details-form">
+                                <form id="shop-details-form" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
@@ -615,7 +615,7 @@ $(document).ready(function() {
                                                 class="text-danger error-below-form-fields"></span>
                                         </div>
 
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="shopfees"> Fees Applicable <span
                                                         class="required">*</span></label>
@@ -623,7 +623,44 @@ $(document).ready(function() {
                                                     readonly></b>
                                             </div>
                                         </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="innerimage1"> Inner Image 1 <span id="innerimage1-star"
+                                                        class="required">*</span></label>
+                                                <input type="file" class="form-control" id="innerimage1" name="innerimage1"></b>
+                                            </div>
+                                            <span id="innerimage1-link" class="file-link"></span>
+                                            <span id="innerimage1-error"
+                                                class="text-danger error-below-form-fields"></span>
+                                        </div>
 
+                                    </div>
+                                     <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="innerimage2">Inner Image 2</label>
+                                                <input type="file" class="form-control" id="innerimage2" name="innerimage2"></b>
+                                            </div>
+                                            <span id="innerimage2-error"
+                                                class="text-danger error-below-form-fields"></span>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="outerimage1">Outer Image 1 <span id="outerimage1-star"
+                                                        class="required">*</span></label>
+                                                <input type="file" class="form-control" id="outerimage1" name="outerimage1"></b>
+                                            </div>
+                                            <span id="outerimage1-link" class="file-link"></span>
+                                            <span id="outerimage1-error" class="text-danger error-below-form-fields"></span>
+                                        </div>
+                                         <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="outerimage2"> Outer Image 2 </label>
+                                                <input type="file" class="form-control" id="outerimage2" name="outerimage2"></b>
+                                            </div>
+                                            <span id="outerimage2-error" class="text-danger error-below-form-fields"></span>
+                                        </div>
                                     </div>
                                     <button type="button" class="btn btn-primary m-3" style="float: right;"
                                         onclick="submitForm('shop-details-form')">Next</button>
@@ -675,7 +712,7 @@ $(document).ready(function() {
                                             <div class="form-group">
                                                 <label for="file"><?= $doc['DocumentName']?>
                                                     <?php if($doc['IsCompulsory'] == 1){ ?> <span
-                                                        class="required">*</span> <?php } ?>
+                                                        class="required compulsory-star">*</span> <?php } ?>
                                                     <br>
                                                     (<?= $doc['DocumentNameMar'] ?>)
 
@@ -788,9 +825,12 @@ $(document).ready(function() {
                 </div>
             </div>
         </div>
+</div>
     </div>
 </div>
-
+<?php
+$editShopOwnerNumber = isset($_SESSION['EditShopOwnerNumber']) ? $_SESSION['EditShopOwnerNumber'] : 0;
+?>
 <!--  -->
 
 <!-- shop Modal Script -->
@@ -805,12 +845,35 @@ $(document).ready(function() {
 
 
 <script>
+const EditShopOwnerNumber = <?php echo $editShopOwnerNumber; ?>;
 let globBusinessDetailCd = 0;
 let globalWardNo = 0;
 let globalSpaceType = 0;
 let otpExpiryTime = 300;
 let otpTimeInterval;
 let updateShop = 0;
+
+$(document).ready(function() {
+  if (EditShopOwnerNumber == 1) {
+    // Hide all required stars for those fields
+    $('#innerimage1-star').hide();
+    $('#outerimage1-star').hide();
+    // For document stars, use a class like .compulsory-star
+    $('.compulsory-star').hide();
+
+    // Also remove the required attribute from inputs to avoid native validation prompts
+    $('#innerimage1').removeAttr('required');
+    $('#outerimage1').removeAttr('required');
+  } else {
+    $('#innerimage1-star').show();
+    $('#outerimage1-star').show();
+    $('.compulsory-star').show();
+
+    $('#innerimage1').attr('required', 'required');
+    $('#outerimage1').attr('required', 'required');
+  }
+});
+
 
 function redirectToEditPage(Shop_Cd) {
     // alert('hello');
@@ -989,6 +1052,7 @@ function submitForm(form_id) {
         }
     } else if (form_id == 'shop-details-form') {
         let hasError = false;
+        
         const fields = [{
                 id: 'shopcategory',
                 errorId: 'shopcategory-error',
@@ -1051,9 +1115,19 @@ function submitForm(form_id) {
             }
         ];
 
+        if (EditShopOwnerNumber != 1) {
+            fields.push(
+                { id: 'innerimage1', errorId: 'innerimage1-error', message: 'Inner Image 1 is required',
+                  linkId: 'innerimage1-link' },
+                { id: 'outerimage1', errorId: 'outerimage1-error', message: 'Outer Image 1 is required' ,
+                  linkId: 'outerimage1-link'}
+            );
+        }
         fields.forEach(field => {
             const value = $('#' + field.id).val();
-            if (value == '' || value == null) {
+            const hasLink = field.linkId ? $('#' + field.linkId + ' a').length > 0 : false;
+
+           if ((value == '' || value == null) && !hasLink) {
                 $('#' + field.errorId).text(field.message);
                 hasError = true;
             } else {
@@ -1194,6 +1268,47 @@ function get_ShopDetails() {
             $('#zoneno').val(data.NodeName).trigger('change');
             $('#wardno').val(globalWardNo).trigger('change');
 
+           if (data.ShopInsideImage1) {
+                const url1 = data.ShopInsideImage1;
+                const fileName1 = url1.split('/').pop();
+                $('#innerimage1-link').html(`
+                    <a href="${url1}" target="_blank" style="display:inline-block;">
+                        <img src="${url1}" alt="${fileName1}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    </a>
+                `);
+            }
+
+            if (data.ShopInsideImage2) {
+                const url2 = data.ShopInsideImage2;
+                const fileName2 = url2.split('/').pop();
+                $('#innerimage2-error').html(`
+                    <a href="${url2}" target="_blank" style="display:inline-block;">
+                        <img src="${url2}" alt="${fileName2}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    </a>
+                `);
+            }
+
+            if (data.ShopOutsideImage1) {
+                const url3 = data.ShopOutsideImage1;
+                const fileName3 = url3.split('/').pop();
+                $('#outerimage1-link').html(`
+                    <a href="${url3}" target="_blank" style="display:inline-block;">
+                        <img src="${url3}" alt="${fileName3}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    </a>
+                `);
+            }
+
+            if (data.ShopOutsideImage2) {
+                const url4 = data.ShopOutsideImage2;
+                const fileName4 = url4.split('/').pop();
+                $('#outerimage2-error').html(`
+                    <a href="${url4}" target="_blank" style="display:inline-block;">
+                        <img src="${url4}" alt="${fileName4}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    </a>
+                `);
+            }
+
+
         },
         error: function(xhr, status, error) {
 
@@ -1205,13 +1320,21 @@ function get_ShopDetails() {
 
 
 function submitShopDetails(form_id) {
-    var formData = $('#' + form_id).serialize();
+    // var formData = $('#' + form_id).serialize();
+    // let Shop_Cd = $('#shop_cd').val();
+    // formData += '&shop_cd=' + encodeURIComponent(Shop_Cd);
+     var formElement = document.getElementById(form_id);
+    var formData = new FormData(formElement); 
+
     let Shop_Cd = $('#shop_cd').val();
-    formData += '&shop_cd=' + encodeURIComponent(Shop_Cd);
+    formData.append('shop_cd', Shop_Cd);
+
     $.ajax({
         url: 'action/save_ShopDetails.php',
         type: 'POST',
         data: formData,
+        processData: false,  
+        contentType: false,
         success: function(response) {
             var data = JSON.parse(response);
             if (data.status === 'success') {
@@ -1415,38 +1538,44 @@ function getSpaceType() {
 
 function SubmitDocumentForm(form_id) {
     let allValid = true;
-    $(`#${form_id} input[type="file"]`).each(function(index, fileInput) {
-        let file = $(fileInput)[0].files[0];
-        let doc_id = $('#document_cd_' + index).val();
-        let file_url = $('#file_url_' + doc_id).val();
-        let isCompulsory = $('#is_compulsory_' + index).val() == 1;
-        let errorSpan = $('#file_' + doc_id + '-error');
-        let reqFileType = $('#document_type_' + index).val();
-        let allowedFileTypes = [];
+   
+        $(`#${form_id} input[type="file"]`).each(function(index, fileInput) {
+            let file = $(fileInput)[0].files[0];
+            let doc_id = $('#document_cd_' + index).val();
+            let file_url = $('#file_url_' + doc_id).val();
+            let isCompulsory = $('#is_compulsory_' + index).val() == 1;
+            let errorSpan = $('#file_' + doc_id + '-error');
+            let reqFileType = $('#document_type_' + index).val();
+            let allowedFileTypes = [];
 
-        if (reqFileType == 'image') {
-            allowedFileTypes = ['image/jpg', 'image/jpeg', 'image/png'];
-        } else {
-            allowedFileTypes = ['application/pdf'];
-        }
-        if (file && !allowedFileTypes.includes(file.type)) {
-            errorSpan.text("Invalid file type: Only " + allowedFileTypes.join(', ') +
-                " files are allowed.");
-            allValid = false;
-        } else if (isCompulsory && !file && !file_url) {
-            errorSpan.text('This document is required.');
-            allValid = false;
-        } else if (file) {
-            let fileSizeMB = file.size / (1024 * 1024);
-            let maxSizeMB = 2;
-            if (fileSizeMB > maxSizeMB) {
-                errorSpan.text('File size must be less than ' + maxSizeMB + ' MB');
-                allValid = false;
+            if (reqFileType == 'image') {
+                allowedFileTypes = ['image/jpg', 'image/jpeg', 'image/png'];
             } else {
-                errorSpan.text('');
+                allowedFileTypes = ['application/pdf'];
             }
-        }
-    });
+            if (file && !allowedFileTypes.includes(file.type)) {
+                errorSpan.text("Invalid file type: Only " + allowedFileTypes.join(', ') +
+                    " files are allowed.");
+                allValid = false;
+            } else if (isCompulsory && !file && !file_url) {
+                if (EditShopOwnerNumber != 1) {  
+                    errorSpan.text('This document is required.');
+                    allValid = false;
+                } else {
+                    errorSpan.text(''); 
+                }
+            } else if (file) {
+                let fileSizeMB = file.size / (1024 * 1024);
+                let maxSizeMB = 2;
+                if (fileSizeMB > maxSizeMB) {
+                    errorSpan.text('File size must be less than ' + maxSizeMB + ' MB');
+                    allValid = false;
+                } else {
+                    errorSpan.text('');
+                }
+            }
+        });
+    
 
     if (allValid) {
         $('#upload_btn').css('disabled', true);
@@ -1587,7 +1716,7 @@ $(document).ready(function() {
     $('#ShopModal').on('hidden.bs.modal', function() {
         clearInterval(otpTimerInterval);
         $('#otpTimerCount').hide();
-        $('#countdown_text').text('05:00');
+        $('#countdown_text').text('30 sec');
         $('#otpvalue').hide();
     });
 
@@ -1714,7 +1843,7 @@ function validateOtponpage(mobileNumber, otpEntered) {
                 var responseData = JSON.parse(response);
                 if (responseData.statusCode === 200) {
                     $('#resendOTP').hide();
-                    otpExpiryTime = 5 * 60;
+                    otpExpiryTime = 30;
                     $('#otpTimerCount').hide();
                     alert("Mobile Verified successfully!!!")
                     $('#shopkeeper_mobile').attr('readonly', true);
@@ -1748,7 +1877,7 @@ function sendOTPToMobileverify(mobileNumber, otp, sessionFlag) {
             if (response.statusCode === 200) {
                 alert('OTP has been sent to your mobile number!');
                 $('#otpTimerCount').show();
-                otpExpiryTime = 5 * 60;
+                otpExpiryTime = 30;
                 StartOtpTimers();
             } else {
                 alert('Failed to send OTP. Please try again.');
@@ -1919,44 +2048,44 @@ function sendApplicationMail(Shop_Cd, Operation) {
     });
 }
 
-document.addEventListener('contextmenu', event => event.preventDefault());
-// document.addEventListener('copy', event => event.preventDefault());
-// document.addEventListener('paste', event => event.preventDefault());
+// document.addEventListener('contextmenu', event => event.preventDefault());
+// // document.addEventListener('copy', event => event.preventDefault());
+// // document.addEventListener('paste', event => event.preventDefault());
 
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
+// document.addEventListener('contextmenu', function(e) {
+//     e.preventDefault();
+// });
 
-document.addEventListener('keydown', function(e) {
-    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-        e.preventDefault();
-    }
-});
+// document.addEventListener('keydown', function(e) {
+//     if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+//         e.preventDefault();
+//     }
+// });
 
-document.addEventListener('keydown', function(e) {
-    if (e.keyCode == 44) {
-        e.preventDefault();
-        alert('Print Screen is disabled');
-    }
-});
+// document.addEventListener('keydown', function(e) {
+//     if (e.keyCode == 44) {
+//         e.preventDefault();
+//         alert('Print Screen is disabled');
+//     }
+// });
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === "F12") {
-        e.preventDefault();
-    }
+// document.addEventListener('keydown', function(e) {
+//     if (e.key === "F12") {
+//         e.preventDefault();
+//     }
 
-    if (e.ctrlKey && e.shiftKey && e.key === "I") {
-        e.preventDefault();
-    }
+//     if (e.ctrlKey && e.shiftKey && e.key === "I") {
+//         e.preventDefault();
+//     }
 
-    if (e.ctrlKey && e.shiftKey && e.key === "C") {
-        e.preventDefault();
-    }
+//     if (e.ctrlKey && e.shiftKey && e.key === "C") {
+//         e.preventDefault();
+//     }
     
-    if (e.ctrlKey && e.key === "u") {
-        e.preventDefault();
-    }
-});
+//     if (e.ctrlKey && e.key === "u") {
+//         e.preventDefault();
+//     }
+// });
 </script>
 </body>
 
