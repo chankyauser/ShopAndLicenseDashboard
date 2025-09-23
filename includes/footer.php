@@ -2048,44 +2048,44 @@ function sendApplicationMail(Shop_Cd, Operation) {
     });
 }
 
-// document.addEventListener('contextmenu', event => event.preventDefault());
-// // document.addEventListener('copy', event => event.preventDefault());
-// // document.addEventListener('paste', event => event.preventDefault());
+document.addEventListener('contextmenu', event => event.preventDefault());
+// document.addEventListener('copy', event => event.preventDefault());
+// document.addEventListener('paste', event => event.preventDefault());
 
-// document.addEventListener('contextmenu', function(e) {
-//     e.preventDefault();
-// });
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
 
-// document.addEventListener('keydown', function(e) {
-//     if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-//         e.preventDefault();
-//     }
-// });
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
+        e.preventDefault();
+    }
+});
 
-// document.addEventListener('keydown', function(e) {
-//     if (e.keyCode == 44) {
-//         e.preventDefault();
-//         alert('Print Screen is disabled');
-//     }
-// });
+document.addEventListener('keydown', function(e) {
+    if (e.keyCode == 44) {
+        e.preventDefault();
+        alert('Print Screen is disabled');
+    }
+});
 
-// document.addEventListener('keydown', function(e) {
-//     if (e.key === "F12") {
-//         e.preventDefault();
-//     }
+document.addEventListener('keydown', function(e) {
+    if (e.key === "F12") {
+        e.preventDefault();
+    }
 
-//     if (e.ctrlKey && e.shiftKey && e.key === "I") {
-//         e.preventDefault();
-//     }
+    if (e.ctrlKey && e.shiftKey && e.key === "I") {
+        e.preventDefault();
+    }
 
-//     if (e.ctrlKey && e.shiftKey && e.key === "C") {
-//         e.preventDefault();
-//     }
+    if (e.ctrlKey && e.shiftKey && e.key === "C") {
+        e.preventDefault();
+    }
     
-//     if (e.ctrlKey && e.key === "u") {
-//         e.preventDefault();
-//     }
-// });
+    if (e.ctrlKey && e.key === "u") {
+        e.preventDefault();
+    }
+});
 </script>
 </body>
 
