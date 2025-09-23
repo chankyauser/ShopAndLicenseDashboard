@@ -209,7 +209,7 @@ button.eyeBtn:active {
                         <input type="hidden" name="otp" id="forgot_otp" required />
                         <span id="otpFieldForgot_error" style="color:red"></span>
                         <p id="otpTimerForgot" style="color: red; font-size: 12px;">OTP expires in <span
-                                id="countdown">05:00</span></p>
+                                id="countdown">00:30</span></p>
                     </div>
 
                     <!-- Password Section -->
@@ -344,7 +344,7 @@ $(document).ready(function() {
                 } else {
                     $('#forgot_otp').val('');
                     $('#otpTimerForgot').hide();
-                    otpExpirationTime = 5 * 60;
+                    otpExpirationTime = 30;
                     startOtpTimer();
                     $('#otpFieldForgot_error').text('').hide();
                     validateForgotOtp(mobileNumber, otp);

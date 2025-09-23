@@ -31,9 +31,13 @@ if (isset($_POST['shop_cd'])) {
                    ISNULL(nm.Node_Cd, '') as Node_Cd,
                    ISNULL(nm.NodeName, '') as NodeName,
                    ISNULL(sm.ShopArea_Name, '') as ShopArea_Name,
+                   ISNULL(sm.ShopInsideImage2, '') as ShopInsideImage2,
+                    ISNULL(sm.ShopOutsideImage1, '') as ShopOutsideImage1,
+                    ISNULL(sm.ShopOutsideImage2, '') as ShopOutsideImage2,
+                     ISNULL(sm.ShopInsideImage1, '') as ShopInsideImage1,
                    ISNULL(CONVERT(VARCHAR,sm.BusinessStartDate,23),'') as BusinessStartDate
             FROM ShopMaster sm
-            LEFT JOIN ParwanaDetails AS pd ON (pd.ParwanaDetCd = sm.ParwanaDetCd)
+            LEFT JOIN ParwanaDetails AS pd ON (pd.ParwanaDetCd = sm.ParwanaDetCd) 
             LEFT JOIN ShopAreaMaster AS sam ON (sam.ShopArea_Cd=sm.ShopArea_Cd)
             LEFT JOIN NodeMaster As nm ON (nm.Ward_No = sm.Ward_No)
             WHERE Shop_Cd = $ShopOwner_Shop_Cd";

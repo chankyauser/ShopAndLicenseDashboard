@@ -97,7 +97,7 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                                             <input type="hidden" name="otp" id="otp" required />
                                             <span id="otperror" style="color:red"></span>
                                             <p id="otpTimer" style="color: red; font-size: 12px;">OTP expires in <span
-                                                    id="countdown">05:00</span></p>
+                                                    id="countdown">00:30</span></p>
                                         </div>
 
                                         <!-- <div class="form-group" id="otpField">
@@ -154,12 +154,12 @@ $_SESSION['SAL_View_Type'] = 'ListView';
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-     let otpExpirationTime = 300; 
+     let otpExpirationTime = 30; 
     let otpTimerInterval;
 
     function startOtpTimer() {
         clearInterval(otpTimerInterval); 
-        otpExpirationTime = 300;
+        otpExpirationTime = 30;
 
         otpTimerInterval = setInterval(() => {
             let minutes = Math.floor(otpExpirationTime / 60);
@@ -229,7 +229,7 @@ $_SESSION['SAL_View_Type'] = 'ListView';
                 $('#otp').val('');
                 $('#otpField').show();
                 $('#resend-otp').hide(); 
-                otpExpirationTime = 5 * 60; 
+                otpExpirationTime = 30; 
                 startOtpTimer(); 
             } else {
                 $('#mobileerror').text('Please enter a valid mobile number.');
