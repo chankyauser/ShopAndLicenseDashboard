@@ -132,7 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     UpdatedDate = GETDATE(),
                     IsActive = 1
                 WHERE Shop_Cd = '$shop_cd'";
-            // echo $sql;die;
         $messaage = "Shop Details Updated successfully";
     }
     
