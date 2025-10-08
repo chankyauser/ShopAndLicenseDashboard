@@ -140,16 +140,13 @@ if (isset($json) && !empty($json)) {
         $QRKey = trim($QRKey);
 
         $fileName = 'QR_' . $billingId . '.png';
-        // $QRDataURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/action/LicenseQR.php?QRKey=' . urlencode($QRKey);
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
-        $host = $_SERVER['HTTP_HOST'];
-
-        $QRDataURL = $protocol . '://' . $host . '/ShopAndLicenseDashboard/action/LicenseQR.php?QRKey=' . urlencode($QRKey);
+        $domain = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
+        $QRDataURL = $domain . '/action/LicenseQR.php?QRKey=' . urlencode($QRKey);
 
         $Path = '../../app-assets/qrcodes/' . $fileName;
 
         QRcode::png($QRDataURL, $Path, QR_ECLEVEL_L, 10);
-        $QRImageURL = $protocol . '://' . $host . '/ShopAndLicenseDashboard/app-assets/qrcodes/' . $fileName;
+        $QRImageURL = $domain . '/app-assets/qrcodes/' . $fileName;
 
         $UpdateQuery = "UPDATE ShopBilling SET QRCode_URL = '$QRImageURL', QRCode_Key = '$QRKey' WHERE Billing_Cd = $billingId";
         $UpdateDB = new DBOperation();
