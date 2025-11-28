@@ -1,0 +1,64 @@
+# -------------------------
+# Core PHP Project .gitignore
+# -------------------------
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Composer (If used)
+vendor/
+composer.lock
+
+# Environment / Config files
+.env
+.env.*
+config.php
+config.local.php
+
+# Logs
+*.log
+logs/
+error_log
+php_errors.log
+
+# Cache
+cache/
+tmp/
+temp/
+
+# Session files (if stored locally)
+sessions/
+
+# Uploaded files (optional—only ignore if uploads should not be versioned)
+uploads/
+files/
+public/uploads/
+images/uploads/
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+
+# Node modules (if using frontend assets)
+node_modules/
+
+# Build / dist folders
+dist/
+build/
+
+# Backup files
+*.bak
+*.old
+*.backup
+
+# Misc
+*.zip
+*.tar
+*.gz
+*.rar
+
+*.apk
