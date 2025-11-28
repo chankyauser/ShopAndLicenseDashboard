@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 
-    $allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    // $allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     $imageFields = ['innerimage1', 'innerimage2', 'outerimage1', 'outerimage2'];
     $fieldToDbColumnMap = [
         'innerimage1' => 'ShopInsideImage1',
@@ -60,7 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $fileName = basename($_FILES[$field]['name']);                                     
             $fileType = mime_content_type($fileTmpPath);
 
-            if (!in_array($fileType, $allowedImageTypes)) {
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $allowedExt = ['jpg', 'jpeg', 'png'];
+
+            if (!in_array($ext, $allowedExt)) {
                 echo json_encode(['status' => 'error', 'message' => "Only JPEG, JPG, PNG allowed for $field"]);
                 exit;
             }
@@ -70,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $destPath = $targetFolder . $newFileName;
 
             if (move_uploaded_file($fileTmpPath, $destPath)) {
-                $imagePaths[$field] = 'http://' . $_SERVER['HTTP_HOST'] . '/ShopAndLicenseDashboard/uploads/' . $newFileName; 
+                $imagePaths[$field] = 'http://' . $_SERVER['HTTP_HOST'] . '/ShopLicense/uploads/' . $newFileName; 
             } else {
                 echo json_encode(['status' => 'error', 'message' => "Failed to upload $field"]);
                 exit;
