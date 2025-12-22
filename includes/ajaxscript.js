@@ -341,6 +341,8 @@ function loginAuthentication() {
                 if (dataResult.error == false  ) {
                     
                         // console.log(dataResult.userinformation.IsVerified);
+                        // console.log(dataResult.userinformation.DefaultElectionName);
+                        // exit();
                     $("#submitmsgsuccess").html(dataResult.message)
                         .hide().fadeIn(800, function() {
                             $("submitmsgsuccess").append("");
