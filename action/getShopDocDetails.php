@@ -12,7 +12,13 @@
                                     ISNULL(sd.Document_Cd,0) as Document_Cd, 
                                     ISNULL(sd.FileURL,'') as FileURL, 
                                     ISNULL(dm.DocumentName,'') as DocumentName,
-                                    ISNULL(dm.DocumentNameMar,'') as DocumentNameMar
+                                    ISNULL(dm.DocumentNameMar,'') as DocumentNameMar,
+                                    ISNULL(sd.Verification_Done_By,0) as Verification_Done_By,
+                                    ISNULL(sd.Verification_Done_Date,'') as Verification_Done_Date,
+                                    ISNULL(sd.Verification_Rejection_Id,0) as Verification_Rejection_Id,
+                                    ISNULL(sd.Verification_Rejection_Reason,'') as Verification_Rejection_Reason,
+                                    ISNULL(sd.Verification_Hold_Reason,'') as Verification_Hold_Reason,
+                                    ISNULL(sd.Verification_Status,'') as Verification_Status
                              FROM ShopDocuments as sd 
                              JOIN ShopDocumentMaster as dm ON sd.Document_Cd = dm.Document_Cd
                              WHERE sd.Shop_Cd = '$Shop_Cd' AND sd.IsActive = 1";

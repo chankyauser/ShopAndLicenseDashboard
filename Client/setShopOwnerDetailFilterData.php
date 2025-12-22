@@ -15,6 +15,8 @@
     $nodeData = array();
     $businessCatData = array();
 
+    $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
     if(!isset($_SESSION['SAL_Node_Name'])){
         $_SESSION['SAL_Node_Name'] = "All";
         $nodeName = $_SESSION['SAL_Node_Name'];
@@ -29,6 +31,66 @@
         $shopName = $_SESSION['SAL_Shop_Name'];
     }
 
+    $billingCondition = '';
+    if ($filter == 'total-bills') {
+        $billingCondition = " AND EXISTS (
+                SELECT 1 FROM ShopBilling sb 
+                WHERE sb.Shop_Cd = ShopMaster.Shop_Cd
+            )";
+    } else if ($filter == 'paid-bills') {
+        $billingCondition = " AND EXISTS (
+                SELECT 1 FROM TransactionDetails sd 
+                WHERE sd.Shop_Cd = ShopMaster.Shop_Cd
+                AND sd.PaymentStatus = 'SUCCESS'
+            )";
+    } else if ($filter == 'bill-amount') {
+        $billingCondition = " AND ShopMaster.Shop_Cd IN ( 
+                    SELECT Shop_Cd 
+                    FROM ShopBilling 
+                    WHERE BillAmount > 0 
+            )";
+    } else if ($filter == 'collected-amount') {
+        $billingCondition = " AND ShopMaster.Shop_Cd IN ( 
+                    SELECT Shop_Cd 
+                    FROM TransactionDetails 
+                    WHERE Amount > 0 AND PaymentStatus = 'SUCCESS'
+            )";
+    } else if ($filter == 'pending-amount') {
+        $billingCondition = " AND ShopMaster.Shop_Cd IN ( 
+                    SELECT sb.Shop_Cd 
+                    FROM ShopBilling sb
+                    LEFT JOIN (
+                        SELECT Shop_Cd, SUM(Amount) AS TotalPaid
+                        FROM TransactionDetails
+                        WHERE PaymentStatus = 'SUCCESS'
+                        GROUP BY Shop_Cd
+                    ) td ON sb.Shop_Cd = td.Shop_Cd
+                    WHERE sb.BillAmount > ISNULL(td.TotalPaid, 0)
+            )";
+    } else if ($filter == 'renewal-shops') {
+
+        $billingCondition = " AND ShopMaster.Shop_Cd IN (
+                SELECT DISTINCT sb.Shop_Cd 
+                FROM ShopBilling sb
+                INNER JOIN ShopMaster sm ON sm.Shop_Cd = sb.Shop_Cd 
+                WHERE sb.IsLicenseRenewal = 1 
+                AND YEAR(sb.LicenseStartDate) = YEAR(GETDATE())
+            )";
+    } else if ($filter == 'pending-renewal-shops') {
+        $billingCondition = " AND ShopMaster.Shop_Cd IN (
+                SELECT DISTINCT sb.Shop_Cd 
+                FROM ShopBilling sb
+                INNER JOIN ShopMaster sm ON sm.Shop_Cd = sb.Shop_Cd
+                LEFT JOIN TransactionDetails td ON sb.Billing_Cd = td.Billing_Cd
+                WHERE sb.IsLicenseRenewal = 1
+                AND (YEAR(sb.LicenseStartDate) = YEAR(GETDATE())) 
+                AND (td.Billing_Cd IS NULL OR td.PaymentStatus <> 'SUCCESS')  
+            )";
+    }else if($filter == 'All')
+    {
+         $billingCondition="";
+    }
+
     if(!isset($_SESSION['SAL_Node_Cd'])){
         $_SESSION['SAL_Node_Cd'] = "All";
         $nodeCd = $_SESSION['SAL_Node_Cd'];
@@ -41,6 +103,73 @@
         $searchOwner = $_SESSION['SAL_search_Owner_Name'];
     }else{
         $searchOwner = $_SESSION['SAL_search_Owner_Name'];
+    }
+
+    $selectedRoleId = '';
+    $selectedStageId = '';
+
+    if (!empty($_SESSION['SAL_approval_stage_id'])) {
+        $selectedStageId = (int) $_SESSION['SAL_approval_stage_id'];
+    }
+    // echo $selectedStageId;
+
+    if (!isset($_SESSION['SAL_approval_status'])) {
+        $_SESSION['SAL_approval_status'] = "";
+        $searchStatus = $_SESSION['SAL_approval_status'];
+    } else {
+        $searchStatus = $_SESSION['SAL_approval_status'];
+    }
+
+    $approvalCondition = "";
+
+
+    if ($selectedStageId == 1) {
+
+        if ($searchStatus == "") {
+            $approvalCondition = "
+                    AND NOT EXISTS (
+                        SELECT 1 FROM Application_Approval_Details aad
+                        WHERE aad.Shop_Cd = ShopMaster.Shop_Cd
+                        AND aad.Approval_Stage_Id = 1
+                    )
+                ";
+        } else {
+            $approvalCondition = "
+                    AND EXISTS (
+                        SELECT 1 FROM Application_Approval_Details aad
+                        WHERE aad.Shop_Cd = ShopMaster.Shop_Cd
+                        AND aad.Approval_Stage_Id = 1
+                        AND aad.Status = '$searchStatus'
+                    )
+                ";
+        }
+        if ($searchStatus == "All") {
+            $approvalCondition = "";
+        }
+
+    } elseif ($selectedStageId > 1) {
+        if ($searchStatus == "") {
+            $approvalCondition = "
+                AND EXISTS (
+                    SELECT 1 FROM Application_Approval_Details aad
+                    WHERE aad.Shop_Cd = ShopMaster.Shop_Cd
+                    AND aad.Status = 'Approved'
+                    AND aad.Approval_Stage_Id = ($selectedStageId-1)
+                )
+            ";
+        } else {
+            $approvalCondition = "
+                    AND EXISTS (
+                        SELECT 1 FROM Application_Approval_Details aad
+                        WHERE aad.Shop_Cd = ShopMaster.Shop_Cd
+                        AND aad.Approval_Stage_Id = $selectedStageId
+                        AND aad.Status = '$searchStatus'
+                    )
+                ";
+        }
+        if ($searchStatus == "All") {
+            $approvalCondition = "";
+        }
     }
 
     if(!isset($_SESSION['SAL_search_mobile'])){
@@ -152,6 +281,7 @@
             $nodeNameCondition
             $nodeCondition
             $searchShopCondition
+            $billingCondition
         ) as t1 
        ),0)  as FilteredShop";
 
@@ -197,28 +327,32 @@
                         ISNULL(ShopMaster.IsCertificateIssued, '') AS IsCertificateIssued,
                         ISNULL(CONVERT(VARCHAR,ShopMaster.BusinessStartDate,23),'') as BusinessStartDate,
                         ISNULL(CONVERT(VARCHAR,ShopMaster.RenewalDate,23),'') as RenewalDate,
-                        ISNULL(ShopMaster.ShopOutsideImage1, '') AS ShopOutsideImage1,
                         ISNULL(ShopMaster.ShopOwnStatus, '') AS ShopOwnStatus,
                         ISNULL(ShopMaster.BusinessCat_Cd, '') AS BusinessCat_Cd,
                         ISNULL(ShopMaster.ShopNameMar, '') AS ShopNameMar,
                         ISNULL(ShopMaster.Ward_No, '') AS Ward_No,
                         ISNULL(NodeMaster.Area, '') AS WardArea,
                         ISNULL(NodeMaster.NodeName, '') AS NodeName
-                            FROM ShopMaster
-                            LEFT JOIN ParwanaDetails ON (ParwanaDetails.ParwanaDetCd = ShopMaster.ParwanaDetCd)
-                            LEFT JOIN ParwanaMaster ON (ParwanaMaster.Parwana_Cd = ParwanaDetails.Parwana_Cd)
-                            LEFT JOIN BusinessCategoryMaster ON (BusinessCategoryMaster.BusinessCat_Cd=ShopMaster.BusinessCat_Cd)
-                            LEFT JOIN NodeMaster ON (NodeMaster.Ward_No = ShopMaster.Ward_No) AND (NodeMaster.IsActive = 1)
-                            LEFT JOIN ShopAreamaster ON (ShopMaster.ShopArea_Cd = ShopAreamaster.ShopArea_Cd) 
-                            WHERE  ShopMaster.IsActive = 1 AND ShopMaster.ShopName IS NOT NULL
+                    FROM ShopMaster
+                    LEFT JOIN ParwanaDetails ON (ParwanaDetails.ParwanaDetCd = ShopMaster.ParwanaDetCd)
+                    LEFT JOIN ParwanaMaster ON (ParwanaMaster.Parwana_Cd = ParwanaDetails.Parwana_Cd)
+                    LEFT JOIN ShopBilling sb ON sb.Shop_Cd = ShopMaster.Shop_Cd
+                    LEFT JOIN BusinessCategoryMaster ON (BusinessCategoryMaster.BusinessCat_Cd=ShopMaster.BusinessCat_Cd)
+                    LEFT JOIN NodeMaster ON (NodeMaster.Ward_No = ShopMaster.Ward_No) AND (NodeMaster.IsActive = 1)
+                    LEFT JOIN ShopAreamaster ON (ShopMaster.ShopArea_Cd = ShopAreamaster.ShopArea_Cd) 
+                    WHERE  ShopMaster.IsActive = 1 AND ShopMaster.ShopName IS NOT NULL
+                            $approvalCondition
                             $mobCondition
                             $ownerCondition
                             $nodeNameCondition
                             $nodeCondition
                             $searchShopCondition
+                            $billingCondition
                             ORDER BY ShopMaster.Shop_Cd DESC
                         OFFSET ($pageNo - 1) * $recordPerPage ROWS 
                         FETCH NEXT $recordPerPage ROWS ONLY;";
+
+    // echo $query1;exit;
 
     $shopListDetail = $db2->ExecutveQueryMultipleRowSALData($query1, $electionName, $developmentMode);
 

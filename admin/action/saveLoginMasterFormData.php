@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $expDate = $_POST['expDate'];
         $deActivateFlag = $_POST['deActivateFlag'];
         $remark = $_POST['remark'];
+        $rolename = $_POST['rolename'];
 
         $query = "SELECT top (1) Executive_Cd, Mobile FROM Survey_Entry_Data..User_Master WHERE User_Id = $userCd ;";
         
@@ -69,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         IsActive = 1,
                         User_Type = '$designation',
                         Remark = N'$remark',
+                        Role_Id = '$rolename',
                         UpdatedByUser = '$updatedByUser',
                         UpdatedDate = GETDATE()
                      WHERE Login_Cd = $loginCd;";
@@ -101,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         IsActive = 1,
                         User_Type = '$designation',
                         Remark = N'$remark',
+                        Role_Id = '$rolename',
                         UpdatedByUser = '$updatedByUser',
                         UpdatedDate = GETDATE()
                      WHERE User_Cd = $userCd AND Executive_Cd = $executiveCd;";
@@ -120,8 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                      WHERE User_Id = $userCd;";
                 $updateSEUser = $dbSEUser->RunQueryData($sqlSEUser, $electionName, $developmentMode);
 
-                $sql2 = "INSERT INTO LoginMaster(User_Cd,Executive_Cd,User_Type,Mobile_No,Remark,UpdatedDate,UpdatedByUser,AddedByUser,AddedDate)
-                VALUES($userCd,$executiveCd,'$designation','$mobile',N'$remark',GETDATE(),'$updatedByUser','$updatedByUser',GETDATE());";
+                $sql2 = "INSERT INTO LoginMaster(User_Cd,Executive_Cd,User_Type,Mobile_No,Remark,Role_Id,UpdatedDate,UpdatedByUser,AddedByUser,AddedDate)
+                VALUES($userCd,$executiveCd,'$designation','$mobile',N'$remark',$rolename,GETDATE(),'$updatedByUser','$updatedByUser',GETDATE());";
                 $insertLogin = $db->RunQueryData($sql2, $electionName, $developmentMode);
                 if($insertLogin){
                     $updateLoginMaster['Flag'] = 'I';

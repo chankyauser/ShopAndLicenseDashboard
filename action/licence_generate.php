@@ -97,7 +97,7 @@
 
     // Signature 
     $cerFile = '../Signature/CSMC_Shop_License_Signatures.cer';
-    $SignPath = "../Signature/CSMC_Signature_".$Billing_Cd.".png";  
+    $SignPath = "../Signature/CSMC_Signature_" . $billing_Id . ".png";
 
     if(!file_exists($SignPath)){
         include('signature_generate.php');
@@ -293,7 +293,7 @@ td:first-child .info::before {
                                                         </div>
                                                         <div class="col-12" style="display: flex; ">
                                                             <div class="col-6" style="width: 80%">
-                                                                <p style="font-size: 14px;">परवाना क्र.
+                                                                <p style="font-size: 14px;padding-left:20px">परवाना क्र.
                                                                     <span><?= $LicenseNumber ?> </span>
                                                                 </p>
                                                             </div>
@@ -304,7 +304,7 @@ td:first-child .info::before {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="row" style="margin-bottom: 50px;">
+                                                    <div class="row" style="margin-bottom: 50px;padding-left:20px">
                                                         <div class="col-12">
                                                             <p style="font-size: 14px;">
                                                                 <!-- छत्रपती संभाजीनगर महानगरपालिका हद्दीतील दुकान क्र. (<span>< ?= $Shop_Cd ?></span>) यावर देय्य असलेली सन < ?= $FinYear ?> या आर्थिक वर्षात पुढील प्रमाणे कराची रक्कम अदा केली असून त्यांना सदरहू परवाना अदा केला जात आहे. -->
@@ -339,7 +339,7 @@ td:first-child .info::before {
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    <div class="row" style="margin-bottom: 50px;">
+                                                    <div class="row" style="margin-bottom: 50px;padding-left:20px">
                                                         <div style="width:50%">
 
                                                         </div>
@@ -437,7 +437,7 @@ td:first-child .info::before {
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <div class="row" style="margin-bottom: 10px;">
+                                                    <div class="row" style="margin-bottom: 10px;padding-left:20px">
                                                         <p style="font-size: 14px;">उपरोक्त व्यावसायिक अस्थापना परवाना
                                                             पुढील
                                                             एकवर्षा करिता मर्यादित असेल. एक वर्षानंतर सदर परवाना
@@ -456,7 +456,7 @@ td:first-child .info::before {
                                                         </div>
                                                     </div> -->
                                                     <div class="row"
-                                                        style="display: flex; justify-content: space-between;  margin-right: 10px;">
+                                                        style="display: flex; justify-content: space-between;  margin-right: 10px;padding-left:20px">
                                                         <img class="qrImg" src="<?= $QRCode_URL ?>" id="qrCode"
                                                             style="width: 10vw; height: 10vw;" />
                                                         <div
@@ -480,7 +480,7 @@ td:first-child .info::before {
                                                         </p>
                                                     </div> -->
                                                     <div class="row"
-                                                        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                                                        style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;padding-left:20px">
                                                         <div style="flex: 1;">
                                                             <p style="font-size: 14px; margin-bottom: 0px;">टीप :-
                                                             </p>

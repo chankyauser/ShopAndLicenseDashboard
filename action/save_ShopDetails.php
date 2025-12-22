@@ -21,11 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $height = isset($_POST['height']) ? trim($_POST['height']) : '';
     $address = isset($_POST['address']) ? trim($_POST['address']) : '';
     $zoneno = isset($_POST['zoneno']) ? trim($_POST['zoneno']) : '';
-    $wardno = isset($_POST['wardno']) ? trim($_POST['wardno']) : '';
+    $wardno = isset($_POST['wardno']) ? trim($_POST['wardno']) : 0;
     $area = isset($_POST['area']) ? trim($_POST['area']) : '';
     $shopfess = isset($_POST['shopfees']) ? trim($_POST['shopfees']) : '';
     $ShopOwnPeriod = isset($_POST['ShopOwnPeriod']) ? trim($_POST['ShopOwnPeriod']) : '';
-   
 
     $targetFolder = '../uploads/';
     if (!is_dir($targetFolder)) {
@@ -91,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-
+    // echo $imagePaths['innerimage1'];exit;
     $Db = new DbOperation();
     $ParwanaQuery = "SELECT ParwanaDetCd FROM ParwanaDetails WHERE IsActive = 1 AND COALESCE(IsRenewal,0) = 0 AND Parwana_Cd = $businessdetails";
     $Parwana = $Db->ExecutveQuerySingleRowSALData($ParwanaQuery, $electionName, $developmentMode);
@@ -124,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     ShopHeight = '$height', 
                     ShopAddress_1 = '$address', 
                     ShopAddress_2 = '',
-                    Ward_No = '$wardno', 
+                    Ward_No = $wardno,
                     ShopArea_Name = '$area',
                     ParwanaDetCd = '$ParwanaDetCd',
                     ShopArea_Cd = '$spacetype', 
@@ -136,7 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     UpdatedDate = GETDATE(),
                     IsActive = 1
                 WHERE Shop_Cd = '$shop_cd'";
-                //  echo $sql;exit;
         $messaage = "Shop Details Updated successfully";
     }
     

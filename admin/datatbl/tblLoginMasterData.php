@@ -16,6 +16,8 @@
                 ISNULL(lm.Mobile_No,'') as Mobile_No,
                 ISNULL(um.UserName,'') as UserName,
                 ISNULL(um.UserType,'') as UM_UserType,
+                ISNULL(lm.Role_Id,0) as Role_Id,
+                ISNULL(dm.DValue,'') as Role_Name,
                 COALESCE(
                         CASE WHEN um.UserType = 'A' THEN 'ORNET' END,
                         CASE WHEN um.UserType = 'C' THEN 'CLIENT' END,
@@ -31,6 +33,7 @@
             FROM LoginMaster lm
             LEFT JOIN Survey_Entry_Data..User_Master um on um.User_Id = lm.User_Cd
             LEFT JOIN Survey_Entry_Data..Executive_Master em on em.Executive_Cd = lm.Executive_Cd 
+            LEFT JOIN DropDownMaster dm on dm.DropDown_Cd = lm.Role_Id AND dm.DTitle='ApprovalRoles'
             ORDER BY LastLoginDate DESC";
 
       $dataLoginMaster = $db->ExecutveQueryMultipleRowSALData($query, $electionName, $developmentMode);
@@ -54,6 +57,7 @@
                                         <th>Sr No</th>
                                         <th>Full Name</th>
                                         <th>Designation</th>
+                                        <th>Role Name</th>
                                         <th>Mobile No</th>
                                         <th>Default Corporation</th>
                                         <th>User Category</th>
@@ -73,6 +77,7 @@
                                             <td><?php echo $srNo; ?></td>
                                             <td><?php echo $value["FullName"]; ?></td>
                                             <td><?php echo $value["User_Type"]; ?></td>
+                                            <td><?php echo $value["Role_Name"]; ?></td>
                                             <td><?php echo $value["Mobile"]; ?></td>
                                             <td><?php echo $value["DefaultElectionName"]; ?></td>
                                             <td><?php //if($value["UM_UserType"]=='A'){ echo "ORNET"; }else if($value["UM_UserType"]=='C'){ echo "CLIENT"; } ?> <?php echo $value["UM_UserCategory"] ?></td>
@@ -93,6 +98,7 @@
                                        <th>Sr No</th>
                                         <th>Full Name</th>
                                         <th>Designation</th>
+                                        <th>Role Name</th>
                                         <th>Mobile No</th>
                                         <th>User Category</th>
                                         <th>Last Login</th>

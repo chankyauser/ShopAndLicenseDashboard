@@ -77,7 +77,7 @@ if (isset($_POST['mobileNumber']) && isset($_POST['otp'])) {
             }
            
             $_SESSION['SAL_UserName'] = '';
-            $_SESSION['SAL_UserType'] = 'U';
+            // $_SESSION['SAL_UserType'] = 'U';
             $_SESSION['SAL_AppName'] = "ShopAndLicence";
             $_SESSION['SAL_DevelopmentMode'] = "Live";
 

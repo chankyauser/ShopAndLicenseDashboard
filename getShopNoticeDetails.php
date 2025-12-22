@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                                             <?php if (!empty($notice['NoticeFileURL'])){ ?>
                                                 <img src="<?php echo htmlspecialchars($notice['NoticeFileURL']); ?>" alt="Notice Image" class="img-fluid mb-2" style="max-width: 150px; height: 200px;">
                                             <?php }else{ ?>
-                                            <img src="./assets/imgs/shopImage.png" alt="Default Image"
+                                            <img src="./assets/imgs/noticeImg.png" alt="Default Image"
                                                         class="img-fluid custom-product-image" style="max-width: 150px; height: 200px;">
                                             <?php } ?>
                                     </div>

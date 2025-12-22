@@ -463,7 +463,13 @@
                                                         }else{
                                                     ?>
                                         <?php echo $_SESSION['SAL_FullName']; ?>
-                                        <span><?php echo $_SESSION['SAL_UserType']; ?></span>
+                                        <span style="margin-top:5px;font-size:13px"><?php 
+                                        if(!empty($_SESSION['SAL_RoleName'])){
+                                            echo $_SESSION['SAL_RoleName'];
+                                        } elseif(!empty($_SESSION['SAL_UserType'])) {
+                                            echo $_SESSION['SAL_UserType']; 
+                                        } 
+                                       ?></span>
                                         <?php
                                                         }
                                                     ?>

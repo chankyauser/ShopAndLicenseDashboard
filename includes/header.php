@@ -549,7 +549,16 @@
                                     <div class="hotline d-none d-lg-flex">
                                         <img src="assets/imgs/theme/icons/icon-user.svg" alt="hotline" />
                                         <p>
-                                            <?= $_SESSION['SAL_ShopKeeperMobile'] ?><span>Shopkeeper / ShopOwner</span>
+                                             <?php  if(isset($_SESSION['EditShopOwnerNumber']) && $_SESSION['EditShopOwnerNumber'] == 1 && !empty($_SESSION['SAL_RoleName'])) {
+                                                ?>
+                                                       <?= $_SESSION['SAL_Mobile'] ?>
+                                                 <span><?= $_SESSION['SAL_RoleName'] ?></span>
+                                            <?php
+                                            }else{?>
+                                            <?= $_SESSION['SAL_ShopKeeperMobile'] ?>
+                                            <span>Shopkeeper / ShopOwner</span>
+                                            <?php
+                                            }?>
                                         </p>
                                     </div>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">

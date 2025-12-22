@@ -6,7 +6,7 @@ $developmentMode = $_SESSION['SAL_DevelopmentMode'];
 
 if (isset($_POST['fullname'])) {
     // Retrieve form data
-    $title = trim($_POST['title']);
+    $title = isset($_POST['title']) ? trim($_POST['title']) : '';
     $firstname = $_POST['firstname'];
     $parentname = $_POST['parentname'];
     $surname = $_POST['surname'];
@@ -46,9 +46,16 @@ if (isset($_POST['fullname'])) {
 
         $messaage = "Shop Application Updated successfully";
     }
+    if (!empty($_SESSION['SAL_RoleName']) || !empty($_SESSION['SAL_UserType'])) {
+        unset($_SESSION['SAL_ShopKeeperMobile']);
+    }
 
-    $_SESSION['SAL_ShopKeeperMobile'] = $mobile;
-
+    // Set only when BOTH are empty
+    if (empty($_SESSION['SAL_RoleName']) && empty($_SESSION['SAL_UserType'])) {
+        $_SESSION['SAL_ShopKeeperMobile'] = $mobile;
+    }
+   
+// echo  $_SESSION['SAL_ShopKeeperMobile'];exit;
     $db = new DBOperation();
     $result = $db->RunQuerySALData($sql, $electionName, $developmentMode);
 
@@ -57,13 +64,13 @@ if (isset($_POST['fullname'])) {
         $result = $db->ExecutveQuerySingleRowSALData($Query, $electionName, $developmentMode);
         $shopCd = $result['shop_cd'];
     }
-   
+    $isLoggedIn = isset($_SESSION['SAL_FullName']) && (isset($_SESSION['SAL_RoleName']) || isset($_SESSION['SAL_UserType'])) ? 1 : 0;
     if ($result) {
         echo json_encode([
             'status' => 'success',
             'message' => $messaage,
-            'Shop_Cd' => $shopCd
-
+            'Shop_Cd' => $shopCd,
+            'isLoggedIn' => $isLoggedIn
         ]);
     } else {
         echo json_encode([

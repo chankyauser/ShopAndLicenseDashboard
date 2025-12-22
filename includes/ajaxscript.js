@@ -341,12 +341,10 @@ function loginAuthentication() {
                 if (dataResult.error == false  ) {
                     
                         // console.log(dataResult.userinformation.IsVerified);
-                        // console.log(dataResult.userinformation.DefaultElectionName);
-                        // exit();
                     $("#submitmsgsuccess").html(dataResult.message)
                         .hide().fadeIn(800, function() {
                             $("submitmsgsuccess").append("");
-                            window.location.href = 'signin.php?mobile='+dataResult.userinformation.Mobile_No+'&userName='+dataResult.userinformation.UserName+'&appName='+dataResult.userinformation.AppName+'&userCd='+dataResult.userinformation.User_Cd+'&fullName='+dataResult.userinformation.ExecutiveName+'&user_type='+dataResult.userinformation.User_Type+'&electionName='+dataResult.userinformation.DefaultElectionName+'&developmentMode='+developmentMode;
+                            window.location.href = 'signin.php?mobile=' + dataResult.userinformation.Mobile_No + '&userName=' + dataResult.userinformation.UserName + '&appName=' + dataResult.userinformation.AppName + '&userCd=' + dataResult.userinformation.User_Cd + '&fullName=' + dataResult.userinformation.ExecutiveName + '&user_type=' + dataResult.userinformation.User_Type + '&electionName=' + dataResult.userinformation.DefaultElectionName + '&developmentMode=' + developmentMode + '&roleName=' + dataResult.userinformation.Role_Name + '&roleId=' + dataResult.userinformation.Role_Id;
                         }).delay(3000).fadeOut("fast");
 
                 } else if (dataResult.error == true ) {

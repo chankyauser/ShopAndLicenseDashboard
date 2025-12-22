@@ -16,7 +16,9 @@
                 $_SESSION['SAL_Shop_Name'] = $_GET['ShopName'];
                 $_SESSION['SAL_search_Owner_Name'] = $_GET['OwnerName'];
                 $_SESSION['SAL_search_mobile'] = $_GET['OwnerMobile'];
-                
+                $_SESSION['SAL_search_Role_Name'] = $_GET['roleCd'];
+                $_SESSION['SAL_approval_stage_id'] = $_GET['ApprovalStageId'];
+                $_SESSION['SAL_approval_status'] = $_GET['Status'];
 
                 if(!isset($_SESSION['SAL_View_Type'])){
                     $_SESSION['SAL_View_Type'] = 'TableView';

@@ -31,6 +31,7 @@
                     ISNULL(lm.Remark,'') as Remark,
                     ISNULL(um.UserName,'') as UserName,
                     ISNULL(um.UserType,'') as UM_UserType,
+                    ISNULL(lm.Role_Id,0) as Role_Id,
                     ISNULL(um.Executive_Cd,0) as UM_Executive_Cd,
                     COALESCE(
                             CASE WHEN um.UserType = 'A' THEN 'ORNET' END,
@@ -55,6 +56,7 @@
                     $expDate = date('Y-m-d', strtotime($value["ExpDate"]));
                     $remark = $value["Remark"];
                     $deActivateFlag = $value["DeactiveFlag"];
+                    $roleName = $value['Role_Id'];
                     // $expDateArray = explode('-',$value["ExpDate"]);
                     // $expDate = $expDateArray[2].'-'.$expDateArray[1].'-'.$expDateArray[0];
                 }
@@ -126,18 +128,45 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-xs-12 col-md-2 col-xl-2">
+                                    <div class="form-group">
+                                        <label>Role Name</label>
+                                        <div class="controls"> 
+                                            <select class="select2 form-control" name="rolename">
+                                                <option value="">--Select--</option>   
+                                                <?php
+                                                    $electionName = $_SESSION['SAL_ElectionName'];
+                                                    $developmentMode = $_SESSION['SAL_DevelopmentMode'];
+
+                                                    $roleQuery = "SELECT 
+                                                            aas.Approval_Stage_Id,
+                                                            aas.Role_Id,
+                                                            dm.DValue AS Role_Name
+                                                        FROM Application_Approval_Stages as aas
+                                                        LEFT JOIN DropDownMaster AS dm ON aas.Role_Id = dm.DropDown_Cd 
+														";
+
+                                                    $db = new DbOperation();
+                                                    $roleData = $db->ExecutveQueryMultipleRowSALData($roleQuery, $electionName, $developmentMode);
+                                                    if (!empty($roleData)) {
+                                                        foreach($roleData as $role){
+                                                            $selected=($roleName == $role['Role_Id']) ? 'selected' :'';
+                                                            ?>
+                                                              <option value="<?php echo htmlspecialchars($role['Role_Id']); ?>" <?php echo $selected; ?>><?php echo htmlspecialchars($role['Role_Name']); ?> </option>
+                                                            <?php
+                                                        }
+                                                    }
+                                                ?>
+                                               
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-xs-12 col-md-6 col-xl-6">
                                     <div class="form-group">
                                         <label for="remark">Remark</label>
                                         <input type='text' name="remark" value="<?php echo $remark;?>" class="form-control" />
                                     </div>
-                                </div>
-                                <div class="col-xs-3 col-md-3 col-xl-3">
-                                    <label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                     <input type="hidden" name="loginCd" value="<?php echo $loginCd; ?>" class="form-control" >
-                                     <input type="hidden" name="action" value="<?php echo $action; ?>" class="form-control" >
-                                     <div id="submitmsgsuccess" class="controls alert alert-success" role="alert" style="display: none;"></div>
-                                     <div id="submitmsgfailed"  class="controls alert alert-danger" role="alert" style="display: none;"></div>
                                 </div>
                                 <div class="col-xs-3 col-md-3 col-xl-3">
                                      <label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -147,12 +176,14 @@
                                         </button>
                                     </div>
                                 </div>
-
-                                
-                                
-                                
+                                <div class="col-xs-3 col-md-3 col-xl-3">
+                                    <label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="hidden" name="loginCd" value="<?php echo $loginCd; ?>" class="form-control">
+                                    <input type="hidden" name="action" value="<?php echo $action; ?>" class="form-control">
+                                    <div id="submitmsgsuccess" class="controls alert alert-success" role="alert" style="display: none;"></div>
+                                    <div id="submitmsgfailed" class="controls alert alert-danger" role="alert" style="display: none;"></div>
+                                </div>
                             </div>
-                            
                         </form>
                     </div>
                 </div>

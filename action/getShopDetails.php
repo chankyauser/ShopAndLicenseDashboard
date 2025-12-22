@@ -6,7 +6,7 @@ $electionName = $_SESSION['SAL_ElectionName'];
 $developmentMode = $_SESSION['SAL_DevelopmentMode'];
 
 if (isset($_POST['shop_cd'])) {
-    $ShopOwner_Shop_Cd = $_POST['shop_cd'];
+    $ShopOwner_Shop_Cd = $_POST['shop_cd'] ?: 0;
 
     $dbshop = new DbOperation();
     $sql = "SELECT ISNULL(sm.ShopOwnPeriod,'') as ShopOwnPeriod,

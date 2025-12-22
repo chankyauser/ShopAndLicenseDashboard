@@ -8,7 +8,7 @@ $developmentMode = $_SESSION['SAL_DevelopmentMode'];
 if (isset($_POST['nodeName'])) {
     $nodeName = $_POST['nodeName'];
 
-    $sql1 = "Select Ward_No FROM [Aurangabad_ShopAndLicense].[dbo].[NodeMaster] where NodeName='$nodeName' ";
+    $sql1 = "Select Ward_No FROM [Aurangabad_ShopAndLicense].[dbo].[NodeMaster] where NodeName='$nodeName' Order By Ward_No ASC";
     // echo $sql1;
     $db = new DBOperation();
     $zoneno = $db->ExecutveQueryMultipleRowSALData($sql1, $electionName, $developmentMode);

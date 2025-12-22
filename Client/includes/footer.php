@@ -100,8 +100,12 @@
         </div>
     </div> -->
     <!-- Vendor JS-->
-</body>
 
+    
+</body>
+<?php
+$editShopOwnerNumber = isset($_SESSION['EditShopOwnerNumber']) ? $_SESSION['EditShopOwnerNumber'] : 0;
+?>
 </html>
     <!-- Vendor JS-->
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
@@ -256,9 +260,9 @@
 
         });
 
-        
-   
-        document.addEventListener('contextmenu', event => event.preventDefault());
+    
+
+    document.addEventListener('contextmenu', event => event.preventDefault());
         // document.addEventListener('copy', event => event.preventDefault());
         // document.addEventListener('paste', event => event.preventDefault());
         document.addEventListener('contextmenu', function(e) {
@@ -296,9 +300,1661 @@
             }
         });
 </script>
+<div class="modal fade" id="ShopModal" tabindex="-1" aria-labelledby="ShopModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 70vw;">
+            <div class="modal-content">
+                <div class="modal-header d-flex justify-content-between align-items-center mx-1 mx-sm-3 mb-0 pb-0 border-0">
+                   
+                    <!-- Nav Tabs -->
+                    <ul class="nav nav-tabs mb-0" id="progressbar" role="tablist">
+                        <li class="nav-item active" id="application-details-tab">
+                            <a class="nav-link" id="application-details-tab-link" data-toggle="tab"
+                                href="#application-details-content"> Page 1 :Application Details</a>
+                        </li>
+                        <li class="nav-item" id="shop-details-tab">
+                            <a class="nav-link" id="shop-details-tab-link" data-toggle="tab" href="#shop-details-content">
+                                Page 2 : Shop Details</a>
+                        </li>
+                        <li class="nav-item" id="shop-documents-tab">
+                            <a class="nav-link" id="shop-documents-tab-link" data-toggle="tab"
+                                href="#shop-documents-content"> Page 3 : Shop Documents</a>
+                        </li>
+                    </ul>
+                    <!-- Close Button -->
+                    <button type="button" class="btn-close p-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="ShopModal">
+                        <div class="container">
 
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="application-details-content">
+                                    <h3 class="m-2">Application Details</h3>
+                                    <form id="application-form">
+                                        <input type="hidden" class="form-control" id="shop_cd" name="shop_cd">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="title">Title <span class="required">*</span></label>
+                                                    <select class="select2 form-control" name="title" id="shopkeeper_title">
+                                                        <option value="">--Select--</option>
+                                                        <option value="Mrs">Mrs</option>
+                                                        <option value="Mr">Mr</option>
+                                                        <option value="Miss">Miss</option>
+                                                    </select>
+                                                </div>
+                                                <span id="shopkeeper_title-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="first-name">First Name <span
+                                                            class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shopkeeper_firstname"
+                                                        name="firstname" placeholder="Enter your First Name"
+                                                        oninput="this.value=this.value.replace(/[^a-zA-Z\d\s]|(?<=\S)\s{2,}/g, '').replace(/\s{2,}/g, ' ').trim(); this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);"
+                                                        onkeyup="getFullName()">
+                                                </div>
+                                                <span id="shopkeeper_firstname-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="parentname">Father's Name/Husband Name</label>
+                                                    <input type="text" class="form-control" id="shopkeeper_parentname"
+                                                        name="parentname" placeholder="Enter your Father's Name"
+                                                        oninput="this.value=this.value.replace(/[^a-zA-Z\d\s]|(?<=\S)\s{2,}/g, '').replace(/\s{2,}/g, ' ').trim(); this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);"
+                                                    onkeyup="getFullName()">
+                                                </div>
+                                                <span id="shopkeeper_parentname-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="surname">SurName <span class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shopkeeper_surname"
+                                                        name="surname" placeholder="Enter your SurName"
+                                                        oninput="this.value=this.value.replace(/[^a-zA-Z\d\s]|(?<=\S)\s{2,}/g, '').replace(/\s{2,}/g, ' ').trim(); this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);"
+                                                    onkeyup="getFullName()">
+                                                </div>
+                                                <span id="shopkeeper_surname-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="fullname">Full Name <span class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shopkeeper_fullname"
+                                                        name="fullname" placeholder="Enter your Full Name" readonly>
+                                                </div>
+                                                <span id="shopkeeper_fullname-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="mobile" class="mr-2">Mobile <span
+                                                            class="required">*</span></label>
+                                                    <div class="d-flex flex-wrap align-items-center gap-2">
+                                                        <!-- Mobile Input -->
+                                                        <input type="text" class="form-control me-2 mb-2"
+                                                            id="shopkeeper_mobile" name="mobile"
+                                                            placeholder="Enter your Mobile"
+                                                            oninput="this.value = this.value.replace(/[^\d]/g, '').slice(0, 10);">
+                                                        <span id="shopkeeper_mobile-error"
+                                                            class="text-danger error-below-form-fields"></span>
+                                                        <!-- Get OTP Button -->
+                                                        <button type="button" class="btn btn-primary btn-sm mb-2"
+                                                            id="verifyOtpBtn" 
+                                                            style="display: none; font-size: 10px;">
+                                                            Get OTP
+                                                        </button>
+
+                                                        <!-- OTP Input -->
+                                                        <input type="text" class="form-control me-2 mb-2" id="otpvalue"
+                                                            name="otpvalue" placeholder="Enter your OTP"
+                                                            oninput="this.value = this.value.replace(/[^\d]/g, '').slice(0, 4);"
+                                                            onkeyup="validateMobileNo()"
+                                                            style="display: none; width: 120px;">
+
+                                                        <!-- Resend OTP -->
+                                                        <p class="mb-2 text-danger" id="resendOTP"
+                                                            style="cursor: pointer; display: none;"
+                                                            >
+                                                            Resend OTP
+                                                        </p>
+
+                                                        <p id="otpTimerCount"
+                                                            style="color: red; font-size: 12px; display:none">OTP expires in
+                                                            <span id="countdown_text">00:30</span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="email">Email <span class="required">*</span></label>
+                                                    <input type="email" class="form-control" id="shopkeeper_email"
+                                                        name="email" placeholder="Enter your Email"
+                                                        onblur="validateEmailInput(this)">
+                                                </div>
+                                                <span id="shopkeeper_email-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="aadharno">Aadhar No</label>
+                                                    <input type="text" class="form-control" id="shopkeeper_aadharno"
+                                                        name="aadharno" placeholder="Enter your Aadhar No"
+                                                        oninput="this.value = this.value.replace(/[^\d]/g, '').slice(0, 12);">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="address">Address For Correspondance <span
+                                                            class="required">*</span></label>
+                                                    <textarea class="form-control" id="shopkeeper_address"
+                                                        name="address"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="pincode">Pincode <span class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shopkeeper_pincode"
+                                                        name="pincode" placeholder="Enter your Pincode"
+                                                        oninput="this.value = this.value.replace(/[^\d]/g, '').slice(0, 6);">
+                                                </div>
+                                                <span id="shopkeeper_pincode-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                        </div>
+
+                                        <button type="button" class="btn btn-primary m-3" style="float: right;"
+                                            onclick="submitForm('application-form')">Next</button>
+                                        <div class="form-group">
+                                            <div id="submitmsg" style="display: none;">
+                                                <img height="50" width="50" src="assets/imgs/loader/loading.gif" />
+                                            </div>
+                                            <div id="submitmsgsuccess" class="controls alert alert-success col-md-10"
+                                                role="alert" style="display: none;"></div>
+                                            <div id="submitmsgfailed" class="controls alert alert-danger col-md-10"
+                                                role="alert" style="display: none;"></div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="tab-pane" id="shop-details-content">
+                                    <h3 class="m-2">Shop Details</h3>
+                                    <form id="shop-details-form" enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="shopcategory">Shop Category<span
+                                                            class="required">*</span></label>
+                                                    <select class="select2 form-control" id="shopcategory"
+                                                        name="shopcategory">
+                                                        <option value="">--Select--</option>
+                                                    </select>
+                                                </div>
+                                                <span id="shopcategory-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="businesscategory">Business Category<span
+                                                            class="required">*</span></label>
+                                                    <select class="select2 form-control" id="businesscategory"
+                                                        name="businesscategory">
+                                                        <option value="">--Select--</option>
+                                                    </select>
+                                                </div>
+                                                <span id="businesscategory-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="nameofbusiness">Name Of Business <span
+                                                            class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="nameofbusiness"
+                                                        name="nameofbusiness" placeholder="Enter your Name of Business"
+                                                        oninput="this.value=this.value.replace(/[^a-zA-Z\d\s]|(?<=\S)\s{2,}/g, '').replace(/\s{2,}/g, ' ')">
+                                                </div>
+                                                <span id="nameofbusiness-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="businessdetails">Business Details <span
+                                                            class="required">*</span></label>
+                                                    <select class="select2 form-control" name="businessdetails"
+                                                        id="businessdetails" onchange="getAmount()">
+                                                        <option value="">--Select--</option>
+                                                    </select>
+                                                </div>
+                                                <span id="businessdetails-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="spacetype">Space Type <span
+                                                            class="required">*</span></label>
+                                                    <select class="select2 form-control" id="spacetype" name="spacetype">
+                                                        <option value="">--Select--</option>
+
+                                                    </select>
+                                                </div>
+                                                <span id="spacetype-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="shopownstatus">Shop Own Status</label>
+                                                    <select class="select2 form-control" id="shopownstatus"
+                                                        name="shopownstatus">
+                                                        <option value="">--Select--</option>
+                                                        <option value="Rented">Rent</option>
+                                                        <option value="own">Own</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="estdate">Estimate Date to Start New Business <span
+                                                            class="required">*</span></label>
+                                                    <input type="Date" class="form-control" id="estimatedate"
+                                                        name="estimatedate">
+                                                </div>
+                                                <span id="estimatedate-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="ShopOwnPeriod">Shop Own Period (in months)<span
+                                                            class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="ShopOwnPeriod"
+                                                        name="ShopOwnPeriod" readonly>
+                                                </div>
+                                                <span id="ShopOwnPeriod-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                        </div>
+
+                                        <!-- <br> -->
+
+                                        <h5 class="m-2">Shop Dimension</h5>
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="length">Length (in Meters)<span
+                                                            class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shoplength" name="length"
+                                                        oninput="this.value = this.value.replace(/\D/g, '')">
+                                                </div>
+                                                <span id="shoplength-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="width">Width (in Meters)<span
+                                                            class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shopwidth" name="width"
+                                                        oninput="this.value = this.value.replace(/\D/g, '')">
+                                                </div>
+                                                <span id="shopwidth-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="height">Height (in Meters)<span
+                                                            class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shopheight" name="height"
+                                                        oninput="this.value = this.value.replace(/\D/g, '')">
+                                                </div>
+                                                <span id="shopheight-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="zoneno">Zone No</label>
+                                                    <select class="select2 form-control" id="zoneno" name="zoneno">
+                                                        <option value="">--Select--</option>
+                                                        <?php
+                                                        // session_start();
+                                                        $electionName = $_SESSION['SAL_ElectionName'];
+                                                        $developmentMode = $_SESSION['SAL_DevelopmentMode'];
+                                                        $sql1 = " SELECT DISTINCT(NodeName) as NodeName FROM NodeMaster WHERE IsActive = 1;";
+                                                        $db3 = new DbOperation();
+                                                        $zone = $db3->ExecutveQueryMultipleRowSALData($sql1, $electionName, $developmentMode);
+                                                        if ($zone) {
+                                                            foreach ($zone as $node) {
+                                                                echo "<option value='" . htmlspecialchars($node['NodeName']) . "'>" . htmlspecialchars($node['NodeName']) . "</option>";
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <span id="zoneno-error" class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="wardno">Ward No</label>
+                                                    <select class="select2 form-control" id="wardno" name="wardno">
+                                                    </select>
+                                                </div>
+                                                <span id="wardno-error" class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="area">Area <span class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shoparea" name="area"
+                                                        oninput="this.value=this.value.replace(/[^a-zA-Z\d\s]|(?<=\S)\s{2,}/g, '').replace(/\s{2,}/g, ' ').trim(); this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);">
+                                                </div>
+                                                <span id="shoparea-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="address">Shop Address For Correspondance <span
+                                                            class="required">*</span></label>
+                                                    <textarea class="form-control" id="shopaddress"
+                                                        name="address"></textarea>
+                                                </div>
+                                                <span id="shopaddress-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="shopfees"> Fees Applicable <span
+                                                            class="required">*</span></label>
+                                                    <input type="text" class="form-control" id="shopfees" name="shopfees"
+                                                        readonly></b>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="innerimage1"> Inner Image 1 <span id="innerimage1-star"
+                                                            class="required">*</span></label>
+                                                    <input type="file" class="form-control" id="innerimage1" name="innerimage1"></b>
+                                                </div>
+                                                <span id="innerimage1-link" class="file-link"></span>
+                                                <span id="innerimage1-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="innerimage2">Inner Image 2</label>
+                                                    <input type="file" class="form-control" id="innerimage2" name="innerimage2"></b>
+                                                </div>
+                                                <span id="innerimage2-error"
+                                                    class="text-danger error-below-form-fields"></span>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="outerimage1">Outer Image 1 <span id="outerimage1-star"
+                                                            class="required">*</span></label>
+                                                    <input type="file" class="form-control" id="outerimage1" name="outerimage1"></b>
+                                                </div>
+                                                <span id="outerimage1-link" class="file-link"></span>
+                                                <span id="outerimage1-error" class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="outerimage2"> Outer Image 2 </label>
+                                                    <input type="file" class="form-control" id="outerimage2" name="outerimage2"></b>
+                                                </div>
+                                                <span id="outerimage2-error" class="text-danger error-below-form-fields"></span>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-primary m-3" style="float: right;"
+                                            onclick="submitForm('shop-details-form')">Next</button>
+                                        <div id="submitmsgsuccess" class="controls alert alert-success col-md-10"
+                                            role="alert" style="display: none;"></div>
+                                        <div id="submitmsgfailed" class="controls alert alert-danger col-md-10" role="alert"
+                                            style="display: none;"></div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane" id="shop-documents-content">
+                                    <h3 class="m-2">Shop Documents</h3>
+                                    <?php   $DocFormatSpan = '';
+                                                $electionName = $_SESSION['SAL_ElectionName'];
+                                                $developmentMode = $_SESSION['SAL_DevelopmentMode']; 
+                                                $sql = "SELECT Document_Cd,DocumentName,DocumentNameMar, DocumentType,IsCompulsory FROM ShopDocumentMaster WHERE IsActive = 1 ORDER BY DocumentType";
+                                                $dbdoc = new DbOperation();
+                                                $docType = $dbdoc->ExecutveQueryMultipleRowSALData($sql, $electionName, $developmentMode);
+                                        ?>
+                                    <form id="shopDocForm">
+                                        <div class="row">
+                                            <?php foreach($docType as $key => $doc) {
+                                                ?>
+                                            <input type="hidden" name="is_compulsory[]" id="is_compulsory_<?= $key ?>"
+                                                value="<?= $doc['IsCompulsory'] ?>">
+                                            <input type="hidden" name="document_type[]" id="document_type_<?= $key ?>"
+                                                value="<?= $doc['DocumentType'] ?>">
+                                            <input type="hidden" name="document_cd[]" id="document_cd_<?= $key ?>"
+                                                value="<?= $doc['Document_Cd'] ?>">
+
+                                            <?php if($doc['DocumentType'] == 'image') {       
+                                                        $accept = 'image/jpeg, image/png, image/jpg';
+                                                        $imgExt = '.jpg, .jpeg, .png';
+                                                    } else{
+                                                        $accept = 'application/pdf';
+                                                        $imgExt = '.pdf';
+                                                    }
+                                                ?>
+
+                                            <input type="hidden" name="ShopDocDet_Cd[]"
+                                                id="ShopDocDet_Cd_<?= $doc['Document_Cd'] ?>">
+
+                                            <?php if($DocFormatSpan != $doc['DocumentType']) { ?>
+                                            <div class="alert alert-info" role="alert">
+                                                Note : Upload below file only <?=$imgExt?> upto 2MB
+                                            </div>
+                                            <?php } $DocFormatSpan = $doc['DocumentType']; ?>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="file"><?= $doc['DocumentName']?>
+                                                        <?php if($doc['IsCompulsory'] == 1){ ?> <span
+                                                            class="required compulsory-star">*</span> <?php } ?>
+                                                        <br>
+                                                        (<?= $doc['DocumentNameMar'] ?>)
+
+                                                    </label>
+                                                    <div class="d-flex align-items-center">
+                                                        <input type="file" class="form-control"
+                                                            id="file_<?= $doc['Document_Cd'] ?>" name="file[]"
+                                                            accept="<?= $accept ?>">
+
+                                                        <input type="hidden" name="file_url[]"
+                                                            id="file_url_<?= $doc['Document_Cd']?>">
+
+                                                        <a href="" id="FileTag_<?= $doc['Document_Cd']?>"
+                                                            class="btn btn-info shadow btn-sm sharp file-btn mr-1 m-2 d-none"
+                                                            target="_blank">
+                                                            <i class="fa fa-file"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <span id="file_<?= $doc['Document_Cd'] ?>-error"
+                                                    class="text-danger error-below-form-fields m-2"></span>
+                                            </div>
+                                            <?php } ?>
+                                        </div>
+                                    </form>
+
+                                    <div class="docList d-none"></div>
+
+                                    <div class="col-md-3 btn-div text-end" style="margin-top:2rem;float:right;">
+                                        <button type="button" class="btn btn-primary m-3" id="upload_btn"
+                                            onclick="submitForm('shopDocForm')">Submit</button>
+                                        <div id="FromMsgSuccess" class="controls alert alert-success" role="alert"
+                                            style="display: none;"></div>
+                                        <div id="FormMsgFailed" class="controls alert alert-danger" role="alert"
+                                            style="display: none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const EditShopOwnerNumber = <?php echo $editShopOwnerNumber; ?>;
+    let globBusinessDetailCd = 0;
+    let globalWardNo = 0;
+    let globalSpaceType = 0;
+    let otpExpiryTime = 300;
+    let otpTimeInterval;
+    let updateShop = 0;
+
+    $(document).ready(function() {
+    // if (EditShopOwnerNumber == 1) {
+    //     // Hide all required stars for those fields
+    //     $('#innerimage1-star').hide();
+    //     $('#outerimage1-star').hide();
+    //     // For document stars, use a class like .compulsory-star
+    //     $('.compulsory-star').hide();
+
+    //     $('#innerimage1').removeAttr('required');
+    //     $('#outerimage1').removeAttr('required');
+    // } else {
+    //     $('#innerimage1-star').show();
+    //     $('#outerimage1-star').show();
+    //     $('.compulsory-star').show();
+
+    //     $('#innerimage1').attr('required', 'required');
+    //     $('#outerimage1').attr('required', 'required');
+    // }
+
+    
+
+    
+    
+        $('#editButton').on('click', function () {
+            $('#EditShopModal').find('input, select, textarea').each(function () {
+                const type = $(this).attr('type');
+                if (type === 'file') {
+                    $(this).prop('disabled', false); 
+                } else {
+                    $(this).prop('readonly', false); 
+                }
+            });
+            $('#EditShopModal').find('select').prop('disabled', false);
+            // $(this).hide();
+            $('#saveBtn').show();
+            <?php if (isset($_SESSION['EditShopOwnerNumber']) && $_SESSION['EditShopOwnerNumber'] == 0) { ?>
+                $('#shopkeeper_mobile').prop('readonly', true);
+            <?php } ?>
+        });
+
+    });
+
+
+    // function redirectToEditPage(Shop_Cd) {
+    //     // alert('hello');
+    //     updateShop = 1;
+    //     $.ajax({
+    //         url: './action/getShopAddressDetails.php',
+    //         type: 'POST',
+    //         data: {
+    //             Shop_Cd: Shop_Cd
+    //         },
+    //         success: function(response) {
+    //             var data = JSON.parse(response);
+    //             if (data.status == 200) {
+    //                 var records = data.data[0];
+    //                 var ShopKeeperName = records['ShopKeeperName'];
+    //                 var nameParts = ShopKeeperName.split(' ');
+    //                 var firstName = '';
+    //                 var middleName = '';
+    //                 var lastName = '';
+    //                 if (records['FirstName'] != '' && records['LastName'] != '') {
+    //                     firstName = records['FirstName'];
+    //                     lastName = records['LastName'];
+    //                     if (records['MiddleName'] != '') {
+    //                         middleName = records['MiddleName'];
+    //                     }
+    //                 } else if (nameParts.length == 3) {
+    //                     firstName = nameParts[0];
+    //                     middleName = nameParts[1];
+    //                     lastName = nameParts[2];
+    //                 } else if (nameParts.length > 3) {
+    //                     firstName = nameParts[0];
+    //                     lastName = nameParts[nameParts.length - 1];
+    //                     middleName = nameParts.slice(1, nameParts.length - 1).join(' ');
+
+    //                 } else {
+    //                     firstName = nameParts[0];
+    //                     lastName = nameParts[1];
+    //                 }
+
+    //                 $('#shopkeeper_title').val(records['Title'].trim()).trigger('change');
+    //                 $('#shopkeeper_fullname').val(records['ShopKeeperName']);
+    //                 $('#shopkeeper_firstname').val(firstName);
+    //                 $('#shopkeeper_parentname').val(middleName);
+    //                 $('#shopkeeper_surname').val(lastName);
+    //                 $('#shopkeeper_mobile').val(records['ShopKeeperMobile']);
+    //                 $('#shopkeeper_email').val(records['ShopEmailAddress']);
+    //                 $('#shopkeeper_aadharno').val(records['ShopOwnerAadharNo']);
+    //                 $('#shopkeeper_address').val(records['ShopOwnerAddress']);
+    //                 $('#shopkeeper_pincode').val(records['ShopOwnerPinCode']);
+    //                 $('#shop_cd').val(Shop_Cd);
+    //                 <?php if(isset($_SESSION['EditShopOwnerNumber']) && $_SESSION['EditShopOwnerNumber'] == 1) { ?>
+    //                 $('#shopkeeper_mobile').prop('readonly', false);
+    //                 <?php } else { ?>
+    //                 $('#shopkeeper_mobile').prop('readonly', true);
+    //                 <?php }?>
+    //             $('#verifyOtpBtn').hide();
+
+                
+    //                 $('#EditShopModal')
+    //                     .find('input, select, textarea')
+    //                     .each(function() {
+    //                         const type = $(this).attr('type');
+    //                         if (type === 'file') {
+    //                             $(this).prop('disabled', true); 
+    //                         } else {
+    //                             $(this).prop('readonly', true); 
+    //                         }
+    //                     });
+
+                
+    //                 $('#EditShopModal').find('select').prop('disabled', true);
+
+                
+    //                 $('#EditShopModal').modal('show');
+                
+    //             } else {
+    //                 alert(data.message);
+    //             }
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error("Error: " + error);
+    //         }
+    //     });
+    
+    //     get_ShopDetails(Shop_Cd)
+    //     get_DocDetails(Shop_Cd);
+    // }
+
+    function getFullName() {
+        var firstname = $('#shopkeeper_firstname').val();
+        var middlename = $('#shopkeeper_parentname').val();
+        var surname = $('#shopkeeper_surname').val();
+
+        let fullName = firstname;
+        if (middlename) {
+            fullName += ' ' + middlename;
+        }
+
+        if (surname) {
+            fullName += ' ' + surname;
+        }
+
+        $('#shopkeeper_fullname').val(fullName);
+    }
+
+    function submitForm(form_id) {
+        if (form_id == 'application-form') {
+        
+            let hasError = false;
+
+            const fields = [{
+                    id: 'shopkeeper_title',
+                    errorId: 'shopkeeper_title-error',
+                    message: 'Title is required'
+                },
+                {
+                    id: 'shopkeeper_firstname',
+                    errorId: 'shopkeeper_firstname-error',
+                    message: 'First Name is required'
+                },
+                {
+                    id: 'shopkeeper_surname',
+                    errorId: 'shopkeeper_surname-error',
+                    message: 'Surname is required'
+                },
+                {
+                    id: 'shopkeeper_mobile',
+                    errorId: 'shopkeeper_mobile-error',
+                    message: 'Mobile Number is required'
+                },
+                {
+                    id: 'shopkeeper_email',
+                    errorId: 'shopkeeper_email-error',
+                    message: 'Email is required'
+                },
+                {
+                    id: 'shopkeeper_pincode',
+                    errorId: 'shopkeeper_pincode-error',
+                    message: 'Pincode is required'
+                },
+                {
+                    id: 'shopkeeper_address',
+                    errorId: 'shopkeeper_address-error',
+                    message: 'Address is required'
+                },
+            ];
+
+            fields.forEach(field => {
+                const value = $('#' + field.id).val();
+                if (value == '' || value == null) {
+                    $('#' + field.errorId).text(field.message);
+                    hasError = true;
+                } else {
+                    if (field.id == 'shopkeeper_mobile') {
+                        const mobileRegex = /^[0-9]{10}$/;
+                        if (!mobileRegex.test(value)) {
+                            $('#' + field.errorId).text('Mobile Number must be 10 digits');
+                            hasError = true;
+                            return;
+                        }
+                    }
+                    if (field.id == 'shopkeeper_pincode') {
+                        const pincodeRegex = /^[0-9]{6}$/;
+                        if (!pincodeRegex.test(value)) {
+                            $('#' + field.errorId).text('Pincode must be 6 digits');
+                            hasError = true;
+                            return;
+                        }
+                    }
+                    $('#' + field.errorId).text('');
+                }
+            });
+
+            var aadhar_no = $('#shopkeeper_aadhar_no').val();
+
+            if (aadhar_no && aadhar_no.length != 12) {
+                $('#shopkeeper_aadharno-error').text('Aadhar Number must be 12 digits');
+                hasError = true;
+                return;
+            }
+
+            if ($('#verifyOtpBtn').is(':visible')) {
+                $('#shopkeeper_mobile-error').text('Please Verify Mobile No');
+                hasError = true;
+                return;
+            }
+
+            if (!hasError) {
+                submitApplicationForm(form_id);
+            }
+        } else if (form_id == 'shop-details-form') {
+            let hasError = false;
+            
+            const fields = [{
+                    id: 'shopcategory',
+                    errorId: 'shopcategory-error',
+                    message: 'Shop Category is required'
+                },
+                {
+                    id: 'businesscategory',
+                    errorId: 'businesscategory-error',
+                    message: 'Business Category is required'
+                },
+                {
+                    id: 'businessdetails',
+                    errorId: 'businessdetails-error',
+                    message: 'Business Details is required'
+                },
+                {
+                    id: 'nameofbusiness',
+                    errorId: 'nameofbusiness-error',
+                    message: 'Business Name is required'
+                },
+                {
+                    id: 'estimatedate',
+                    errorId: 'estimatedate-error',
+                    message: 'Estimate Date is required'
+                },
+                {
+                    id: 'spacetype',
+                    errorId: 'spacetype-error',
+                    message: 'Space Type is required'
+                },
+                {
+                    id: 'shopownstatus',
+                    errorId: 'shopownstatus-error',
+                    message: 'Shop Own Status is required'
+                },
+                {
+                    id: 'shoplength',
+                    errorId: 'shoplength-error',
+                    message: 'Shop Length is required'
+                },
+                {
+                    id: 'shopheight',
+                    errorId: 'shopheight-error',
+                    message: 'Shop Height is required'
+                },
+                {
+                    id: 'shopwidth',
+                    errorId: 'shopwidth-error',
+                    message: 'Shop Width is required'
+                },
+                {
+                    id: 'shopaddress',
+                    errorId: 'shopaddress-error',
+                    message: 'Shop Address is required'
+                },
+                {
+                    id: 'shoparea',
+                    errorId: 'shoparea-error',
+                    message: 'Shop Area is required'
+                }
+            ];
+
+        
+                fields.push(
+                    { id: 'innerimage1', errorId: 'innerimage1-error', message: 'Inner Image 1 is required',
+                    linkId: 'innerimage1-link' },
+                    { id: 'outerimage1', errorId: 'outerimage1-error', message: 'Outer Image 1 is required' ,
+                    linkId: 'outerimage1-link'}
+                );
+            
+            fields.forEach(field => {
+                const value = $('#' + field.id).val();
+                const hasLink = field.linkId ? $('#' + field.linkId + ' a').length > 0 : false;
+
+            if ((value == '' || value == null) && !hasLink) {
+                    $('#' + field.errorId).text(field.message);
+                    hasError = true;
+                } else {
+                    if (field.id == 'shoplength') {
+                        if (value == 0) {
+                            $('#' + field.errorId).text('Shop Length should be greater than 0');
+                            hasError = true;
+                            return;
+                        }
+                    }
+
+                    if (field.id == 'shopheight') {
+                        if (value == 0) {
+                            $('#' + field.errorId).text('Shop Height should be greater than 0');
+                            hasError = true;
+                            return;
+                        }
+                    }
+
+                    if (field.id == 'shopwidth') {
+                        if (value == 0) {
+                            $('#' + field.errorId).text('Shop Width should be greater than 0');
+                            hasError = true;
+                            return;
+                        }
+                    }
+                    $('#' + field.errorId).text('');
+                }
+            });
+
+            var zoneno = $('#zoneno').val();
+            var wardno = $('#wardno').val();
+
+            if (zoneno && zoneno !== '0') {
+                if (!wardno) {
+                    $('#wardno-error').text('Ward No is required');
+                    hasError = true;
+                }
+            }
+
+            if (!hasError) {
+                submitShopDetails(form_id);
+            }
+
+
+
+        } else if (form_id == 'shopDocForm') {
+            SubmitDocumentForm(form_id);
+        }
+    }
+
+
+    function submitApplicationForm(form_id) {
+        var formData = $('#' + form_id).serialize();
+
+        $.ajax({
+            url: '../action/save_ApplicationForm.php',
+            type: 'POST',
+            data: formData,
+            beforeSend: function() {},
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    $("#application-form #submitmsgsuccess").html(data.message)
+                        .hide().fadeIn(800, function() {
+                            $("submitmsgsuccess").append("");
+
+                        }).delay(1000).fadeOut("fast");
+                    if (data.Shop_Cd) {
+                        $('#shop_cd').val(data.Shop_Cd);
+                    }
+                    get_ShopDetails();
+                    setTimeout(function() {
+                        if ($('.nav-item').has('active')) {
+                            $('.nav-item').removeClass('active');
+                        }
+                        $('#shop-details-tab').addClass('active');
+                        $('#shop-details-tab-link').tab('show');
+                        updateNavLinks();
+                    }, 2000);
+                    
+                } else {
+                    $("#application-form #submitmsgfailed").html(data.message)
+                        .hide().fadeIn(800, function() {
+                            $("submitmsgfailed").append("");
+                        }).delay(1000).fadeOut("fast");
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#submitmsgfailed').text('An error occurred. Please try again.').show();
+            }
+        });
+    }
+
+
+    function get_ShopDetails() {
+        getShopCategory();
+        getBusinessCategory();
+        getSpaceType();
+        var Shop_Cd = $('#shop_cd').val();
+        $.ajax({
+            url: '../action/getShopDetails.php',
+            type: 'POST',
+            data: {
+                shop_cd: Shop_Cd
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                console.log(data);
+                globBusinessDetailCd = data.Parwana_Cd;
+                globalWardNo = data.Ward_No;
+                globalSpaceType = data.ShopArea_Cd;
+                // console.log(globalWardNo);
+                $('#ShopOwnPeriod').val("");
+
+                $('#nameofbusiness').val(data.ShopName);
+                $('#shopcategory').val(data.ShopCategory).trigger('change');
+                $('#businesscategory').val(data.BusinessCat_Cd).trigger('change');
+                $('#nameofbusiness').val(data.ShopName);
+                $('#businessdetails').val(globBusinessDetailCd).trigger('change');
+                $('#shopownstatus').val(data.ShopOwnStatus);
+                $('#spacetype').val(globalSpaceType).trigger('change');
+
+                if (data.BusinessStartDate != null && data.BusinessStartDate != '') {
+                    $('#estimatedate').val(data.BusinessStartDate);
+                }
+                if (data.ShopOwnPeriod != null && data.ShopOwnPeriod != '') {
+                    $('#ShopOwnPeriod').val(data.ShopOwnPeriod);
+                } else {
+                    calculate_ShopOwnsPeriod(data.BusinessStartDate);
+                }
+
+                $('#shoplength').val(data.ShopLength);
+                $('#shopheight').val(data.ShopHeight);
+                $('#shopwidth').val(data.ShopWidth);
+                $('#shoparea').val(data.ShopArea_Name);
+                $('#shopaddress').val(data.ShopAddress_1);
+                $('#shopfees').val(data.Amount);
+                $('#zoneno').val(data.NodeName).trigger('change');
+                $('#wardno').val(globalWardNo).trigger('change');
+
+            if (data.ShopInsideImage1) {
+                    const url1 = data.ShopInsideImage1;
+                    const fileName1 = url1.split('/').pop();
+                    $('#innerimage1-link').html(`
+                        <a href="${url1}" target="_blank" style="display:inline-block;">
+                            <img src="${url1}" alt="${fileName1}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                        </a>
+                    `);
+                }
+
+                if (data.ShopInsideImage2) {
+                    const url2 = data.ShopInsideImage2;
+                    const fileName2 = url2.split('/').pop();
+                    $('#innerimage2-error').html(`
+                        <a href="${url2}" target="_blank" style="display:inline-block;">
+                            <img src="${url2}" alt="${fileName2}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                        </a>
+                    `);
+                }
+
+                if (data.ShopOutsideImage1) {
+                    const url3 = data.ShopOutsideImage1;
+                    const fileName3 = url3.split('/').pop();
+                    $('#outerimage1-link').html(`
+                        <a href="${url3}" target="_blank" style="display:inline-block;">
+                            <img src="${url3}" alt="${fileName3}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                        </a>
+                    `);
+                }
+
+                if (data.ShopOutsideImage2) {
+                    const url4 = data.ShopOutsideImage2;
+                    const fileName4 = url4.split('/').pop();
+                    $('#outerimage2-error').html(`
+                        <a href="${url4}" target="_blank" style="display:inline-block;">
+                            <img src="${url4}" alt="${fileName4}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                        </a>
+                    `);
+                }
+
+
+            },
+            error: function(xhr, status, error) {
+
+                $('#submitmsg').hide();
+                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+            }
+        });
+    }
+
+
+    function submitShopDetails(form_id) {
+        // var formData = $('#' + form_id).serialize();
+        // let Shop_Cd = $('#shop_cd').val();
+        // formData += '&shop_cd=' + encodeURIComponent(Shop_Cd);
+        var formElement = document.getElementById(form_id);
+        var formData = new FormData(formElement); 
+
+        let Shop_Cd = $('#shop_cd').val();
+        formData.append('shop_cd', Shop_Cd);
+
+        $.ajax({
+            url: '../action/save_ShopDetails.php',
+            type: 'POST',
+            data: formData,
+            processData: false,  
+            contentType: false,
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    $("#shop-details-form #submitmsgsuccess").html(data.message)
+                        .hide().fadeIn(800, function() {
+                            $("#submitmsgsuccess").append("");
+                        }).delay(1000).fadeOut("fast");
+                    if (data.Shop_Cd) {
+                        $('#shop_cd').val(data.Shop_Cd);
+                    }
+                    get_DocDetails();
+                    // setTimeout(function() {
+                        if ($('.nav-item').has('active')) {
+                            $('.nav-item').removeClass('active');
+                        }
+                        $('#shop-documents-tab').addClass('active');
+                        $('#shop-documents-tab-link').tab('show');
+                        updateNavLinks();
+                    // },1200);
+                    
+                } else {
+                    $("#shop-details-form #submitmsgfailed").html(data.message)
+                        .hide().fadeIn(800, function() {
+                            $("#submitmsgfailed").append("");
+                        }).delay(1000).fadeOut("fast");
+                }
+            },
+            error: function(xhr, status, error) {
+
+                alert('An error occurred while saving the details.');
+                console.log(error);
+            }
+        });
+    }
+
+    $('#businesscategory').change(function() {
+        // alert($(this).val());
+        console.log($(this).val());
+        var categoryCd = $(this).val();
+        if (categoryCd) {
+
+            $.ajax({
+                url: '../action/get_business_details.php',
+                type: 'POST',
+                data: {
+                    businessCatCd: categoryCd
+                },
+                success: function(response) {
+                    $('#businessdetails').html('<option value="">--Select--</option>');
+                    if (response) {
+                        var details = JSON.parse(
+                            response);
+                        $.each(details, function(index, detail) {
+                            $('#businessdetails').append('<option value="' + detail
+                                .Parwana_Cd + '">' + detail.Parwana_Name_Eng +
+                                '</option>');
+                        });
+                    } else {
+                        $('#businessdetails').append(
+                            '<option value="">No details available</option>');
+                    }
+                    $('#businessdetails').val(globBusinessDetailCd).trigger('change');
+                },
+                error: function() {
+                    alert('Error fetching business details.');
+                }
+            });
+        } else {
+            $('#businessdetails').html('<option value="">--Select--</option>');
+        }
+    });
+
+    $('#zoneno').on('change', function() {
+        var zoneno = $(this).val();
+        var nodeName = $('#zoneno option:selected').text();
+        // alert(nodeName);
+        $('#wardno').html('<option value="">--Select--</option>');
+
+        if (zoneno) {
+            $.ajax({
+                url: '../action/get_wards.php',
+                type: 'POST',
+                data: {
+                    nodeName: nodeName
+                },
+                success: function(response) {
+                    var wards = JSON.parse(response);
+                    $.each(wards, function(index, ward) {
+                        $('#wardno').append('<option value="' + ward.Ward_No +
+                            '">' + ward.Ward_No + '</option>');
+                    });
+                    $('#wardno').val(globalWardNo).trigger('change');
+                },
+                error: function() {
+                    alert('Error fetching ward data.');
+                }
+
+
+            });
+        }
+    });
+
+
+    function get_DocDetails() {
+    
+        var Shop_Cd = $('#shop_cd').val();
+        $.ajax({
+            url: '../action/getShopDocDetails.php',
+            type: 'POST',
+            data: {
+                Shop_Cd: Shop_Cd
+            },
+            success: function(response) {
+                var docDetails = JSON.parse(response);
+                docDetails = docDetails[0];
+                docDetails.forEach(doc => {
+                    $(`#ShopDocDet_Cd${doc.Document_Cd}`).val(doc.ShopDocDet_Cd);
+                    $(`#FileTag_${doc.Document_Cd}`).removeClass('d-none');
+                    $(`#FileTag_${doc.Document_Cd}`).attr('href', doc.FileURL);
+                    $(`#file_url_${doc.Document_Cd}`).val(doc.FileURL);
+                });
+                // $('.shopdocRow').append(newRow);
+            },
+            error: function() {
+                alert('Error fetching ward data.');
+            }
+        });
+    }
+
+
+    function getShopCategory() {
+        $.ajax({
+            url: '../action/getshopcategory.php',
+            type: 'POST',
+            success: function(response) {
+                const categories = JSON.parse(response);
+                const dropdown = $('#shopcategory');
+                dropdown.empty(); // Clear existing options
+                dropdown.append('<option value="">--Select--</option>'); // Default option
+
+                categories.forEach(category => {
+                    // Corrected string interpolation
+                    dropdown.append(
+                        `<option value="${category.DValue}">${category.DValue}</option>`);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching data:', error);
+                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+            }
+        });
+    }
+
+    function getBusinessCategory() {
+        $.ajax({
+            url: '../action/getbusinesscategory.php',
+            type: 'POST',
+            success: function(response) {
+                const categories = JSON.parse(response);
+                const dropdown = $('#businesscategory');
+                dropdown.empty();
+                dropdown.append('<option value="">--Select--</option>');
+
+                if (categories.length > 1) {
+                    categories.forEach(category => {
+                        dropdown.append(
+                            `<option value="${category.BusinessCat_Cd}"> ${category.BusinessCatName} </option>`
+                        );
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching data:', error);
+                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+            }
+        });
+    }
+
+    function getSpaceType() {
+
+        $.ajax({
+            url: '../action/getSpaceType.php',
+            type: 'POST',
+            success: function(response) {
+                const types = JSON.parse(response);
+                const dropdown = $('#spacetype');
+                dropdown.empty();
+                dropdown.append('<option value="">--Select--</option>');
+
+                types.forEach(type => {
+                    dropdown.append(
+                        `<option value="${type.ShopArea_Cd}">${type.ShopAreaName}</option>`);
+                });
+                $('#spacetype').val(globalSpaceType).trigger('change');
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching data:', error);
+                $('#submitmsgfailed').text('An error occurred while fetching the data.').show();
+            }
+        });
+    }
+
+
+    function SubmitDocumentForm(form_id) {
+        let allValid = true;
+    
+            $(`#${form_id} input[type="file"]`).each(function(index, fileInput) {
+                let file = $(fileInput)[0].files[0];
+                let doc_id = $('#document_cd_' + index).val();
+                let file_url = $('#file_url_' + doc_id).val();
+                let isCompulsory = $('#is_compulsory_' + index).val() == 1;
+                let errorSpan = $('#file_' + doc_id + '-error');
+                let reqFileType = $('#document_type_' + index).val();
+                let allowedFileTypes = [];
+
+                if (reqFileType == 'image') {
+                    allowedFileTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+                } else {
+                    allowedFileTypes = ['application/pdf'];
+                }
+                if (file && !allowedFileTypes.includes(file.type)) {
+                    errorSpan.text("Invalid file type: Only " + allowedFileTypes.join(', ') +
+                        " files are allowed.");
+                    allValid = false;
+                } else if (isCompulsory && !file && !file_url) {
+                    if (EditShopOwnerNumber != 1) {  
+                        errorSpan.text('This document is required.');
+                        allValid = false;
+                    } else {
+                        errorSpan.text(''); 
+                    }
+                } else if (file) {
+                    let fileSizeMB = file.size / (1024 * 1024);
+                    let maxSizeMB = 2;
+                    if (fileSizeMB > maxSizeMB) {
+                        errorSpan.text('File size must be less than ' + maxSizeMB + ' MB');
+                        allValid = false;
+                    } else {
+                        errorSpan.text('');
+                    }
+                }
+            });
+        
+
+        if (allValid) {
+            $('#upload_btn').css('disabled', true);
+            let formElement = $('#shopDocForm')[0];
+            let formData = new FormData(formElement);
+            let Shop_Cd = $('#shop_cd').val();
+            formData.append('Shop_Cd', Shop_Cd);
+
+            // var redirect='Client';
+
+            // formData.append('Client', redirect);
+            $.ajax({
+                type: "POST",
+                url: "../action/saveShopDocDetails.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    var data = JSON.parse(response);
+                    if (data.status == 200) {
+                        // if(updateShop !== 1){
+                        //     sendApplicationMail(Shop_Cd, 'shopRegister');
+                        // }else{
+                        //     sendApplicationMail(Shop_Cd, 'shopInfoUpdate');
+                        // }
+                        $(`#${form_id} #FromMsgSuccess`).html(data.message)
+                            .hide().fadeIn(800, function() {
+                                $("#shopDocForm #FromMsgSuccess").append("");
+                            }).delay(3000).fadeOut("fast");
+                        $('input[name="file[]"]').val('');
+                   
+                    $('#ShopModal').modal('hide');
+                    // setTimeout(function() {
+                    //     if (data.isLoggedIn == 1) {
+                    //         window.location.href = '../Client/index.php?p=shop-owner-details';
+                    //     }
+                    // }, 1500);
+
+
+
+
+                    } else {
+                        $(`#${form_id} #FormMsgFailed`).html(data.message)
+                            .hide().fadeIn(800, function() {
+                                $("#shopDocForm #FormMsgFailed").append("");
+                            }).delay(3000).fadeOut("fast");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr.responseText);
+                }
+            });
+        }
+    }
+
+    function validateEmailInput(input) {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (input && input.value && !emailRegex.test(input.value)) {
+            input.value = '';
+            $('#shopkeeper_email-error').text("Please enter a valid email.");
+        }
+    }
+
+    function updateNavLinks() {
+    
+        $('.nav-item').each(function() {
+            var tabLink = $(this).find('.nav-link');
+            if ($(this).hasClass('active')) {
+                tabLink.removeClass('disabled');
+                tabLink.attr('aria-disabled', 'false');
+                tabLink.css('pointer-events', '');
+            } else {
+                tabLink.addClass('disabled');
+                tabLink.attr('aria-disabled', 'true');
+                tabLink.css('pointer-events', 'none');
+            }
+        });
+        
+    }
+
+
+    function getAmount() {
+        var businessdetails = $('#businessdetails').val();
+        $.ajax({
+            url: '../action/get_FeesApplicableAmount.php',
+            type: 'POST',
+            data: {
+                ParwanaCd: businessdetails
+            },
+            success: function(response) {
+                var data = JSON.parse(response);
+                var amount = data.Amount;
+                $('#shopfees').val(amount);
+
+            },
+            error: function() {
+                alert('Error fetching business details.');
+            }
+        });
+
+    }
+
+    $('#estimatedate').on('change', function() {
+        calculate_ShopOwnsPeriod(this.value);
+    });
+
+    function calculate_ShopOwnsPeriod(startDate) {
+        if (startDate == null || startDate == '') {
+            $('#ShopOwnPeriod').val("");
+        } else {
+            var endDate = new Date();
+            var start = new Date(startDate);
+            var yearsDiff = endDate.getFullYear() - start.getFullYear();
+            var monthsDiff = endDate.getMonth() - start.getMonth();
+
+            if (endDate.getDate() < start.getDate()) {
+                monthsDiff--;
+            }
+            var totalMonths = yearsDiff * 12 + monthsDiff;
+
+            $('#ShopOwnPeriod').val(totalMonths);
+        }
+
+    }
+
+
+    function StartOtpTimers() {
+        clearInterval(otpTimeInterval);
+        otpExpiryTime = 300;
+
+        otpTimeInterval = setInterval(() => {
+            let minutes = Math.floor(otpExpiryTime / 60);
+            let seconds = otpExpiryTime % 60;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            console.log(`${minutes}:${seconds}`);
+            document.getElementById('countdown_text').textContent = `${minutes}:${seconds}`;
+
+            if (otpExpiryTime <= 0) {
+                clearInterval(otpTimeInterval);
+                document.getElementById('countdown_text').textContent = '00:00';
+                $('#resendOTP').show();
+                $('.otp-input').prop('disabled', true);
+            }
+
+            otpExpiryTime--;
+        }, 1000);
+    }
+
+
+    $(document).ready(function() {
+
+        // $('#ShopModal').on('hidden.bs.modal', function() {
+        //     clearInterval(otpTimeInterval);
+        //     $('#otpTimerCount').hide();
+        //     $('#countdown_text').text('30 sec');
+        //     $('#otpvalue').hide();
+        // });
+
+        // $('#ShopModal').modal({
+        //     backdrop: 'static',
+        //     keyboard: false
+        // });
+
+    
+
+        $('#shopkeeper_mobile').removeAttr('readonly');
+        $('#shopkeeper_mobile').on('input', function() {
+            var mobileValue = $(this).val().replace(/[^\d]/g, '').slice(0, 10);
+            setTimeout(() => {
+                if (mobileValue.length == 10 && mobileValue.length != 0) {
+                    $('#verifyOtpBtn').show();
+                    $('#shopkeeper_mobile-error').text('');
+                } else if (mobileValue.length != 10) {
+                    $('#shopkeeper_mobile-error').text('Mobile Number must be 10 digits');
+                } else {
+                    $('#verifyOtpBtn').hide();
+                }
+            }, 800);
+
+        });
+
+        $('#shopkeeper_aadharno').on('keyup', function() {
+            var aadharValue = $(this).val().replace(/[^\d]/g, '').slice(0, 12);
+            setTimeout(() => {
+                if (aadharValue.length != 12 && aadharValue.length != 0) {
+                    $('#shopkeeper_aadharno-error').text('Aadhar Number must be 12 digits');
+                } else {
+                    $('#shopkeeper_aadharno-error').text('');
+                }
+            }, 800);
+        });
+
+        $('#shopkeeper_pincode').on('keyup', function() {
+            var pincodeValue = $(this).val().replace(/[^\d]/g, '').slice(0, 6);
+            setTimeout(() => {
+                if (pincodeValue.length != 6 && pincodeValue.length != 0) {
+                    $('#shopkeeper_pincode-error').text('Pincode must be 6 digits');
+                } else {
+                    $('#shopkeeper_pincode-error').text('');
+                }
+            }, 800);
+        });
+
+        $('#shoplength').on('keyup', function() {
+            var lengthValue = $(this).val();
+            setTimeout(() => {
+                if (lengthValue == 0 && lengthValue == '') {
+                    $('#shoplength-error').text('Shop Length should be greater than 0');
+                } else {
+                    $('#shoplength-error').text('');
+                }
+            }, 800);
+        });
+
+        $('#shopwidth').on('keyup', function() {
+            var widthValue = $(this).val();
+            setTimeout(() => {
+                if (widthValue == 0 && widthValue == '') {
+                    $('#shopwidth-error').text('Shop width should be greater than 0');
+                } else {
+                    $('#shopwidth-error').text('');
+                }
+            }, 800);
+        });
+
+        $('#shopheight').on('keyup', function() {
+            var heightValue = $(this).val();
+            setTimeout(() => {
+                if (heightValue == 0 && heightValue == '') {
+                    $('#shopheight-error').text('Shop Height should be greater than 0');
+                } else {
+                    $('#shopheight-error').text('');
+                }
+            }, 800);
+        });
+
+
+        $('#verifyOtpBtn').on('click', function() {
+            var mobileValue = $('#shopkeeper_mobile').val();
+            var otp = generateOtp();
+            $('#verifyOtpBtn').hide();
+            // $('#resendOTP').show();
+            $('#otpvalue').show();
+            sendOTPToMobileverify(mobileValue, otp, 0);
+
+        });
+
+        $('#resendOTP').on('click', function() {
+            var mobileNumber = $('#shopkeeper_mobile').val();
+            if (mobileNumber.length === 10) {
+                var otp = generateOtp();
+                sendOTPToMobileverify(mobileNumber, otp, 0);
+                $('#otp').val('');
+                // $('#otpField').show();
+                $('#resendOTP').hide();
+                // $('#otpTimerCount').show();
+            } else {
+                $('#mobileerror').text('Please enter a valid mobile number.');
+            }
+        });
+        $('#resendOTP').hide();
+    });
+
+    function validateMobileNo() {
+        var mobileNumber = $('#shopkeeper_mobile').val();
+        var otp = $('#otpvalue').val();
+        validateOtponpage(mobileNumber, otp)
+    }
+    function validateOtponpage(mobileNumber, otpEntered) {
+
+        if (otpEntered.length == 4) {
+            $.ajax({
+                type: "POST",
+                url: '../action/sendOTP.php',
+                data: {
+                    verifyMobileNumber: mobileNumber,
+                    verifyOtp: otpEntered
+                },
+                success: function(response) {
+                    var responseData = JSON.parse(response);
+                    if (responseData.statusCode === 200) {
+                        $('#resendOTP').hide();
+                        otpExpiryTime = 30;
+                        $('#otpTimerCount').hide();
+                        alert("Mobile Verified successfully!!!")
+                        $('#shopkeeper_mobile').attr('readonly', true);
+                        $('#otpvalue').hide();
+                    } else {
+                        $('#otpvalue').val('');
+                        $('#resendOTP').show();
+                        $('#otpTimerCount').hide();
+                        alert(responseData.msg || 'OTP verification failed.');
+                    }
+                },
+                error: function() {
+                    alert('Error occurred during OTP verification.');
+                }
+            });
+        }
+
+    }
+    function sendOTPToMobileverify(mobileNumber, otp, sessionFlag) {
+        $.ajax({
+            type: "POST",
+            url: '../action/sendOTP.php',
+            data: {
+                mobileNumber: mobileNumber,
+                otp: otp,
+                sessionFlag: sessionFlag
+            },
+            success: function(response) {
+                response = JSON.parse(response);
+                if (response.statusCode === 200) {
+                    alert('OTP has been sent to your mobile number!');
+                    $('#otpTimerCount').show();
+                    otpExpiryTime = 30;
+                    StartOtpTimers();
+                } else {
+                    alert('Failed to send OTP. Please try again.');
+                }
+            },
+            error: function() {
+                alert('Error occurred while sending OTP.');
+            }
+        });
+    }
+
+    function generateOtp() {
+        var otp = Math.floor(1000 + Math.random() * 9000);
+        return otp;
+    }
+
+    // function sendApplicationMail(Shop_Cd, Operation) {
+    //     // alert(Shop_Cd);
+    //     $.ajax({
+    //         url: "mail_files/sendApplicationMail.php",
+    //         type: "POST",
+    //         data: {
+    //             Shop_Cd: Shop_Cd,
+    //             operation: Operation
+    //         },
+    //         success: function(response) {
+    //             console.log(response);
+    //             // exit();
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.log(xhr.responseText);
+    //             alert("Error sending email: " + error);
+    //         }
+    //     });
+    // }
+</script>
 </body>
 
 </html>

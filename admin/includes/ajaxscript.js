@@ -2133,7 +2133,8 @@ function submitLoginMasterFormData() {
     var deActivateFlag = document.getElementsByName('deActivateFlag')[0].value;
     var remark = document.getElementsByName('remark')[0].value;
     var action = document.getElementsByName('action')[0].value;
-   
+    var rolename = document.getElementsByName('rolename')[0].value;
+
     if (electionName === '') {
         alert("Select Corporation!!");
     } else if (userCd === '') {
@@ -2154,7 +2155,8 @@ function submitLoginMasterFormData() {
                 expDate: expDate,
                 deActivateFlag: deActivateFlag,
                 remark: remark,
-                action: action
+                action: action,
+                rolename: rolename
             },
             beforeSend: function() { // Before we send the request, remove the .hidden class from the spinner and default to inline-block.
                 $('#submitLoginMasterBtnId').attr("disabled", true);
@@ -2189,6 +2191,66 @@ function submitLoginMasterFormData() {
                 // error: function () {
                 //    alert('Error occured');
                 // }
+        });
+    }
+}
+
+function submitApprovalStageMasterFormData() {
+    var rolename = document.getElementsByName('rolename')[0].value;
+    var stageNumber = document.getElementsByName('stageNumber')[0].value;
+    var Approval_Stage_Id = document.getElementsByName('Approval_Stage_Id')[0].value;
+    var isMandatory = document.getElementsByName('isMandatory')[0].value;
+    var action = document.getElementsByName('action')[0].value;
+
+
+    if (rolename === '') {
+        alert("Select Role Name!!");
+    } else if (stageNumber === '') {
+        alert("Select Stage Number!!");
+    } else {
+        $.ajax({
+            type: "POST",
+            url: 'action/saveApprovalStageMasterData.php',
+            data: {
+                roleName: rolename,
+                stageNumber: stageNumber,
+                ApprovalStageId: Approval_Stage_Id,
+                isMandatory: isMandatory,
+                action: action
+            },
+            beforeSend: function () {
+                $('#submitstageMasterBtnId').attr("disabled", true);
+                $('html').addClass("ajaxLoading");
+            },
+            success: function (dataResult) {
+                console.log(dataResult);
+                var dataResult = JSON.parse(dataResult);
+                if (dataResult.statusCode == 200 || dataResult.statusCode == 204 || dataResult.statusCode == 206 || dataResult.statusCode == 207) {
+
+                    $("#submitmsgsuccess").html(dataResult.msg)
+                        .hide().fadeIn(1000, function () {
+                            $("submitmsgsuccess").append("");
+                            window.location.href = './home.php?p=application-approval-stages-master';
+                        }).delay(1000).fadeOut("fast");
+
+                } else if (dataResult.statusCode == 404 || dataResult.statusCode == 203) {
+                    $("#submitmsgfailed").html(dataResult.msg)
+                        .hide().fadeIn(1000, function () {
+                            $("submitmsgfailed").append("");
+                            window.location.href = './home.php?p=application-approval-stages-master';
+                        }).delay(1000).fadeOut("fast");
+
+                }
+
+                // return data;
+            },
+            complete: function () {
+                $('#submitstageMasterBtnId').attr("disabled", false);
+                $('html').removeClass("ajaxLoading");
+            }
+            // error: function () {
+            //    alert('Error occured');
+            // }
         });
     }
 }

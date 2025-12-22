@@ -10,6 +10,8 @@ if(isset($_GET['mobile'])){
 	$_SESSION['SAL_DevelopmentMode'] = $_GET['developmentMode'];
 	$_SESSION['SAL_UserId'] = $_GET['userCd'];
     $_SESSION['SAL_UserType'] = $_GET['user_type'];
+	$_SESSION['SAL_RoleName'] = $_GET['roleName'];
+	$_SESSION['SAL_RoleId'] = $_GET['roleId'];
 	
 	if($_SESSION['SAL_UserName'] == 'RAM_B30'){
 		header('Location:client/index.php');  

@@ -741,7 +741,7 @@ $(document).ready(function() {
 
                                 <div class="docList d-none"></div>
 
-                                <div class="col-md-3 btn-div" style="margin-top:2rem;">
+                                <div class="col-md-3 btn-div text-end" style="margin-top:2rem;float:right;">
                                     <button type="button" class="btn btn-primary m-3" id="upload_btn"
                                         onclick="submitForm('shopDocForm')">Submit</button>
                                     <div id="FromMsgSuccess" class="controls alert alert-success" role="alert"
@@ -774,6 +774,9 @@ $(document).ready(function() {
     background-color: #C90D41;
     border-color: #C90D41;
     box-shadow: 0 0 0 .25rem rgba(49, 132, 253, .5);
+}
+.status-dropdown option {
+    color: black !important; 
 }
 </style>
 <div class="modal fade" id="chktransactionModal" tabindex="-1" aria-labelledby="transactionModalLabel"
@@ -872,6 +875,37 @@ $(document).ready(function() {
     $('#innerimage1').attr('required', 'required');
     $('#outerimage1').attr('required', 'required');
   }
+
+    $('#editButton').on('click', function () {
+        $('#EditShopModal').find('input, select, textarea').each(function () {
+            const type = $(this).attr('type');
+            if ($(this).attr('id') === 'shopfees') {
+                $(this).prop('readonly', true);
+            } else if (type === 'file') {
+                $(this).prop('disabled', false); 
+            } else {
+                $(this).prop('readonly', false); 
+            }
+        });
+        $('#EditShopModal').find('select').prop('disabled', false);
+        // $(this).hide();
+         $('#EditShopModal')
+            .find('select')
+            .not('#verification-table-body select')
+            .prop('disabled', false);
+
+        const roleName = "<?php echo isset($_SESSION['SAL_RoleName']) ? $_SESSION['SAL_RoleName'] : ''; ?>";
+        const userType = "<?php echo isset($_SESSION['SAL_UserType']) ? $_SESSION['SAL_UserType'] : ''; ?>";
+        applyRoleBasedDisabling(roleName, userType);
+
+        $('#saveBtn').show();
+        if ($('#EditShopModal .modal-title .editing-enabled').length === 0) {
+            $('#EditShopModal .modal-title').append(' <span class="text-success editing-enabled" style="font-size:20px;">(Editing Enabled)</span>');
+        }
+        <?php if (isset($_SESSION['EditShopOwnerNumber']) && $_SESSION['EditShopOwnerNumber'] == 0) { ?>
+            $('#shopkeeper_mobile').prop('readonly', true);
+        <?php } ?>
+    });
 });
 
 
@@ -930,15 +964,31 @@ function redirectToEditPage(Shop_Cd) {
                 $('#shopkeeper_mobile').prop('readonly', true);
                 <?php }?>
                 $('#verifyOtpBtn').hide();
-                $('#ShopModal').modal('show');
-                setTimeout(function() {
-                    if ($('.nav-item').has('active')) {
-                        $('.nav-item').removeClass('active');
-                    }
-                    $('#application-details-tab').addClass('active');
-                    $('#application-details-tab-link').tab('show');
-                    updateNavLinks();
-                }, 200);
+                $('#EditShopModal')
+                    .find('input, select, textarea')
+                    .each(function() {
+                        const type = $(this).attr('type');
+                        const isApprovalDropdown = $(this).hasClass('approval-status');
+                        const isRemarkField = $(this).closest('.remark-field').length > 0;
+                        const isReasonField = $(this).closest('.reason-field').length > 0;
+
+                        if (isApprovalDropdown || isRemarkField || isReasonField) {
+                            $(this).prop('disabled', false).prop('readonly', false);
+                        } else if (type === 'file') {
+                            $(this).prop('disabled', true);
+                        } else {
+                            $(this).prop('readonly', true).prop('disabled', false);
+                        }
+                    });
+              
+                $('#EditShopModal')
+                    .find('select')
+                    .not('.approval-status')
+                    .not('.reason-dropdown')
+                    .prop('disabled', true);
+
+                $('#EditShopModal').modal('show');
+
             } else {
                 alert(data.message);
             }
@@ -947,6 +997,10 @@ function redirectToEditPage(Shop_Cd) {
             console.error("Error: " + error);
         }
     });
+
+    get_ShopDetails(Shop_Cd)
+    get_DocDetails(Shop_Cd);
+    get_VerificationDetails(Shop_Cd);
 }
 
 function getFullName() {
@@ -1191,10 +1245,9 @@ function submitApplicationForm(form_id) {
         success: function(response) {
             var data = JSON.parse(response);
             if (data.status === 'success') {
-                $("#submitmsgsuccess").html(data.message)
+                $("#application-form #submitmsgsuccess").html(data.message)
                     .hide().fadeIn(800, function() {
-                        $("submitmsgsuccess").append("");
-
+                        $("#application-form #submitmsgsuccess").append("");
                     }).delay(3000).fadeOut("fast");
                 if (data.Shop_Cd) {
                     $('#shop_cd').val(data.Shop_Cd);
@@ -1209,24 +1262,24 @@ function submitApplicationForm(form_id) {
                     updateNavLinks();
                 }, 2500);
             } else {
-                $("#submitmsgfailed").html(data.message)
+                $("#application-form #submitmsgfailed").html(data.message)
                     .hide().fadeIn(800, function() {
-                        $("submitmsgfailed").append("");
+                        $("#application-form #submitmsgfailed").append("");
                     }).delay(3000).fadeOut("fast");
             }
         },
         error: function(xhr, status, error) {
-            $('#submitmsgfailed').text('An error occurred. Please try again.').show();
+            $('#application-form #submitmsgfailed').text('An error occurred. Please try again.').show();
         }
     });
 }
 
 
-function get_ShopDetails() {
+function get_ShopDetails(Shop_Cd) {
     getShopCategory();
     getBusinessCategory();
     getSpaceType();
-    var Shop_Cd = $('#shop_cd').val();
+    // var Shop_Cd = $('#shop_cd').val();
     $.ajax({
         url: 'action/getShopDetails.php',
         type: 'POST',
@@ -1272,8 +1325,8 @@ function get_ShopDetails() {
                 const url1 = data.ShopInsideImage1;
                 const fileName1 = url1.split('/').pop();
                 $('#innerimage1-link').html(`
-                    <a href="${url1}" target="_blank" style="display:inline-block;">
-                        <img src="${url1}" alt="${fileName1}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    <a href="https://csmcshoplicenses.com/image-proxy.php?url=${url1}" target="_blank" style="display:inline-block;">
+                        <img src="https://csmcshoplicenses.com/image-proxy.php?url=${url1}" alt="${fileName1}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
                     </a>
                 `);
             }
@@ -1282,8 +1335,8 @@ function get_ShopDetails() {
                 const url2 = data.ShopInsideImage2;
                 const fileName2 = url2.split('/').pop();
                 $('#innerimage2-error').html(`
-                    <a href="${url2}" target="_blank" style="display:inline-block;">
-                        <img src="${url2}" alt="${fileName2}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    <a href="https://csmcshoplicenses.com/image-proxy.php?url=${url2}" target="_blank" style="display:inline-block;">
+                        <img src="https://csmcshoplicenses.com/image-proxy.php?url=${url2}" alt="${fileName2}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
                     </a>
                 `);
             }
@@ -1292,8 +1345,8 @@ function get_ShopDetails() {
                 const url3 = data.ShopOutsideImage1;
                 const fileName3 = url3.split('/').pop();
                 $('#outerimage1-link').html(`
-                    <a href="${url3}" target="_blank" style="display:inline-block;">
-                        <img src="${url3}" alt="${fileName3}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    <a href="https://csmcshoplicenses.com/image-proxy.php?url=${url3}" target="_blank" style="display:inline-block;">
+                        <img src="https://csmcshoplicenses.com/image-proxy.php?url=${url3}" alt="${fileName3}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
                     </a>
                 `);
             }
@@ -1302,8 +1355,8 @@ function get_ShopDetails() {
                 const url4 = data.ShopOutsideImage2;
                 const fileName4 = url4.split('/').pop();
                 $('#outerimage2-error').html(`
-                    <a href="${url4}" target="_blank" style="display:inline-block;">
-                        <img src="${url4}" alt="${fileName4}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
+                    <a href="https://csmcshoplicenses.com/image-proxy.php?url=${url4}" target="_blank" style="display:inline-block;">
+                        <img src="https://csmcshoplicenses.com/image-proxy.php?url=${url4}" alt="${fileName4}" style="height: 60px; width: auto; cursor: pointer; border: 1px solid #ccc; border-radius: 4px;" />
                     </a>
                 `);
             }
@@ -1340,7 +1393,7 @@ function submitShopDetails(form_id) {
             if (data.status === 'success') {
                 $("#shop-details-form #submitmsgsuccess").html(data.message)
                     .hide().fadeIn(800, function() {
-                        $("submitmsgsuccess").append("");
+                        $("#shop-details-form #submitmsgsuccess").append("");
                     }).delay(3000).fadeOut("fast");
                 if (data.Shop_Cd) {
                     $('#shop_cd').val(data.Shop_Cd);
@@ -1355,9 +1408,9 @@ function submitShopDetails(form_id) {
                     updateNavLinks();
                 }, 200);
             } else {
-                $("#submitmsgfailed").html(data.message)
+                $("#shop-details-form #submitmsgfailed").html(data.message)
                     .hide().fadeIn(800, function() {
-                        $("submitmsgfailed").append("");
+                        $("#shop-details-form #submitmsgfailed").append("");
                     }).delay(3000).fadeOut("fast");
             }
         },
@@ -1437,8 +1490,8 @@ $('#zoneno').on('change', function() {
 });
 
 
-function get_DocDetails() {
-    var Shop_Cd = $('#shop_cd').val();
+function get_DocDetails(Shop_Cd) {
+    // var Shop_Cd = $('#shop_cd').val();
     $.ajax({
         url: 'action/getShopDocDetails.php',
         type: 'POST',
@@ -1453,6 +1506,22 @@ function get_DocDetails() {
                 $(`#FileTag_${doc.Document_Cd}`).removeClass('d-none');
                 $(`#FileTag_${doc.Document_Cd}`).attr('href', doc.FileURL);
                 $(`#file_url_${doc.Document_Cd}`).val(doc.FileURL);
+                if (doc.FileURL && doc.FileURL !== "") {
+                    showExistingFile(doc.Document_Cd, doc.FileURL);
+                }
+
+                $(`#approval_status_${doc.Document_Cd}`).val(doc.Verification_Status);
+
+                if (doc.Verification_Status === 'Rejected') {
+                    $(`#reason_container_${doc.Document_Cd}`).removeClass('d-none');
+                    $(`#remark_container_${doc.Document_Cd}`).removeClass('d-none');
+                    $(`#reason_${doc.Document_Cd}`).val(doc.Verification_Rejection_Id);
+                    $(`#remark_${doc.Document_Cd}`).val(doc.Verification_Rejection_Reason);
+              
+                } else {
+                    $(`#reason_container_${doc.Document_Cd}`).addClass('d-none');
+                    $(`#remark_container_${doc.Document_Cd}`).addClass('d-none');
+                }
             });
             // $('.shopdocRow').append(newRow);
         },
@@ -1462,7 +1531,411 @@ function get_DocDetails() {
     });
 }
 
+function showExistingFile(docId, fileUrl) {
+    const previewBox = document.getElementById(`file_preview_${docId}`);
+    const viewBtn = document.getElementById(`FileTag_${docId}`);
+    const container = document.getElementById(`preview_container_${docId}`);
 
+    if (!fileUrl) return;
+
+    let ext = fileUrl.split('.').pop().toLowerCase();
+    let previewHTML = '';
+
+    if (['jpg', 'jpeg', 'png'].includes(ext)) {
+        previewHTML = `<img src="https://csmcshoplicenses.com/image-proxy.php?url=${fileUrl}" class="img-fluid rounded border zoomable" style="max-height:250px; object-fit:contain;">`;
+    } else if (ext === 'pdf') {
+        previewHTML = `<embed src="https://csmcshoplicenses.com/image-proxy.php?url=${fileUrl}" type="application/pdf" class="border rounded pdf-zoomable">`;
+    } else {
+        previewHTML = `<p class="text-muted">Preview not available for this file type.</p>`;
+    }
+
+    previewBox.innerHTML = previewHTML;
+    viewBtn.href = fileUrl;
+    viewBtn.classList.remove('d-none');
+    container.classList.remove('d-none');
+
+    const zoomable = previewBox.querySelector('.zoomable, .pdf-zoomable');
+    enableZoom(zoomable);
+}
+
+function previewFile(event, docId) {
+    const file = event.target.files[0];
+    const previewBox = document.getElementById(`file_preview_${docId}`);
+    const previewContainer = document.getElementById(`preview_container_${docId}`);
+
+    if (!file) {
+        previewBox.innerHTML = `<p class="text-muted">No file selected.</p>`;
+        return;
+    }
+
+    const maxSize = 2 * 1024 * 1024; 
+    if (file.size > maxSize) {
+        alert("File size exceeds 4MB. Please select a smaller file.");
+        event.target.value = '';
+        previewBox.innerHTML = `<p class="text-muted">No file selected.</p>`;
+        previewContainer.classList.add('d-none');
+        return;
+    }
+ 
+
+    const fileType = file.type;
+    let previewHTML = '';
+
+    if (fileType.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewHTML = `<img src="https://csmcshoplicenses.com/image-proxy.php?url=${e.target.result}" class="img-fluid rounded border zoomable" style="max-height:250px; object-fit:contain;">`;
+            previewBox.innerHTML = previewHTML;
+            previewContainer.classList.remove('d-none');
+            enableZoom(previewBox.querySelector('.zoomable'));
+        };
+        reader.readAsDataURL(file);
+    } else if (fileType === 'application/pdf') {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewHTML = `<embed src="https://csmcshoplicenses.com/image-proxy.php?url=${e.target.result}" type="application/pdf" class="border rounded pdf-zoomable">`;
+            previewBox.innerHTML = previewHTML;
+            previewContainer.classList.remove('d-none');
+            enableZoom(previewBox.querySelector('.pdf-zoomable'));
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewBox.innerHTML = `<p class="text-danger">Unsupported file type</p>`;
+        previewContainer.classList.remove('d-none');
+    }
+}
+
+
+function enableZoom(el) {
+    if (!el) return;
+    el.addEventListener('click', () => {
+        el.classList.toggle('zoomed');
+    });
+}
+
+    function get_VerificationDetails(Shop_Cd) {
+        $.ajax({
+            url: 'action/getVerificationDetails.php',
+            type: 'POST',
+            data: { Shop_Cd: Shop_Cd },
+            dataType: 'json',
+            success: function(response) {
+                var tbody = $('#verification-table-body');
+                tbody.empty();
+
+                    var roleName = "<?php echo isset($_SESSION['SAL_RoleName']) ? $_SESSION['SAL_RoleName'] : ''; ?>";
+                    var userType = "<?php echo isset($_SESSION['SAL_UserType']) ? $_SESSION['SAL_UserType'] : ''; ?>";
+                    var EditShopOwnerNumber = "<?php echo isset($_SESSION['EditShopOwnerNumber']) ? $_SESSION['EditShopOwnerNumber'] : ''; ?>";
+                    var EditShopOwnerNumberNum = Number(EditShopOwnerNumber);
+                   
+                    if(EditShopOwnerNumberNum === 1){
+                        if (response.verifications && response.verifications.length > 0) {
+                            var reasons = response.reasons || [];
+
+                            response.verifications.forEach(function (verif, index) {
+
+                                var reasonOptions = '<option value="">Select Reason</option>';
+                                reasons.forEach(function (reason) {
+                                    var selected = verif.Rejection_Reason == reason.DropDown_Cd ? 'selected' : '';
+                                    reasonOptions += `<option value="${reason.DropDown_Cd}" ${selected}>${reason.Reason_Text}</option>`;
+                                });
+
+                                var remarkValue = '';
+                                if (verif.Status === 'Rejected') {
+                                    remarkValue = verif.Rejection_Remark || '';
+                                } else if (verif.Status === 'Hold') {
+                                    remarkValue = verif.Hold_Remark || '';
+                                } else {
+                                    remarkValue = verif.Remark || '';
+                                }
+
+
+                                var showReasonRemark = (verif.Status === 'Rejected' || verif.Status === 'Hold') ? '' : 'style="display:none;"';
+
+                                var row = `<tr data-approval-stage-id="${verif.Approval_Stage_Id}" 
+                                        data-original-reason="${verif.Rejection_Reason || ''}"
+                                        data-original-remark="${remarkValue}">
+                                <td>${index + 1}</td>
+                                <td>${verif.Role_Name || 'N/A'}</td>
+                                <td>
+                                    <select name="status_${index + 1}" class="status-dropdown" data-row="${index + 1}">
+                                        <option value="">Select Status</option>
+                                        <option value="Pending" ${!verif.Status || verif.Status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="Approved" ${verif.Status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                        <option value="Rejected" ${verif.Status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                        <option value="Hold" ${verif.Status === 'Hold' ? 'selected' : ''}>Hold</option>
+                                    </select>
+                                </td>
+                            <td>
+                                ${verif.Updated_Date
+                                        ? `<div>By : ${verif.Updated_By_Role_Name || ''}(${formatName(verif.Updated_By_Executive_Name)})</div>
+                                    <div> Date : ${formatDateTimeAMPM(verif.Updated_Date)}</div>`
+                                        : `<div></div>`
+                                    }
+
+                                </td>
+                                <td class="reason-container" ${showReasonRemark}>
+                                    <select name="reason_${index + 1}" class="reason-dropdown form-select">
+                                        ${reasonOptions}
+                                    </select>
+                                    <span class="reason-error text-danger" style="font-size: 12px; display: none;"></span>
+                                </td>
+                                <td class="remark-container" ${showReasonRemark}>
+                                    <input type="text" name="remark_${index + 1}" class="remark-input form-control" placeholder="Enter remark" value="${remarkValue}">
+                                </td>
+                            </tr>`;
+
+                                tbody.append(row);
+                            });
+
+                            applyRoleBasedDisabling(roleName, userType);
+
+                            $('#verification-table-body tr').each(function () {
+                                var initialStatus = $(this).find('.status-dropdown').val();
+                                $(this).data('prev-status', initialStatus);
+                            });
+
+                            $(document).off('change', '.status-dropdown').on('change', '.status-dropdown', function () {
+                                var row = $(this).closest('tr');
+                                var status = $(this).val();
+                                var prevStatus = row.data('prev-status') || '';
+
+                                updateStatusColor($(this));
+
+                                if (status === 'Rejected' || status === 'Hold') {
+
+                                    row.find('.reason-container').show();
+                                    row.find('.remark-container').show();
+
+                                    if ((status === 'Rejected' && prevStatus !== 'Rejected') ||
+                                        (status === 'Hold' && prevStatus !== 'Hold')) {
+                                        row.find('.reason-dropdown').val('');
+                                        row.find('.remark-input').val('');
+                                    }
+                                } else {
+
+                                    row.find('.reason-container').hide();
+                                    row.find('.remark-container').hide();
+                                    row.find('.reason-error').hide();
+                                }
+
+                                row.data('prev-status', status);
+
+                                var reason = row.find('.reason-dropdown').val();
+                                if (status === 'Rejected' || status === 'Hold') {
+                                    if (!reason) {
+                                        row.find('.reason-error').text('Reason is required for ' + status + ' status.').show();
+                                    } else {
+                                        row.find('.reason-error').hide();
+                                        submitRowVerificationDetails(row);
+                                    }
+                                } else if (status === 'Approved' || status === 'Pending') {
+                                    row.find('.reason-error').hide();
+                                    submitRowVerificationDetails(row);
+                                }
+                            });
+
+                            $(document).off('change keyup', '.reason-dropdown, .remark-input').on('change keyup', '.reason-dropdown, .remark-input', function () {
+                                var row = $(this).closest('tr');
+                                var status = row.find('.status-dropdown').val();
+                                var reason = row.find('.reason-dropdown').val();
+
+                                if (status === 'Rejected' || status === 'Hold') {
+                                    if (!reason) {
+                                        row.find('.reason-error').text('Reason is required for ' + status + ' status.').show();
+                                    } else {
+                                        row.find('.reason-error').hide();
+                                        submitRowVerificationDetails(row);
+                                    }
+                                }
+                            });
+                            $('.status-dropdown').each(function () {
+                                updateStatusColor($(this));
+                            });
+
+                        } else {
+                            tbody.html('<tr><td colspan="6" class="text-center">No verification details found.</td></tr>');
+                        }
+                    }
+
+                   
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    alert('Error fetching verification data.');
+                }
+            });
+    }
+ 
+    function applyRoleBasedDisabling(roleName, userType) {
+        var rows = $('#verification-table-body tr');
+
+        rows.each(function (index) {
+            var stageNumber = index + 1;
+            var row = $(this);
+
+            var statusDropdown = row.find('.status-dropdown');
+            var reasonDropdown = row.find('.reason-dropdown');
+            var remarkInput = row.find('.remark-input');
+
+            var initialStatus = statusDropdown.val();
+            var shouldDisable = false;
+
+          
+            var prevRow = index > 0 ? rows.eq(index - 1) : null;
+            var prevStatus = prevRow ? prevRow.find('.status-dropdown').val() : '';
+
+          
+
+            if (userType === 'Admin') {
+                shouldDisable = true;
+            }
+            else if (roleName === 'Clerk') {
+                if (stageNumber === 2 || stageNumber === 3) {
+                    shouldDisable = true;
+                }
+            }
+            else if (roleName === 'Additional Commissioner') {
+
+                if (stageNumber === 1 && initialStatus !== 'Pending' && initialStatus !== '') {
+                    shouldDisable = true;
+                }
+                else if (stageNumber === 3) {
+                    shouldDisable = true;
+                }
+
+               
+                if (stageNumber === 2 && (prevStatus === 'Rejected' || prevStatus === 'Hold')) {
+                    shouldDisable = true;
+
+                   
+                    prevRow.find('.status-dropdown').prop('disabled', true);
+                    prevRow.find('.reason-dropdown').prop('disabled', true);
+                    prevRow.find('.remark-input').prop('readonly', true);
+                }
+            }
+            else if (roleName === 'Municipal Commissioner') {
+
+                if (stageNumber < 3 && initialStatus !== 'Pending' && initialStatus !== '') {
+                    shouldDisable = true;
+                }
+
+              
+                if (stageNumber === 3 && (prevStatus === 'Rejected' || prevStatus === 'Hold')) {
+                    shouldDisable = true;
+
+                  
+                    prevRow.find('.status-dropdown').prop('disabled', true);
+                    prevRow.find('.reason-dropdown').prop('disabled', true);
+                    prevRow.find('.remark-input').prop('readonly', true);
+                }
+            }
+
+
+            if (shouldDisable) {
+                statusDropdown.prop('disabled', true);
+                reasonDropdown.prop('disabled', true);
+                remarkInput.prop('readonly', true);
+            } else {
+                statusDropdown.prop('disabled', false);
+
+                if (initialStatus === 'Rejected' || initialStatus === 'Hold') {
+                    reasonDropdown.prop('disabled', false);
+                    remarkInput.prop('readonly', false);
+                }
+            }
+        });
+   }
+
+
+    function formatName(name) {
+        if (!name) return '';
+        return name
+            .toLowerCase()
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+    function submitRowVerificationDetails(row) {
+        var shop_cd = $('#shop_cd').val();
+        var approvalStageId = row.data('approval-stage-id');
+        var status = row.find('.status-dropdown').val();
+        var reason = row.find('.reason-dropdown').val();
+        var remark = row.find('.remark-input').val();
+
+        $.ajax({
+            url: 'action/saveVerificationDetails.php',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Shop_Cd: shop_cd,
+                Approval_Stage_Id: approvalStageId,
+                Status: status,
+                Reason: reason,
+                Remark: remark
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    console.log('Stage ' + approvalStageId + ' updated successfully');
+                } else {
+                    console.error(response.message || 'Error updating verification details');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+    function showError(row, message) {
+        removeError(row);
+        row.find('td:last').append('<div class="error-msg text-danger mt-1">' + message + '</div>');
+    }
+
+    function removeError(row) {
+        row.find('.error-msg').remove();
+    }
+    function formatDateTimeAMPM(dateTimeStr) {
+        if (!dateTimeStr) return '';
+        var dateObj = new Date(dateTimeStr);
+        if (isNaN(dateObj)) return '';
+
+        var options = {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            hour12: true
+        };
+        return dateObj.toLocaleString('en-US', options);
+    }
+    function updateStatusColor(dropdown) {
+        var val = dropdown.val();
+        var color = 'black';
+
+        if (val === 'Approved') {
+            color = 'green';
+        } else if (val === 'Rejected') {
+            color = 'red';
+        } else if (val === 'Hold') {
+            color = 'orange';
+        }
+
+        dropdown.css({
+            'color': color
+        });
+    }
+
+    function toggleReasonRemark(dropdown) {
+        var status = dropdown.val();
+        var row = dropdown.closest('tr');
+        var reasonContainer = row.find('.reason-container');
+        var remarkContainer = row.find('.remark-container');
+
+        if (status === 'Rejected' || status === 'Hold') {
+            reasonContainer.show();
+            remarkContainer.show();
+        } else {
+            reasonContainer.hide();
+            remarkContainer.hide();
+        }
+    }
+    
 function getShopCategory() {
     $.ajax({
         url: 'action/getshopcategory.php',

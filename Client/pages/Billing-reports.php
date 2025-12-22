@@ -206,7 +206,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                         <div class="card-body">
                             <div class="row row-cols-2 row-cols-lg-5 g-2">
                                 <div class="col">
-                                    <a>
+                                    <a href="index.php?p=shop-owner-details&filter=total-bills">
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Shop-Visited.png" alt="" /> -->
@@ -239,7 +239,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                 </div>
 
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a>
+                                    <a href="index.php?p=shop-owner-details&filter=paid-bills">
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permission-Denied.png" alt="" /> -->
@@ -270,7 +270,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                     </a>
                                 </div>
                                 <div class="col">
-                                     <a>
+                                    <a href="index.php?p=shop-owner-details&filter=bill-amount">
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Document-Pending.png" alt="" /> -->
@@ -304,7 +304,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
 
 
                                 <div class="col-lg-2 col-md-2 col-sm-6 col-12">
-                                    <a>
+                                    <a href="index.php?p=shop-owner-details&filter=collected-amount">
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Document-Received.png" alt="" /> -->
@@ -337,7 +337,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                 </div>
 
                                 <div class="col-lg-3 col-md-2 col-sm-6 col-12">
-                                    <a>
+                                    <a href="index.php?p=shop-owner-details&filter=pending-amount">
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Non-Cooperative.png" alt="" /> -->
@@ -372,7 +372,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                             <div class="row row-cols-2 row-cols-lg-5 g-2">
                                 
                                 <div class="col">
-                                    <a>
+                                    <a href="index.php?p=shop-owner-details&filter=renewal-shops">
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permanently-Closed.png" alt="" /> -->
@@ -503,7 +503,7 @@ $demandBillingSummaryData = $db2->ExecutveQuerySingleRowSALData($queryDemandArea
                                 </div>
                                 <?php } ?>
                                 <div class="col">
-                                    <a>
+                                    <a href="index.php?p=shop-owner-details&filter=pending-renewal-shops">
                                         <div class="banner-left-icon d-flex align-items-center wow fadeIn animated">
                                             <div class="banner-icon">
                                                 <!-- <img src="assets/imgs/theme/icons/Permission-Denied.png" alt="" /> -->
